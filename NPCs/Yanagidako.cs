@@ -54,14 +54,17 @@ namespace DarknessFallenMod.NPCs
 
             Target = player.Center;
 
-           
+            if(Vector2.DistanceSquared(Target, NPC.Center) < 10000)
+            {
+                Target = player.Center + new Vector2(Main.rand.Next(-25, 25), Main.rand.Next(-25, 25));
+            }
 
             NPC.ai[1] -= 0.01f;
-            float Clamped = Math.Clamp(NPC.ai[1], 0f, 4f);
+            float Clamped = Math.Clamp(NPC.ai[1], 0f, 0.3f);
             if (Clamped != NPC.ai[1])
             {
                 Velocity = Vector2.Normalize(Target - NPC.Center) * 15;
-                NPC.ai[1] = 2f;
+                NPC.ai[1] = 0.3f;
             }
 
             NPC.Center += Velocity;
@@ -85,6 +88,8 @@ namespace DarknessFallenMod.NPCs
 
         public override void OnKill()
         {
+            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ModContent.ItemType<SoulOfDestruction>(), (int)MathF.Floor(Main.rand.Next(0, 3) / 2f));
+
             int LegGore = Mod.Find<ModGore>("YanagidakoGore0").Type;
             int HeadGore = Mod.Find<ModGore>("YanagidakoGore1").Type;
 
@@ -95,12 +100,7 @@ namespace DarknessFallenMod.NPCs
             Gore.NewGore(NPC.GetSource_FromThis(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), HeadGore);
         }
 
-        public override void ModifyNPCLoot(NPCLoot npcLoot)
-        {
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfDestruction>(), 5, minimumDropped: 1, maximumDropped: 3));
-        }
-
-        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+             public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
@@ -109,5 +109,4 @@ namespace DarknessFallenMod.NPCs
             });
         }
     }
-    
 }
