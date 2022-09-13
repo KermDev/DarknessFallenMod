@@ -10,7 +10,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Inferno Rod"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
+			DisplayName.SetDefault("Inferno Rod");
 			Tooltip.SetDefault("shoots 3 fire balls that track enemies");
 			Item.staff[Item.type] = true;
 		}
@@ -40,6 +40,15 @@ namespace DarknessFallenMod.Items.MagicWeapons
 			Projectile.NewProjectile(source, position, velocity.RotatedBy(0.58f), type, damage, knockback, player.whoAmI);
 			Projectile.NewProjectile(source, position, velocity.RotatedBy(-0.58f), type, damage, knockback, player.whoAmI);
 			return true;
+        }
+
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+			Vector2 shootOffset = new Vector2(50, 0).RotatedBy(velocity.ToRotation());
+            if (Collision.CanHit(position, 5, 5, position + shootOffset, 5, 5))
+            {
+				position += shootOffset;
+            }
         }
 
         public override void AddRecipes()
