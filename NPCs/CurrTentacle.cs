@@ -36,6 +36,7 @@ namespace DarknessFallenMod.NPCs
             Banner = NPC.type;
             BannerItem = ModContent.ItemType<Items.Placeable.Banners.CurrTentacleBanner>();
         }
+
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             return SpawnCondition.Corruption.Chance * 0.07f;
@@ -50,11 +51,7 @@ namespace DarknessFallenMod.NPCs
             }
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
         }
-
-        public override void OnKill()
-        {
-
-        }
+        
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately

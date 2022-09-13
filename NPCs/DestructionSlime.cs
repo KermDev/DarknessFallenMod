@@ -50,12 +50,13 @@ namespace DarknessFallenMod.NPCs
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
         }
 
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.Gel, Main.rand.Next(0, 8));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.DemoniteOre, Main.rand.Next(0, 4));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ModContent.ItemType<SoulOfDestruction>(), (int)MathF.Floor(Main.rand.Next(0, 3) / 2f));
+            npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 0, maximumDropped: 8));
+            npcLoot.Add(ItemDropRule.Common(ItemID.DemoniteOre, minimumDropped: 0, maximumDropped: 4));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfDestruction>(), 5, minimumDropped: 1, maximumDropped: 3));
         }
+
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately

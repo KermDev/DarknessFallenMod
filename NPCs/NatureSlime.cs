@@ -50,13 +50,14 @@ namespace DarknessFallenMod.NPCs
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
         }
 
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.Gel, Main.rand.Next(1, 2));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.Wood, Main.rand.Next(2, 10));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.Acorn, Main.rand.Next(2, 4));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ModContent.ItemType<SoulOfNature>(), (int)Math.Floor(Main.rand.Next(0, 3) / 2f));
+            npcLoot.Add(ItemDropRule.Common(ItemID.Acorn, minimumDropped: 2, maximumDropped: 4));
+            npcLoot.Add(ItemDropRule.Common(ItemID.Wood, minimumDropped: 2, maximumDropped: 10));
+            npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 1, maximumDropped: 2));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfNature>(), 5, minimumDropped: 1, maximumDropped: 3));
         }
+
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately

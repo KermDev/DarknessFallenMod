@@ -12,7 +12,7 @@ namespace DarknessFallenMod.Items.Materials
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blue Chitin");
-            Tooltip.SetDefault("dropped by Blue Beetles");
+            Tooltip.SetDefault("Dropped by Blue Beetles");
 
           
 

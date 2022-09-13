@@ -74,10 +74,9 @@ namespace DarknessFallenMod.NPCs
             }
         }
 
-
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ModContent.ItemType<BloodyJaw>(), (int)MathF.Floor(Main.rand.Next(0, 3) / 2f));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BloodyJaw>(), 10));
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

@@ -51,10 +51,6 @@ namespace DarknessFallenMod.NPCs
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
         }
 
-        public override void OnKill()
-        {
-
-        }
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately

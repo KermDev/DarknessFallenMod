@@ -52,12 +52,6 @@ namespace DarknessFallenMod.NPCs
 
         public override void OnKill()
         {
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.Acorn, Main.rand.Next(0, 1));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.Wood, Main.rand.Next(0, 3));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.Lens, Main.rand.Next(0, 2));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ItemID.BlackLens, Main.rand.Next(0, 1));
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ModContent.ItemType<SoulOfNature>(), (int)Math.Floor(Main.rand.Next(0,3) / 2f));
-
             int LegGore = Mod.Find<ModGore>("NatureDemonEyeGore1").Type;
             int HeadGore = Mod.Find<ModGore>("NatureDemonEyeGore0").Type;
 
@@ -67,6 +61,16 @@ namespace DarknessFallenMod.NPCs
             }
             Gore.NewGore(NPC.GetSource_FromThis(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), HeadGore);
         }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ItemID.Acorn, 2));
+            npcLoot.Add(ItemDropRule.Common(ItemID.Wood, minimumDropped: 0, maximumDropped: 3));
+            npcLoot.Add(ItemDropRule.Common(ItemID.Lens, minimumDropped: 0, maximumDropped: 2));
+            npcLoot.Add(ItemDropRule.Common(ItemID.BlackLens, 2));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfNature>(), 5, minimumDropped: 1, maximumDropped: 3));
+        }
+
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
