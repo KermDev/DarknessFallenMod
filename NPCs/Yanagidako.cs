@@ -54,14 +54,17 @@ namespace DarknessFallenMod.NPCs
 
             Target = player.Center;
 
-           
+            if(Vector2.DistanceSquared(Target, NPC.Center) < 10000)
+            {
+                Target = player.Center + new Vector2(Main.rand.Next(-25, 25), Main.rand.Next(-25, 25));
+            }
 
             NPC.ai[1] -= 0.01f;
-            float Clamped = Math.Clamp(NPC.ai[1], 0f, 4f);
+            float Clamped = Math.Clamp(NPC.ai[1], 0f, 0.3f);
             if (Clamped != NPC.ai[1])
             {
                 Velocity = Vector2.Normalize(Target - NPC.Center) * 15;
-                NPC.ai[1] = 2f;
+                NPC.ai[1] = 0.3f;
             }
 
             NPC.Center += Velocity;
