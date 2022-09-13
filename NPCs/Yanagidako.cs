@@ -88,8 +88,6 @@ namespace DarknessFallenMod.NPCs
 
         public override void OnKill()
         {
-            Item.NewItem(NPC.GetSource_Death(), NPC.getRect(), ModContent.ItemType<SoulOfDestruction>(), (int)MathF.Floor(Main.rand.Next(0, 3) / 2f));
-
             int LegGore = Mod.Find<ModGore>("YanagidakoGore0").Type;
             int HeadGore = Mod.Find<ModGore>("YanagidakoGore1").Type;
 
@@ -100,7 +98,12 @@ namespace DarknessFallenMod.NPCs
             Gore.NewGore(NPC.GetSource_FromThis(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), HeadGore);
         }
 
-             public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfDestruction>(), 5, minimumDropped: 1, maximumDropped: 3));
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
