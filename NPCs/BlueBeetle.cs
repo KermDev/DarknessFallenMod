@@ -8,24 +8,26 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.GameContent.Bestiary;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DarknessFallenMod.NPCs
 {
     public class BlueBeetle : ModNPC
     {
-        int speed;
-
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blue Beetle");
             Main.npcFrameCount[NPC.type] = 6;
+
+            NPCID.Sets.TrailCacheLength[Type] = 15;
+            NPCID.Sets.TrailingMode[Type] = 3;
         }
 
 
         public override void SetDefaults()
         {
-            NPC.width = 35;
-            NPC.height = 53;
+            NPC.width = 50;
+            NPC.height = 50;
             NPC.damage = 12;
             NPC.defense = 10;
             NPC.lifeMax = 250;
@@ -33,37 +35,93 @@ namespace DarknessFallenMod.NPCs
             NPC.DeathSound = SoundID.NPCDeath53;
             NPC.value = 89f;
             NPC.knockBackResist = 0.5f;
-            NPC.aiStyle = 3;
-            AIType = NPCID.GoblinScout;
+            //NPC.aiStyle = 3;
+            //AIType = NPCID.GoblinScout;
+            NPC.aiStyle = -1;
             Banner = NPC.type;
             BannerItem = ModContent.ItemType<Items.Placeable.Banners.BlueBeetleBanner>();
         }
 
-        
+        float normalSpeed = 1.5f;
+        float inRangeSpeed = 2.5f;
 
+        bool inRange;
+        const int range = 50000;
+
+        const float acceleration = 0.05f;
         public override void AI()
         {
-            NPC.TargetClosest(true);
             Player player = Main.player[NPC.target];
-
             if (!player.active || player.dead)
             {
-                NPC.TargetClosest(false);
-                NPC.velocity.Y = 20;
+                NPC.TargetClosest();
+                player = Main.player[NPC.target];
             }
 
-            if (!player.active)
+            Vector2 directionToPlayer = NPC.DirectionTo(player.Center);
+
+            int xDirToPlayer = MathF.Sign(directionToPlayer.X);
+            NPC.direction = xDirToPlayer;
+
+            inRange = false;
+            if (Vector2.DistanceSquared(player.Center, NPC.Center) < range)
             {
-                NPC.velocity.Y += 20f ;
+                inRange = true;
+
+                if (Main.rand.NextBool(2)) Dust.NewDust(NPC.Hitbox.BottomLeft(), NPC.width, 2, DustID.Dirt);
             }
 
-            if (NPC.collideX && NPC.velocity.Y == 0)
+            if (((player.Center.Y < NPC.position.Y && inRange) || NPC.collideX) && NPC.velocity.Y == 0) NPC.velocity.Y -= 6f;
+
+            float xSpeed = acceleration * xDirToPlayer;
+            if (MathF.Sign(NPC.velocity.X) != xDirToPlayer)
             {
-                NPC.velocity.Y += 6f;
+                xSpeed *= 2;
             }
 
-            speed = Vector2.DistanceSquared(player.Center, NPC.Center) < 100000 ? 3 : 1;
+            NPC.velocity.X += xSpeed;
+
+            float maxSpeed = inRange ? inRangeSpeed : normalSpeed;
+            NPC.velocity.X = Math.Clamp(NPC.velocity.X, -maxSpeed, maxSpeed);
         }
+
+        /* Some effects that dont work rn
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            if (inRange)
+            {
+                Texture2D tex = ModContent.Request<Texture2D>(Texture).Value;
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.BeginWithShaderOptions();
+
+                for (int i = 0; i < NPC.oldPos.Length; i++)
+                {
+                    if (i % 3 == 0)
+                    {
+                        Vector2 pos = NPC.oldPos[i];
+
+                        Main.EntitySpriteDraw(
+                            tex,
+                            pos - Main.screenPosition + NPC.Hitbox.Size() * 0.5f,
+                            NPC.frame,
+                            drawColor * 0.5f,
+                            NPC.rotation,
+                            NPC.frame.Size() * 0.5f,
+                            NPC.scale,
+                            NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                            0
+                            );
+                    }
+                }
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.BeginWithDefaultOptions();
+            }
+
+            return true;
+        }
+        */
 
         public override void FindFrame(int frameHeight)
         {
