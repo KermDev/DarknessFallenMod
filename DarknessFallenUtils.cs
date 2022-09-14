@@ -25,9 +25,7 @@ namespace DarknessFallenMod
 
         public static void DrawProjectileInHBCenter(this Projectile projectile, Color lightColor, bool animated = false, Vector2? offset = null, Vector2? origin = null)
         {
-            if (projectile.ModProjectile is null) return;
-
-            Texture2D texture = ModContent.Request<Texture2D>(projectile.ModProjectile.Texture).Value;
+            Texture2D texture = TextureAssets.Projectile[projectile.type].Value;
 
             Vector2 drawOrigin;
             Rectangle? sourceRectangle = null;
