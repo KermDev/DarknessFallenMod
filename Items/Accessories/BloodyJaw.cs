@@ -13,7 +13,7 @@ namespace DarknessFallenMod.Items.Accessories
             DisplayName.SetDefault("BloodyJaw"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
             Tooltip.SetDefault("Gives 4% additional damage" + 
                 $"\n3% increased critical damage chance");
-            ItemID.Sets.ItemIconPulse[Item.type] = true; // The item pulses while in the player's inventory
+            //ItemID.Sets.ItemIconPulse[Item.type] = true; // The item pulses while in the player's inventory
         }
 
         public override void SetDefaults()
