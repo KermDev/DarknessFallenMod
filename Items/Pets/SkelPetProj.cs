@@ -59,7 +59,7 @@ namespace DarknessFallenMod.Items.Pets
 
 			float DistanceSquare = Vector2.DistanceSquared(player.Center, Projectile.Center);
 			Vector2 Direction = player.Center - Projectile.Center;
-			if(Direction == Vector2.Zero)
+			if (Direction == Vector2.Zero)
             {
 				Direction = Vector2.UnitY;
             }
@@ -74,14 +74,14 @@ namespace DarknessFallenMod.Items.Pets
 				Velocity *= 0.9f;
             }
 
-			if(DistanceSquare >= 300000)
+			if (DistanceSquare >= 300000)
             {
 				Projectile.Center = player.Center;
             }
 
 			Projectile.Center += Velocity;
 
-			Projectile.spriteDirection = (Velocity.X < 0 ? 1 : -1);
+			Projectile.spriteDirection = (Velocity.X < 0 ? -1 : 1);
 		}
 	}
 }
