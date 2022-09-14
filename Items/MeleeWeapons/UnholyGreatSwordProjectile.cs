@@ -15,13 +15,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             DisplayName.SetDefault("Unholy Greatsword"); // Name of the projectile. It can be appear in chat
             Main.projFrames[Projectile.type] = 1; //number of frames in the animation;
         }
-
-        // Setting the default parameters of the projectile
-        // You can check most of Fields and Properties here https://github.com/tModLoader/tModLoader/wiki/Projectile-Class-Documentation
+        
         public override void SetDefaults()
         {
-            Projectile.width = 16; // The width of projectile hitbox
-            Projectile.height = 32; // The height of projectile hitbox
+            Projectile.width = 40; // The width of projectile hitbox
+            Projectile.height = 40; // The height of projectile hitbox
 
             Projectile.aiStyle = 0; // The ai style of the projectile (0 means custom AI). For more please reference the source code of Terraria
             Projectile.DamageType = DamageClass.Melee; // What type of damage does this projectile affect?
@@ -74,6 +72,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
             Projectile.velocity *= 0.9f;
             Projectile.rotation = Projectile.velocity.ToRotation();
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Projectile.DrawProjectileInHBCenter(lightColor, origin: new Vector2(8, 23));
+            return false;
         }
 
         public override void Kill(int timeLeft) //this is caled whenever the projectile expires (only once);

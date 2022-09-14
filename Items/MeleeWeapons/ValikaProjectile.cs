@@ -21,8 +21,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Melee;
-            Projectile.width = 80;
-            Projectile.height = 80;
+            Projectile.width = 64;
+            Projectile.height = 64;
             Projectile.aiStyle = 0;
             Projectile.friendly = true;
             Projectile.hostile = false;

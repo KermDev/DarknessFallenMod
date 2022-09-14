@@ -45,8 +45,5 @@ namespace DarknessFallenMod.Items.RangeWeapons
             recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 		}
-	
-	
-	
 	}
 }
