@@ -27,7 +27,6 @@ namespace DarknessFallenMod.Items.Pets
 			Projectile.height = 30;
 			Projectile.penetrate = -1;
 			Projectile.netImportant = true;
-			Projectile.timeLeft *= 5;
 			Projectile.friendly = true;
 			Projectile.ignoreWater = true;
 			Projectile.scale = 0.8f;
@@ -37,21 +36,18 @@ namespace DarknessFallenMod.Items.Pets
 		public override void AI()
 		{
 			Player player = Main.player[Projectile.owner];
-
-			// If the player is no longer active (online) - deactivate (remove) the projectile.
+			
 			if (!player.active)
 			{
 				Projectile.active = false;
 				return;
 			}
-
-			// Keep the projectile disappearing as long as the player isn't dead and has the pet buff.
-			if (!player.dead && player.HasBuff(ModContent.BuffType<Buffs.FruityPetBuff>()))
+			
+			if (!player.dead && player.HasBuff(ModContent.BuffType<Buffs.SkelPetBuff>()))
 			{
 				Projectile.timeLeft = 2;
 			}
-			 
-			// Lights up area around it.
+			
 			if (!Main.dedServ)
 			{
 				Lighting.AddLight(Projectile.Center, 1f, 175f/255f, 0f);
