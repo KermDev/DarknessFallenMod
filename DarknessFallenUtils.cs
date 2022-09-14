@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.UI.Chat;
 
 namespace DarknessFallenMod
 {
@@ -65,6 +67,43 @@ namespace DarknessFallenMod
             {
                 position += shootOffset;
             }
+        }
+
+        public enum TooltipLineEffectStyle
+        {
+            Epileptic
+        }
+
+        public static void DrawTooltipLineEffect(DrawableTooltipLine line, int x, int y, TooltipLineEffectStyle effectStyle)
+        {
+            switch (effectStyle)
+            {
+                case TooltipLineEffectStyle.Epileptic:
+                    EchoEffect(line, new Vector2(x, y));
+                    break;
+            }
+        }
+
+        static void EchoEffect(DrawableTooltipLine line, Vector2 position)
+        {
+            float ind = 0.1f;
+            for (int i = 0; i < 10; i++)
+            {
+                //float val = MathF.Abs(MathF.Sin(Main.GameUpdateCount * 0.05f + ind));
+                float val = ind;
+                ChatManager.DrawColorCodedStringWithShadow(
+                    Main.spriteBatch,
+                    line.Font,
+                    line.Text,
+                    position,
+                    new Color(Main.rand.NextFloat(), Main.rand.NextFloat(), Main.rand.NextFloat()) * 0.5f * val,
+                    0,
+                    line.Origin,
+                    Vector2.UnitX * val + Vector2.One
+                    );
+                ind += 0.1f;
+            }
+            
         }
     }
 }

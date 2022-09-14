@@ -2,6 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using DarknessFallenMod.Items.Materials;
+using System.Collections.ObjectModel;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
@@ -43,5 +44,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 		}
-	}
+
+        public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
+        {
+			//if (line.Name == "ItemName") DarknessFallenUtils.DrawTooltipLineEffect(line, line.X, line.Y, DarknessFallenUtils.TooltipLineEffectStyle.Epileptic);
+
+			return base.PreDrawTooltipLine(line, ref yOffset);
+        }
+    }
 }
