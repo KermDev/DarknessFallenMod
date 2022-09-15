@@ -32,5 +32,13 @@ namespace DarknessFallenMod.Items.Armor
             player.GetDamage(DamageClass.Generic) += 0.08f;
             player.moveSpeed += 0.05f;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Materials.MagmiteBar>(), 15)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 }

@@ -44,7 +44,7 @@ namespace DarknessFallenMod.Items.Tools
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient<MagmiteBar>(20);
+            recipe.AddIngredient<MagmiteBar>(12);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }

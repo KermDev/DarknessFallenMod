@@ -72,7 +72,7 @@ namespace DarknessFallenMod.Tiles.Ores
         {
 			progress.Message = DarknessFallenUtils.OreGenerationMessage;
 
-			for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.00002f); i++)
+			for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.00003f); i++)
             {
 				int x = WorldGen.genRand.Next(0, Main.maxTilesX);
 				int y = WorldGen.genRand.Next(Main.UnderworldLayer, Main.maxTilesY);

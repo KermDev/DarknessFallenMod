@@ -10,7 +10,7 @@ namespace DarknessFallenMod.Items.Accessories
         public override void SetStaticDefaults()
         {
             Tooltip.SetDefault(
-                "2 defense" +
+                "3 defense" +
                 "\nGrants immunity to knockback" +
                 "\nGrants immunity to fire blocks" +
                 "\n[c/bb6666:Burns attacking enemies]"
@@ -41,8 +41,8 @@ namespace DarknessFallenMod.Items.Accessories
         {
             CreateRecipe()
                 .AddIngredient(ItemID.CobaltShield)
-                .AddIngredient(ModContent.ItemType<Items.Materials.MagmiteBar>(), 5)
-                .AddTile(TileID.Hellforge)
+                .AddIngredient(ModContent.ItemType<Materials.MagmiteBar>(), 5)
+                .AddTile(TileID.Anvils)
                 .Register();
         }
     }

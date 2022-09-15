@@ -22,7 +22,7 @@ namespace DarknessFallenMod.Items.Tools
             Item.useTime = 15;
             Item.useAnimation = 30;
             Item.autoReuse = true;
-            Item.axe = 110;
+            Item.axe = 22;
             Item.useTurn = true;
 
             Item.DamageType = DamageClass.Melee;
@@ -39,7 +39,7 @@ namespace DarknessFallenMod.Items.Tools
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient<MagmiteBar>(20);
+            recipe.AddIngredient<MagmiteBar>(10);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }
