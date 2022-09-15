@@ -72,7 +72,7 @@ namespace DarknessFallenMod.Tiles.Ores
         {
 			progress.Message = DarknessFallenUtils.OreGenerationMessage;
 
-			for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.00003f); i++)
+			for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.00006f); i++)
             {
 				int x = WorldGen.genRand.Next(0, Main.maxTilesX);
 				int y = WorldGen.genRand.Next(Main.UnderworldLayer, Main.maxTilesY);
@@ -80,7 +80,7 @@ namespace DarknessFallenMod.Tiles.Ores
 				Tile tile = Framing.GetTileSafely(x, y);
 				if (tile.HasTile && tile.TileType == TileID.Ash)
                 {
-					WorldGen.TileRunner(x, y, WorldGen.genRand.Next(6, 7), WorldGen.genRand.Next(1, 2), ModContent.TileType<MagmiteOreTile>());
+					WorldGen.TileRunner(x, y, WorldGen.genRand.Next(8, 10), WorldGen.genRand.Next(1, 2), ModContent.TileType<MagmiteOreTile>());
 				}
             }
 		}
