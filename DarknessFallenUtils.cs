@@ -13,6 +13,8 @@ namespace DarknessFallenMod
 {
     public static class DarknessFallenUtils
     {
+        public const string OreGenerationMessage = "Darkness Fallen Ore Generation";
+
         public static void BeginWithShaderOptions(this SpriteBatch spritebatch)
         {
             spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);

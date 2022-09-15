@@ -10,6 +10,7 @@ using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Graphics.Shaders;
+using System.IO;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
@@ -25,8 +26,10 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override void SetDefaults()
         {
-            Projectile.width = 73;
-            Projectile.height = 73;
+            Projectile.width = 0;
+            Projectile.height = 0;
+
+            Projectile.knockBack = 8;
 
             Projectile.aiStyle = -1;
             Projectile.DamageType = DamageClass.MeleeNoSpeed;
@@ -34,21 +37,24 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.light = 0.4f;
-            Projectile.tileCollide = false;
-            Projectile.timeLeft = 66;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 9999;
             Projectile.ownerHitCheck = true;
             Projectile.penetrate = -1;
             Projectile.MaxUpdates = 3;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
+            
         }
 
-        float goBackAngle = MathHelper.PiOver2 * 1.5f;
+        float goBackAngle = MathHelper.PiOver2 * 1.75f;
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.rotation = Projectile.velocity.ToRotation() - (goBackAngle * Player.direction);
         }
 
         float swingSpeed;
-        const float stopFramePercent = 0.5f;
+        const float stopFramePercent = 0.2f;
         int stopFrames => (int)(Player.itemAnimationMax * stopFramePercent);
         int swingFrames => Player.itemAnimationMax - stopFrames;
         public override void AI()
@@ -65,16 +71,17 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             if (Player.itemAnimation > stopFrames)
             {
                 swingSpeed = MathF.Pow(MathF.Sin(MathHelper.Pi * (Player.itemAnimation - stopFrames) / swingFrames), 2);
-                Projectile.rotation += swingSpeed * Player.direction * 0.14f;
+                Projectile.rotation += swingSpeed * Player.direction * 0.11f;
             }
 
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
 
             /*
             Vector2 rotVector = Projectile.rotation.ToRotationVector2();
-            for (int i = 0; i < 3; i++)
+            Vector2 rotVector90 = rotVector.RotatedBy(-MathHelper.PiOver2);
+            for (int i = 0; i < 2; i++)
             {
-                Dust.NewDust(Projectile.Center + rotVector * Main.rand.NextFloat(40, swordResize * 100 + 100), 1, 1, DustID.TreasureSparkle, Scale: 0.4f);
+                Dust.NewDust(Projectile.Center + rotVector * Main.rand.NextFloat(40, swordResize * 100 + 100) + rotVector90 * 45 * Player.direction, 1, 1, DustID.TerraBlade, Scale: 0.4f);
             }
             */
         }
@@ -87,7 +94,16 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + bladeDir * 30, Projectile.Center + bladeDir * (normalBladeLenght + normalBladeLenght * swordResize));
         }
 
-        VertexStrip vtx = new VertexStrip();
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(swingSpeed);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            swingSpeed = reader.ReadSingle();
+        }
+
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = TextureAssets.Projectile[Type].Value;
@@ -95,31 +111,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Vector2 offset = Vector2.One * swordResize;
             Vector2 positionOffset = Projectile.rotation.ToRotationVector2() * 53 + new Vector2(-10, 0) * Player.direction;
             positionOffset += positionOffset * swordResize;
-
-            /*
-            Main.spriteBatch.End();
-            Main.spriteBatch.BeginWithShaderOptions();
-
-            GameShaders.Misc["MagicMissile"]
-                .UseSaturation(-3f)
-                .UseOpacity(2f)
-                .Apply();
-
-            vtx.PrepareStrip(Projectile.oldPos,
-                Projectile.oldRot,
-                prog => Color.Lerp(Color.Red, Color.LightYellow, Utils.GetLerpValue(0, 1, prog)),
-                prog => 60f,
-                positionOffset - Main.screenPosition,
-                Projectile.oldPos.Length,
-                true
-                );
-
-            vtx.DrawTrail();
-            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.BeginWithDefaultOptions();
-            */
 
             Main.EntitySpriteDraw(
                 tex,

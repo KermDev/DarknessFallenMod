@@ -14,7 +14,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
 		public override void SetDefaults()
 		{
-			Item.damage = 144;
+			Item.damage = 115;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;
@@ -30,6 +30,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.noMelee = true;
 			Item.shoot = ModContent.ProjectileType<HolyGreatswordProjectile>();
 			Item.shootSpeed = 9f;
+			Item.reuseDelay = 0;
 		}
 
 		public override void AddRecipes()
