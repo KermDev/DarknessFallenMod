@@ -79,12 +79,12 @@ namespace DarknessFallenMod
             switch (effectStyle)
             {
                 case TooltipLineEffectStyle.Epileptic:
-                    EchoEffect(line, new Vector2(x, y));
+                    EpilepticEffect(line, new Vector2(x, y));
                     break;
             }
         }
 
-        static void EchoEffect(DrawableTooltipLine line, Vector2 position)
+        static void EpilepticEffect(DrawableTooltipLine line, Vector2 position)
         {
             float ind = 0.1f;
             for (int i = 0; i < 10; i++)
@@ -104,6 +104,44 @@ namespace DarknessFallenMod
                 ind += 0.1f;
             }
             
+        }
+
+        public static void ForeachNPCInRange(Vector2 center, float rangeSquared, Action<NPC> predicate)
+        {
+            Array.ForEach(Main.npc, npc =>
+            {
+                if (npc.DistanceSQ(center) <= rangeSquared)
+                {
+                    predicate.Invoke(npc);
+                }
+            });
+        }
+
+        public static void ForeachNPCInRectangle(Rectangle rectangle, Action<NPC> predicate)
+        {
+            Array.ForEach(Main.npc, npc =>
+            {
+                if (npc.Hitbox.Intersects(rectangle))
+                {
+                    predicate.Invoke(npc);
+                }
+            });
+        }
+
+        public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, float rangeSQ = float.MaxValue)
+        {
+            closest = null;
+            float minDist = rangeSQ;
+            foreach(NPC npc in Main.npc)
+            {
+                if (npc.CanBeChasedBy() && npc.DistanceSQ(center) < minDist)
+                {
+                    closest = npc;
+                }
+            }
+
+            if (closest is null) return false;
+            return true;
         }
     }
 }

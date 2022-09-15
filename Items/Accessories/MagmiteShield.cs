@@ -30,7 +30,7 @@ namespace DarknessFallenMod.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.statDefense += 2;
+            player.statDefense += 3;
             player.fireWalk = true;
             player.noKnockback = true;
 
@@ -54,7 +54,7 @@ namespace DarknessFallenMod.Items.Accessories
         {
             if (MagmiteShieldEquiped)
             {
-                npc.AddBuff(BuffID.OnFire, 180);
+                npc.AddBuff(BuffID.OnFire, 60);
             }
         }
 
