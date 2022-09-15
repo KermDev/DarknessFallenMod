@@ -43,6 +43,14 @@ namespace DarknessFallenMod.Items.Armor
             player.setBonus = "Fireballs shoot out of armor every 15 seconds dealing small damage to enemies" + "\nWhen you crit an enemy an explosion happens setting everything in the explosion on fire";
             player.GetModPlayer<MagmiteSetPlayer>().MagmiteSetEquipped = true;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Materials.MagmiteBar>(), 15)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 
     public class MagmiteSetPlayer : ModPlayer
