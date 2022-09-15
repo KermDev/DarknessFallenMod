@@ -44,11 +44,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-			Vector2 shootOffset = new Vector2(50, 0).RotatedBy(velocity.ToRotation());
-            if (Collision.CanHit(position, 5, 5, position + shootOffset, 5, 5))
-            {
-				position += shootOffset;
-            }
+			DarknessFallenUtils.OffsetShootPos(ref position, velocity, Vector2.UnitX * 50);
         }
 
         public override void AddRecipes()

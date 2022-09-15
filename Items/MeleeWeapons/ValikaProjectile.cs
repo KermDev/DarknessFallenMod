@@ -21,8 +21,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override void SetDefaults()
         {
             Projectile.DamageType = DamageClass.Melee;
-            Projectile.width = 80;
-            Projectile.height = 80;
+            Projectile.width = 64;
+            Projectile.height = 64;
             Projectile.aiStyle = 0;
             Projectile.friendly = true;
             Projectile.hostile = false;
@@ -31,6 +31,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.light = 0.50f;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = false;
+
+            Projectile.localNPCHitCooldown = 6;
+            Projectile.usesLocalNPCImmunity = true;
         }
 
         public override Color? GetAlpha(Color lightColor)
@@ -51,8 +54,10 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             }
         }
 
+        
         public override void AI()
         {
+            /*
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.spriteDirection -= Projectile.direction;
 
@@ -79,6 +84,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             // If found, change the velocity of the projectile and turn it in the direction of the target
             // Use the SafeNormalize extension method to avoid NaNs returned by Vector2.Normalize when the vector is zero 
             Projectile.velocity = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero) * projSpeed;
+            */
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
 
@@ -118,5 +124,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
             return closestNPC;
         }
+        
     }
 }

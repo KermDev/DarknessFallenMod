@@ -20,8 +20,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         // You can check most of Fields and Properties here https://github.com/tModLoader/tModLoader/wiki/Projectile-Class-Documentation
         public override void SetDefaults()
         {
-            Projectile.width = 48; // The width of projectile hitbox
-            Projectile.height = 48; // The height of projectile hitbox
+            Projectile.width = 27; // The width of projectile hitbox
+            Projectile.height = 27; // The height of projectile hitbox
             Projectile.penetrate = 10;
             Projectile.aiStyle = 0; // The ai style of the projectile (0 means custom AI). For more please reference the source code of Terraria
             Projectile.DamageType = DamageClass.Melee; // What type of damage does this projectile affect?

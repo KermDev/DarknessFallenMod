@@ -40,7 +40,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 
 
 
-                    public override void AddRecipes()
+        public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.SoulofFright, 20);

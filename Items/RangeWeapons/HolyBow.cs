@@ -30,7 +30,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
 			Item.UseSound = SoundID.Item5;
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<HolyBowProjectile>();
-			Item.shootSpeed = 48f;
+			Item.shootSpeed = 12f;
 		}
 
 		public override Vector2? HoldoutOffset()
@@ -38,7 +38,12 @@ namespace DarknessFallenMod.Items.RangeWeapons
 			return new Vector2(-2f, 0);
 		}
 
-		public override void AddRecipes()
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+			//DarknessFallenUtils.OffsetShootPos(ref position, velocity, Vector2.UnitX * 30);
+        }
+
+        public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
 			recipe.AddIngredient(ItemID.SoulofLight, 30);
@@ -46,8 +51,5 @@ namespace DarknessFallenMod.Items.RangeWeapons
             recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 		}
-	
-	
-	
 	}
 }

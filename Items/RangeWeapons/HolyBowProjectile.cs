@@ -22,8 +22,8 @@ namespace DarknessFallenMod.Items.RangeWeapons
         // You can check most of Fields and Properties here https://github.com/tModLoader/tModLoader/wiki/Projectile-Class-Documentation
         public override void SetDefaults()
         {
-            Projectile.width = 30; // The width of projectile hitbox
-            Projectile.height = 10; // The height of projectile hitbox
+            Projectile.width = 20; // The width of projectile hitbox
+            Projectile.height = 20; // The height of projectile hitbox
 
             Projectile.aiStyle = 0; // The ai style of the projectile (0 means custom AI). For more please reference the source code of Terraria
             Projectile.DamageType = DamageClass.Ranged; // What type of damage does this projectile affect?
@@ -33,16 +33,15 @@ namespace DarknessFallenMod.Items.RangeWeapons
             Projectile.light = 0.4f; // How much light emit around the projectile
             Projectile.tileCollide = true; // Can the projectile collide with tiles?
             Projectile.timeLeft = 600; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+            Projectile.extraUpdates = 4;
         }
-
-        // Custom AI
+        
         public override void AI()
         {
             AnimateProjectile();
 
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
-
 
         public void AnimateProjectile() // Call this every frame, for example in the AI method.
         {
@@ -54,6 +53,13 @@ namespace DarknessFallenMod.Items.RangeWeapons
                 Projectile.frameCounter = 0;
             }
         }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Projectile.DrawProjectileInHBCenter(lightColor, true, Vector2.UnitX * 5);
+            return false;
+        }
+
         public override void Kill(int timeLeft) //this is caled whenever the projectile expires (only once);
         {
             for (int i = 0; i <= 5; i++) //repeats 50 times;
