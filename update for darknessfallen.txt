@@ -13,3 +13,4 @@
 - both beetles have more defense 
 - inferno rod projectiles now shoot out of the rod instead of the player
 - blue beetle now speeds up when close to player as a unique ability 
+- fixed pets and accessories

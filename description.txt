@@ -6,9 +6,9 @@ at the moment we have :
 
 - 17 weapons
 - 2 pets
-- 10 enemies
-- 1 potion
-- 35 items
+- 11 enemies
+- 2 potions
+- 49 items
 
 planned :
 more melee weapons
