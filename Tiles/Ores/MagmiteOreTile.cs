@@ -33,8 +33,6 @@ namespace DarknessFallenMod.Tiles.Ores
 			HitSound = SoundID.Tink;
 			MineResist = 3f;
 			MinPick = 100;
-
-			
 		}
 
         public override void FloorVisuals(Player player)

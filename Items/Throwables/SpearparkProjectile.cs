@@ -16,6 +16,11 @@ namespace DarknessFallenMod.Items.Throwables
     {
         Asset<Texture2D> textureAsset;
 
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 2;
+        }
+
         public override void SetDefaults()
         {
             textureAsset = ModContent.Request<Texture2D>(Texture);
@@ -36,7 +41,10 @@ namespace DarknessFallenMod.Items.Throwables
         int foldDir;
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            SoundEngine.PlaySound(SoundID.Item51, Projectile.Center);
+            Projectile.frame = 1;
+
+            //SoundEngine.PlaySound(SoundID.Item51, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Research, Projectile.Center);
 
             for (int i = 0; i < 10; i++) Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Bone);
 
@@ -82,13 +90,14 @@ namespace DarknessFallenMod.Items.Throwables
                     Vector2 rotVectorNorm = Projectile.rotation.ToRotationVector2();
                     rotVectorNorm.Normalize();
 
-                    Vector2 lineEnd = Projectile.Center - rotVectorNorm * 65;
+                    Vector2 lineEnd = Projectile.Center - rotVectorNorm * 97;
 
                     foreach (Player player in Main.player)
                     {
                         if (player.controlJump && Collision.CheckAABBvLineCollision(player.Hitbox.TopLeft(), player.Hitbox.Size(), Projectile.Center, lineEnd))
                         {
                             SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing, Projectile.Center);
+                            SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap, Projectile.Center);
 
                             int goreAmount = Main.rand.Next(2, 3);
                             for (int i = 0; i < goreAmount; i++) Gore.NewGore(
@@ -133,25 +142,7 @@ namespace DarknessFallenMod.Items.Throwables
         float drawAlpha = 1;
         public override bool PreDraw(ref Color lightColor)
         {
-            /*
-            Texture2D texture = textureAsset.Value;
-
-            DrawData data = new(
-                texture,
-                Projectile.Center - Main.screenPosition + Projectile.rotation.ToRotationVector2() * 10,
-                null,
-                lightColor * drawAlpha,
-                Projectile.rotation,
-                new Vector2(texture.Width, texture.Height / 2),
-                Projectile.scale,
-                SpriteEffects.None,
-                0
-                );
-
-            Main.EntitySpriteDraw(data);
-            */
-
-            Projectile.DrawProjectileInHBCenter(lightColor * drawAlpha, offset: Vector2.UnitX * 10);
+            Projectile.DrawProjectileInHBCenter(lightColor * drawAlpha, true, offset: Vector2.UnitX * 10);
 
             return false;
         }
