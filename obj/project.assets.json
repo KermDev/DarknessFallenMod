@@ -31,23 +31,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\adamd\\.nuget\\packages\\": {},
+    "C:\\Users\\ooba1\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\adamd\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
+      "projectUniqueName": "C:\\Users\\ooba1\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
       "projectName": "DarknessFallenMod",
-      "projectPath": "C:\\Users\\adamd\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
-      "packagesPath": "C:\\Users\\adamd\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\adamd\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\obj\\",
+      "projectPath": "C:\\Users\\ooba1\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
+      "packagesPath": "C:\\Users\\ooba1\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ooba1\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\adamd\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ooba1\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -94,7 +94,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
