@@ -31,24 +31,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\adamd\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\lucas\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\adamd\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
+      "projectUniqueName": "C:\\Users\\lucas\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
       "projectName": "DarknessFallenMod",
-      "projectPath": "C:\\Users\\adamd\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
-      "packagesPath": "C:\\Users\\adamd\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\adamd\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\obj\\",
+      "projectPath": "C:\\Users\\lucas\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
+      "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\lucas\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\adamd\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -85,7 +80,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -94,7 +90,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

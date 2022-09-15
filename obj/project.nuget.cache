@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "OC44PzIMzw8yD2/p5JxN+Zxxm++qVdF8eSgaVs+y6meCcFh/04BkLXKE+kOT00hH4xk3ellHfFrvqcnZnJ86Ug==",
+  "dgSpecHash": "VNkBfvJJTXdLHlD4e3cZgxVzJ4oXD/NlrRzNhlmqVxZmkjdzbytodLvaUfSHXUjtNQ9slFFgnD7LSX3qC4TEpw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\adamd\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
+  "projectFilePath": "C:\\Users\\lucas\\OneDrive\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\DarknessFallenMod\\DarknessFallenMod.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\adamd\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
+    "C:\\Users\\lucas\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
   ],
   "logs": []
 }
