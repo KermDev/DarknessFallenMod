@@ -16,7 +16,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
 		public override void SetDefaults()
 		{
-			Item.damage = 657;
+			Item.damage = 340;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 60;
 			Item.height = 60;

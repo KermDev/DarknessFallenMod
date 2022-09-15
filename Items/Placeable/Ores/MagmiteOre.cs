@@ -22,6 +22,7 @@ namespace DarknessFallenMod.Items.Placeable.Ores
 			Item.width = 15;
 			Item.height = 15;
 			Item.value = Item.buyPrice(silver: 16);
+			Item.rare = ItemRarityID.Red;
 		}
 
 		public override bool? CanBurnInLava() => false;

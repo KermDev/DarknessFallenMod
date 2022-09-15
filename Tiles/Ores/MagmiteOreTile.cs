@@ -26,7 +26,7 @@ namespace DarknessFallenMod.Tiles.Ores
 
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Magmite Ore");
-			AddMapEntry(new Color(152, 171, 198), name);
+			AddMapEntry(new Color(200, 40, 40), name);
 
 			DustType = 25;
 			ItemDrop = ModContent.ItemType<Items.Placeable.Ores.MagmiteOre>();
