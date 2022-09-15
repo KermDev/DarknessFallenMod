@@ -45,10 +45,8 @@ namespace DarknessFallenMod.Items.Tools
         {
             Recipe recipe = CreateRecipe();
             recipe.AddIngredient<MagmiteBar>(20);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }
-
-
     }
 }

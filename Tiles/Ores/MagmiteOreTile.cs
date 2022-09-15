@@ -23,6 +23,7 @@ namespace DarknessFallenMod.Tiles.Ores
 			Main.tileSolid[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLavaDeath[Type] = false;
+			Main.tileLighted[Type] = true;
 
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Magmite Ore");
@@ -38,6 +39,13 @@ namespace DarknessFallenMod.Tiles.Ores
         public override void FloorVisuals(Player player)
         {
 			player.AddBuff(BuffID.Burning, 10);
+        }
+
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+			r = 0.2f;
+			g = 0.1f;
+			b = 0f;
         }
     }
 
