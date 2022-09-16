@@ -44,9 +44,11 @@ namespace DarknessFallenMod.NPCs.Bosses
 		}
         #endregion
 
+		public int Phase => NPC.life < NPC.lifeMax * 0.5f ? 2 : 1;
+
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[Type] = 4;
+            Main.npcFrameCount[Type] = 8;
 
 			NPCID.Sets.BossBestiaryPriority.Add(Type);
 		}
@@ -76,7 +78,7 @@ namespace DarknessFallenMod.NPCs.Bosses
         {
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
 
-            if (NPC.life < NPC.lifeMax * 0.5f)
+            if (Phase == 2)
             {
 				if (laserTimer <= 0)
                 {
@@ -92,7 +94,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 						NPC.GetSource_FromAI(),
 						laserPos + dir * 45,
 						dir.RotatedByRandom(MathHelper.PiOver4 * 0.1f) * speed,
-						Main.rand.NextFromList(new int[] { ProjectileID.Fireball, ProjectileID.DemonScythe, ProjectileID.DD2LightningBugZap, ProjectileID.EnchantedBeam }),
+						Main.rand.NextFromList(new int[] { ProjectileID.Fireball, ProjectileID.DemonScythe, ProjectileID.EnchantedBeam }),
 						20,
 						1
 						);
@@ -129,10 +131,10 @@ namespace DarknessFallenMod.NPCs.Bosses
             
 			if (NPC.velocity.Y != 0)
             {
-				NPC.frame.Y = frameHeight * 2;
+				NPC.frame.Y = (Phase == 1 ? 2 : 6) * frameHeight;
             }
 
-			if (NPC.frame.Y > maxFrame * frameHeight) NPC.frame.Y = 0;
+			if (NPC.frame.Y > (Phase == 1 ? 3 : maxFrame) * frameHeight) NPC.frame.Y = (Phase == 1 ? 0 : 4) * frameHeight;
         }
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
