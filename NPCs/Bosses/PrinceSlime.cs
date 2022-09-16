@@ -11,6 +11,7 @@ using Terraria;
 using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -20,6 +21,7 @@ namespace DarknessFallenMod.NPCs.Bosses
     [AutoloadBossHead]
     public class PrinceSlime : ModNPC
     {
+        #region KING SLIME SPAWN PREVENTION IL EDIT, DONT TOUCH IT WILL BREAK
         public override void Load()
         {
 			IL.Terraria.NPC.DoDeathEvents_AdvanceSlimeRain += ILPreventCountAdvance;
@@ -40,11 +42,14 @@ namespace DarknessFallenMod.NPCs.Bosses
 				return 1;
 			});
 		}
+        #endregion
 
-		public override void SetStaticDefaults()
+        public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 4;
-        }
+
+			NPCID.Sets.BossBestiaryPriority.Add(Type);
+		}
 
         public override void SetDefaults()
         {
@@ -65,7 +70,50 @@ namespace DarknessFallenMod.NPCs.Bosses
 			NPC.BossBar = ModContent.GetInstance<PrinceSlimeBossBar>();
 		}
 
-		const int animationSpeed = 10;
+		int laserTimer = 180;
+		Vector2 laserPos => NPC.Center - Vector2.UnitY * NPC.scale * 12;
+		public override void AI()
+        {
+			if (Main.netMode == NetmodeID.MultiplayerClient) return;
+
+            if (NPC.life < NPC.lifeMax * 0.5f)
+            {
+				if (laserTimer <= 0)
+                {
+					laserTimer = Main.rand.Next(60, 280);
+					
+					Vector2 dir = laserPos.DirectionTo(Main.player[NPC.target].Center);
+
+					float speed = 7;
+
+					Lighting.AddLight(laserPos, TorchID.Red);
+
+					int proj = Projectile.NewProjectile(
+						NPC.GetSource_FromAI(),
+						laserPos + dir * 45,
+						dir.RotatedByRandom(MathHelper.PiOver4 * 0.1f) * speed,
+						Main.rand.NextFromList(new int[] { ProjectileID.Fireball, ProjectileID.DemonScythe, ProjectileID.DD2LightningBugZap, ProjectileID.EnchantedBeam }),
+						20,
+						1
+						);
+
+					Main.projectile[proj].hostile = true;
+                }
+				else if (laserTimer < 60)
+                {
+					foreach (Vector2 pos in laserPos.GetCircularPositions(laserTimer * laserTimer, 16))
+                    {
+						// 21, 75, 304, 301
+						Dust.NewDust(pos, 0, 0, DustID.TreasureSparkle, newColor: Color.Red, Scale: 0.5f);
+					}
+					
+                }
+
+				laserTimer--;
+			}
+        }
+
+        const int animationSpeed = 10;
         public override void FindFrame(int frameHeight)
         {
 			NPC.frameCounter++;
@@ -111,6 +159,12 @@ namespace DarknessFallenMod.NPCs.Bosses
         public override void OnKill()
         {
 			NPC.SetEventFlagCleared(ref Systems.DownedBossSystem.downedPrinceSlime, -1);
+		}
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.Slimescaliber>(), 5));
+			npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 2, maximumDropped: 10));
 		}
 
         public override void OnSpawn(IEntitySource source)

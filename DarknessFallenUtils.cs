@@ -143,5 +143,27 @@ namespace DarknessFallenMod
             if (closest is null) return false;
             return true;
         }
+
+        public static Vector2[] GetCircularPositions(this Vector2 center, float radius, int amount = 8, float rotation = 0)
+        {
+            if (amount < 2) return Array.Empty<Vector2>();
+
+            Vector2[] postitions = new Vector2[amount];
+
+            float angle = MathHelper.Pi * 2f / amount;
+            angle += rotation;
+
+            for (int i = 0; i < amount; i++)
+            {
+                Vector2 position = new Vector2(MathF.Cos(angle * i), MathF.Sin(angle * i));
+                position *= radius;
+                position += center;
+
+                postitions[i] = position;
+            }
+
+
+            return postitions;
+        }
     }
 }
