@@ -31,7 +31,18 @@ namespace DarknessFallenMod.Items.Vanity
 
         public override void EquipFrameEffects(Player player, EquipType type)
         {
-			if (Main.rand.NextBool(15)) Dust.NewDust(player.position, player.width, 1, DustID.Crimslime, newColor: Color.Green);
+            if (Main.rand.NextBool(20))
+            {
+                Dust dust = Dust.NewDustDirect(player.position, player.width, 3, 4, Alpha: 100, newColor: Color.Green * 0.4f, Scale: 1.4f);
+                if (Main.rand.NextBool(2))
+                    dust.alpha += 25;
+                if (Main.rand.NextBool(2))
+                    dust.alpha += 25;
+                dust.noLight = true;
+                dust.velocity *= 0.2f;
+                dust.velocity.Y += 0.2f;
+                dust.velocity += player.velocity;
+            }
         }
     }
 }

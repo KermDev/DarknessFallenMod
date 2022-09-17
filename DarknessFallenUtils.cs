@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 using Terraria.UI.Chat;
 
 namespace DarknessFallenMod
@@ -179,6 +180,18 @@ namespace DarknessFallenMod
 
 
             return postitions;
+        }
+
+        public static void SetTrophy(this ModTile modTile)
+        {
+            Main.tileFrameImportant[modTile.Type] = true;
+            Main.tileLavaDeath[modTile.Type] = true;
+
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
+            TileObjectData.addTile(modTile.Type);
+
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileID.Sets.FramesOnKillWall[modTile.Type] = true;
         }
     }
 }

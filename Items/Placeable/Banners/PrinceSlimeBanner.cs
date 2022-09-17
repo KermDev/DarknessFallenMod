@@ -25,7 +25,7 @@ namespace DarknessFallenMod.Items.Placeable.Banners
 			Item.autoReuse = true;
 			Item.maxStack = 999;
 			Item.consumable = true;
-			Item.createTile = ModContent.TileType<Tiles.Banners.NatureSlimeBannerTile>();
+			Item.createTile = ModContent.TileType<Tiles.Banners.PrinceSlimeBannerTile>();
 			Item.width = 10;
 			Item.height = 24;
 			Item.rare = ItemRarityID.Green;

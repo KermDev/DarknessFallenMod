@@ -14,6 +14,11 @@ namespace DarknessFallenMod.Items.SummonWeapons
 {
     public class CultSlime : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            Tooltip.SetDefault("[c/00aa22:Summons the slime cult to fight for you]");
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 12;

@@ -104,7 +104,7 @@ namespace DarknessFallenMod.NPCs.Bosses
                 }
 				else if (laserTimer < 60)
                 {
-					foreach (Vector2 pos in laserPos.GetCircularPositions(laserTimer * laserTimer, 16))
+					foreach (Vector2 pos in laserPos.GetCircularPositions(laserTimer * laserTimer, 8, laserTimer * 0.01f))
                     {
 						// 21, 75, 304, 301
 						Dust.NewDust(pos, 0, 0, DustID.TreasureSparkle, newColor: Color.Red, Scale: 0.5f);
@@ -148,7 +148,6 @@ namespace DarknessFallenMod.NPCs.Bosses
 		public override void HitEffect(int hitDirection, double damage)
         {
 			if (Main.netMode == NetmodeID.Server) return;
-			
 
 			Main.NewText(Systems.DownedBossSystem.downedPrinceSlime);
 
@@ -172,6 +171,15 @@ namespace DarknessFallenMod.NPCs.Bosses
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.SummonWeapons.CultSlime>(), 5));
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Accessories.BottleOSlime>(), 3));
 
+			// vanity set
+			npcLoot.Add(ItemDropRule.OneFromOptions(3,
+				ModContent.ItemType<Items.Vanity.SlimeGuardHelmet>(),
+				ModContent.ItemType<Items.Vanity.SlimeGuardChestplate>(),
+				ModContent.ItemType<Items.Vanity.SlimeGuardLeggings>()));
+
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Placeable.Furniture.PrinceSlimeTrophy>(), 10));
+			npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.PrinceSlimeRelic>()));
+
 			npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 2, maximumDropped: 10));
 		}
 
@@ -182,9 +190,9 @@ namespace DarknessFallenMod.NPCs.Bosses
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-			if (Main.slimeRain && !NPC.AnyNPCs(Type) && !NPC.AnyNPCs(NPCID.KingSlime))
+			if (Main.slimeRainTime > 0 && !NPC.AnyNPCs(Type) && !NPC.AnyNPCs(NPCID.KingSlime))
             {
-				return 0.3f;
+				return 0.5f;
             }
 			return 0;
         }
