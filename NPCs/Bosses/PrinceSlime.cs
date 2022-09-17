@@ -68,7 +68,8 @@ namespace DarknessFallenMod.NPCs.Bosses
 			NPC.boss = true;
 			NPC.npcSlots = 20;
 			NPC.aiStyle = NPCAIStyleID.KingSlime;
-			
+			AIType = NPCAIStyleID.KingSlime;
+
 			NPC.BossBar = ModContent.GetInstance<PrinceSlimeBossBar>();
 		}
 
@@ -161,11 +162,16 @@ namespace DarknessFallenMod.NPCs.Bosses
         public override void OnKill()
         {
 			NPC.SetEventFlagCleared(ref Systems.DownedBossSystem.downedPrinceSlime, -1);
+
+			if (NPC.killCount[Type] + 1 % 10 == 0) Item.NewItem(NPC.GetSource_Death(), NPC.Hitbox, 2);
 		}
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.Slimescaliber>(), 5));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.SummonWeapons.CultSlime>(), 5));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Accessories.BottleOSlime>(), 3));
+
 			npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 2, maximumDropped: 10));
 		}
 
@@ -178,7 +184,7 @@ namespace DarknessFallenMod.NPCs.Bosses
         {
 			if (Main.slimeRain && !NPC.AnyNPCs(Type) && !NPC.AnyNPCs(NPCID.KingSlime))
             {
-				return 0.5f;
+				return 0.3f;
             }
 			return 0;
         }
@@ -191,10 +197,4 @@ namespace DarknessFallenMod.NPCs.Bosses
 			return ModContent.Request<Texture2D>("DarknessFallenMod/NPCs/Bosses/PrinceSlime_Head_Boss");
 		}
 	}
-
-    /*public class KingSlimeILEdit : ILoadable
-    {
-        
-		
-    }*/
 }

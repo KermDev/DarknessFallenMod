@@ -30,7 +30,7 @@ namespace DarknessFallenMod.Items.Armor
         public override void UpdateEquip(Player player)
         {
             player.GetDamage(DamageClass.Generic) += 0.08f;
-            player.moveSpeed += 0.05f;
+            player.moveSpeed *= 1.05f;
         }
 
         public override void AddRecipes()
