@@ -4,22 +4,20 @@ darkness fallen is a mod that will hopefully become a future content mod, we are
 
 at the moment we have :
 
-- 17 weapons
-- 2 pets
+- 1 ore
 - 11 enemies
+- 2 pets
+- 19 weapons
 - 2 potions
-- 49 items
+- 60 items
 
-planned :
-more melee weapons
-more ranged weapons
-more magic weapons
-more potions
-more enemies
-armor sets
-tools
-more accessories 
-Bosses ( coming at a much later date )
+planned : 
+bosses
+biomes
+ores
+enemies
+weapons
+pretty much everything...
 
 
 discord : https://discord.gg/nQERDjxqtp
