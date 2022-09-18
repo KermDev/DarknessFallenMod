@@ -193,5 +193,12 @@ namespace DarknessFallenMod
             TileID.Sets.DisableSmartCursor[modTile.Type] = true;
             TileID.Sets.FramesOnKillWall[modTile.Type] = true;
         }
+
+        public class Shaker
+        {
+            float str;
+            float deno;
+            
+        }
     }
 }

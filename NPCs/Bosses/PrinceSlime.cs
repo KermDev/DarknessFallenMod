@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Terraria;
+using Terraria.Audio;
 using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -62,60 +63,113 @@ namespace DarknessFallenMod.NPCs.Bosses
 			NPC.lifeMax = 1000;
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath1;
-			NPC.knockBackResist = 0f;
+			NPC.knockBackResist = -200f;
 			NPC.value = Item.buyPrice(gold: 5);
 			NPC.SpawnWithHigherTime(30);
 			NPC.boss = true;
 			NPC.npcSlots = 20;
-			NPC.aiStyle = NPCAIStyleID.KingSlime;
-			AIType = NPCAIStyleID.KingSlime;
+			NPC.aiStyle = -1;
 
 			NPC.BossBar = ModContent.GetInstance<PrinceSlimeBossBar>();
 		}
 
-		int laserTimer = 180;
+        float laserTimer = 61;
+		ref float aiTimer => ref NPC.ai[0];
 		Vector2 laserPos => NPC.Center - Vector2.UnitY * NPC.scale * 12;
+		bool fell;
 		public override void AI()
-        {
-			if (Main.netMode == NetmodeID.MultiplayerClient) return;
-
-            if (Phase == 2)
-            {
-				if (laserTimer <= 0)
-                {
-					laserTimer = Main.rand.Next(60, 280);
-					
-					Vector2 dir = laserPos.DirectionTo(Main.player[NPC.target].Center);
-
-					float speed = 7;
-
-					Lighting.AddLight(laserPos, TorchID.Red);
-
-					int proj = Projectile.NewProjectile(
-						NPC.GetSource_FromAI(),
-						laserPos + dir * 45,
-						dir.RotatedByRandom(MathHelper.PiOver4 * 0.1f) * speed,
-						Main.rand.NextFromList(new int[] { ProjectileID.Fireball, ProjectileID.DemonScythe, ProjectileID.EnchantedBeam }),
-						20,
-						1
-						);
-
-					Main.projectile[proj].hostile = true;
-                }
-				else if (laserTimer < 60)
-                {
-					foreach (Vector2 pos in laserPos.GetCircularPositions(laserTimer * laserTimer, 8, laserTimer * 0.01f))
-                    {
-						// 21, 75, 304, 301
-						Dust.NewDust(pos, 0, 0, DustID.TreasureSparkle, newColor: Color.Red, Scale: 0.5f);
-					}
-					
-                }
-
-				laserTimer--;
+		{
+			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
+			{
+				NPC.TargetClosest();
 			}
-        }
 
+			if (!fell)
+			{
+				if (NPC.velocity.Y == 0)
+				{
+					for (int i = 0; i < 25; i++)
+					{
+						Dust.NewDust(NPC.Hitbox.BottomLeft(), NPC.width, 2, DustID.TintableDust, SpeedY: -5, SpeedX: Main.rand.Next(-5, 5), Scale: Main.rand.NextFloat(1f, 2.5f), newColor: new Color(0, 255, 80), Alpha: 170);
+					}
+
+					foreach (Player player in Main.player)
+					{
+						if (player.DistanceSQ(NPC.Center) < 5760000)
+						{
+							player.GetModPlayer<DarknessFallenPlayer>().ShakeScreen(7, 0.94f);
+						}
+					}
+
+					SoundEngine.PlaySound(SoundID.Item167, NPC.Center);
+
+					fell = true;
+				}
+
+				return;
+			}
+
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+				Player target = Main.player[NPC.target];
+
+				Vector2 dirToPlayer = NPC.Center.DirectionTo(target.Center);
+				int xdir = MathF.Sign(dirToPlayer.X);
+
+				if (NPC.velocity.Y == 0 && aiTimer >= 90 && laserTimer > 60)
+				{
+					NPC.velocity.Y += Main.rand.Next(-10, -5);
+					NPC.velocity.X += Math.Clamp(NPC.DistanceSQ(target.Center) * 0.0003f, 0.1f, 4f) * xdir;
+					aiTimer = 0;
+				}
+
+				if (NPC.collideY) NPC.velocity.X *= 0.92f;
+				if (NPC.collideX && NPC.velocity.Y != 0) NPC.velocity.X += xdir * 2;
+
+				if (Main.rand.NextBool(360)) NPC.NewNPCDirect(NPC.GetSource_FromAI(), (int)target.Center.X + Main.rand.Next(-300, 300), (int)target.Center.Y - 1200, ModContent.NPCType<PrinceSlimeMinion>()).netUpdate = true;
+
+				if (NPC.velocity.Y == 0) aiTimer++;
+
+				if (Phase == 2)
+				{
+					if (laserTimer <= 0)
+					{
+						laserTimer = Main.rand.Next(90, 200);
+
+						Vector2 dir = laserPos.DirectionTo(target.Center);
+
+						float speed = 7;
+
+						Lighting.AddLight(laserPos, TorchID.Red);
+
+						int proj = Projectile.NewProjectile(
+							NPC.GetSource_FromAI(),
+							laserPos + dir * 45,
+							dir.RotatedByRandom(MathHelper.PiOver4 * 0.1f) * speed,
+							Main.rand.NextFromList(new int[] { ProjectileID.Fireball, ProjectileID.DemonScythe, ProjectileID.EnchantedBeam }),
+							20,
+							1
+							);
+
+						Main.projectile[proj].hostile = true;
+					}
+					else if (laserTimer < 60)
+					{
+						foreach (Vector2 pos in laserPos.GetCircularPositions(laserTimer * laserTimer, 8, laserTimer * 0.01f))
+						{
+							// 21, 75, 304, 301
+							Dust.NewDust(pos, 0, 0, DustID.TreasureSparkle, newColor: Color.Red, Scale: 0.5f);
+						}
+
+					}
+
+					laserTimer--;
+				}
+
+				NPC.netUpdate = true;
+			}
+		}
+		
         const int animationSpeed = 10;
         public override void FindFrame(int frameHeight)
         {
@@ -127,15 +181,15 @@ namespace DarknessFallenMod.NPCs.Bosses
             {
 				NPC.frameCounter = 0;
 
-				NPC.frame.Y += frameHeight;
+				NPC.frame.Y += 108;
             }
             
 			if (NPC.velocity.Y != 0)
             {
-				NPC.frame.Y = (Phase == 1 ? 2 : 6) * frameHeight;
+				NPC.frame.Y = (Phase == 1 ? 2 : 6) * 109;
             }
 
-			if (NPC.frame.Y > (Phase == 1 ? 3 : maxFrame) * frameHeight) NPC.frame.Y = (Phase == 1 ? 0 : 4) * frameHeight;
+			if (NPC.frame.Y > (Phase == 1 ? 3 : maxFrame) * 108) NPC.frame.Y = (Phase == 1 ? 0 : 4) * 108;
         }
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
@@ -148,8 +202,6 @@ namespace DarknessFallenMod.NPCs.Bosses
 		public override void HitEffect(int hitDirection, double damage)
         {
 			if (Main.netMode == NetmodeID.Server) return;
-
-			Main.NewText(Systems.DownedBossSystem.downedPrinceSlime);
 
             if (NPC.life <= 0)
             {
@@ -171,6 +223,8 @@ namespace DarknessFallenMod.NPCs.Bosses
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.SummonWeapons.CultSlime>(), 5));
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Accessories.BottleOSlime>(), 3));
 
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MagicWeapons.SlimyRain>(), 100));
+
 			// vanity set
 			npcLoot.Add(ItemDropRule.OneFromOptions(3,
 				ModContent.ItemType<Items.Vanity.SlimeGuardHelmet>(),
@@ -186,13 +240,18 @@ namespace DarknessFallenMod.NPCs.Bosses
         public override void OnSpawn(IEntitySource source)
         {
 			ChatHelper.BroadcastChatMessage(Terraria.Localization.NetworkText.FromLiteral("His slimy excellency has arrived"), Color.Green);
-        }
+
+			NPC.TargetClosest();
+			NPC.Center = Main.player[NPC.target].Center;
+			NPC.position.Y -= 1200;
+			NPC.velocity.Y = 12;
+		}
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-			if (Main.slimeRainTime > 0 && !NPC.AnyNPCs(Type) && !NPC.AnyNPCs(NPCID.KingSlime))
+			if (Main.slimeRain && !NPC.AnyNPCs(NPC.type) && !NPC.AnyNPCs(NPCID.KingSlime))
             {
-				return 0.5f;
+				return 0.3f;
             }
 			return 0;
         }
