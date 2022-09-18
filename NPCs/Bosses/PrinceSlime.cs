@@ -217,7 +217,7 @@ namespace DarknessFallenMod.NPCs.Bosses
         {
 			NPC.SetEventFlagCleared(ref Systems.DownedBossSystem.downedPrinceSlime, -1);
 
-			if (NPC.killCount[Type] % 10 == 0 && !(NPC.killCount[Type] % 50 == 0)) Item.NewItem(NPC.GetSource_Death(), NPC.Hitbox, ModContent.ItemType<Items.Placeable.Banners.PrinceSlimeBanner>());
+			NPC.DropCustomBannerKillCount(50, ModContent.ItemType<Items.Placeable.Banners.PrinceSlimeBanner>());
 		}
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
