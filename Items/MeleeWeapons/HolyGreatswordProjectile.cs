@@ -85,6 +85,10 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             }
             */
         }
+        public override bool? CanCutTiles()
+        {
+            return true;
+        }
 
         float swordResize => swingSpeed * 0.6f;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 using Terraria.UI.Chat;
 
 namespace DarknessFallenMod
@@ -130,18 +131,74 @@ namespace DarknessFallenMod
 
         public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, float rangeSQ = float.MaxValue)
         {
+            return TryGetClosestEnemyNPC(center, out closest, npc => true, rangeSQ);
+        }
+
+        public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, Func<NPC, bool> condition, float rangeSQ = float.MaxValue)
+        {
             closest = null;
+            NPC closestCondition = null;
             float minDist = rangeSQ;
-            foreach(NPC npc in Main.npc)
+            foreach (NPC npc in Main.npc)
             {
                 if (npc.CanBeChasedBy() && npc.DistanceSQ(center) < minDist)
                 {
-                    closest = npc;
+                    if (condition(npc))
+                    {
+                        closestCondition = npc;
+                    }
+                    else
+                    {
+                        closest = npc;
+                    }
                 }
             }
 
+            closest = closestCondition ?? closest;
+
             if (closest is null) return false;
             return true;
+        }
+
+        public static Vector2[] GetCircularPositions(this Vector2 center, float radius, int amount = 8, float rotation = 0)
+        {
+            if (amount < 2) return Array.Empty<Vector2>();
+
+            Vector2[] postitions = new Vector2[amount];
+
+            float angle = MathHelper.Pi * 2f / amount;
+            angle += rotation;
+
+            for (int i = 0; i < amount; i++)
+            {
+                Vector2 position = new Vector2(MathF.Cos(angle * i), MathF.Sin(angle * i));
+                position *= radius;
+                position += center;
+
+                postitions[i] = position;
+            }
+
+
+            return postitions;
+        }
+
+        public static void SetTrophy(this ModTile modTile)
+        {
+            Main.tileFrameImportant[modTile.Type] = true;
+            Main.tileLavaDeath[modTile.Type] = true;
+
+            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
+            TileObjectData.addTile(modTile.Type);
+
+            TileID.Sets.DisableSmartCursor[modTile.Type] = true;
+            TileID.Sets.FramesOnKillWall[modTile.Type] = true;
+        }
+
+        public class Shaker
+        {
+            float str;
+            float deno;
+            
         }
     }
 }

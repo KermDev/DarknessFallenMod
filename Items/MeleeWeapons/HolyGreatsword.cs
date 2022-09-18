@@ -24,7 +24,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.knockBack = 8;
 			Item.value = 17500;
 			Item.rare = 8;
-			Item.UseSound = SoundID.Item1;
+			Item.UseSound = SoundID.Item71;
 			Item.autoReuse = true;
 			Item.noUseGraphic = true;
 			Item.noMelee = true;

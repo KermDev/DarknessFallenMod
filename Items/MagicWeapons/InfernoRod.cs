@@ -11,7 +11,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Inferno Rod");
-			Tooltip.SetDefault("shoots 3 fire balls that track enemies");
+			Tooltip.SetDefault("Shoots 3 fire balls that track enemies");
 			Item.staff[Item.type] = true;
 		}
 

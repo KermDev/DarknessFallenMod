@@ -50,16 +50,21 @@ namespace DarknessFallenMod.NPCs
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
         }
 
-        public override void OnKill()
+        public override void HitEffect(int hitDirection, double damage)
         {
-            int LegGore = Mod.Find<ModGore>("NatureDemonEyeGore1").Type;
-            int HeadGore = Mod.Find<ModGore>("NatureDemonEyeGore0").Type;
+            if (Main.netMode == NetmodeID.Server) return;
 
-            for (int i = 0; i < 3; i++)
+            if (NPC.life < 0)
             {
-                Gore.NewGore(NPC.GetSource_FromThis(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), LegGore);
+                int LegGore = Mod.Find<ModGore>("NatureDemonEyeGore1").Type;
+                int HeadGore = Mod.Find<ModGore>("NatureDemonEyeGore0").Type;
+
+                for (int i = 0; i < 3; i++)
+                {
+                    Gore.NewGore(NPC.GetSource_FromThis(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), LegGore);
+                }
+                Gore.NewGore(NPC.GetSource_FromThis(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), HeadGore);
             }
-            Gore.NewGore(NPC.GetSource_FromThis(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), HeadGore);
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
