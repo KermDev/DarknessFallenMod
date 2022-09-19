@@ -33,7 +33,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
         {
-			target.AddBuff(ModContent.BuffType<Buffs.ExoflameBuff>(), 600);
+            target.AddBuff(ModContent.BuffType<Buffs.ExoflameBuff>(), 600);
             
             for (int k = 0; k < Main.maxNPCs; k++)
             {

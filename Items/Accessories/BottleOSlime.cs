@@ -13,7 +13,7 @@ namespace DarknessFallenMod.Items.Accessories
         {
 			DisplayName.SetDefault("Bottle\'O\'Slime");
 			Tooltip.SetDefault(
-                "25% increased movement speed\n" +
+                "15% increased movement speed\n" +
                 "[c/00aa22: Watch out its slippery!]"
                 );
         }
@@ -30,7 +30,7 @@ namespace DarknessFallenMod.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.moveSpeed *= 1.25f;
+            player.moveSpeed *= 1.15f;
             player.slippy = true;
         }
     }

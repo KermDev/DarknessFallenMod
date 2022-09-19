@@ -64,11 +64,14 @@ namespace DarknessFallenMod.NPCs.Bosses
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath1;
 			NPC.knockBackResist = -200f;
-			NPC.value = Item.buyPrice(gold: 5);
+			NPC.value = Item.buyPrice(gold: 4, silver: 46, copper: 12);
 			NPC.SpawnWithHigherTime(30);
 			NPC.boss = true;
 			NPC.npcSlots = 20;
 			NPC.aiStyle = -1;
+
+			BannerItem = ModContent.ItemType<Items.Placeable.Banners.PrinceSlimeBanner>();
+			Banner = Type;
 
 			NPC.BossBar = ModContent.GetInstance<PrinceSlimeBossBar>();
 		}
@@ -146,7 +149,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 							NPC.GetSource_FromAI(),
 							laserPos + dir * 45,
 							dir.RotatedByRandom(MathHelper.PiOver4 * 0.1f) * speed,
-							Main.rand.NextFromList(new int[] { ProjectileID.Fireball, ProjectileID.DemonScythe, ProjectileID.EnchantedBeam }),
+							ProjectileID.Fireball,
 							20,
 							1
 							);
@@ -214,7 +217,7 @@ namespace DarknessFallenMod.NPCs.Bosses
         {
 			NPC.SetEventFlagCleared(ref Systems.DownedBossSystem.downedPrinceSlime, -1);
 
-			if (NPC.killCount[Type] + 1 % 10 == 0) Item.NewItem(NPC.GetSource_Death(), NPC.Hitbox, 2);
+			NPC.DropCustomBannerKillCount(50, ModContent.ItemType<Items.Placeable.Banners.PrinceSlimeBanner>());
 		}
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)

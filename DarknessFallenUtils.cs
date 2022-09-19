@@ -194,11 +194,9 @@ namespace DarknessFallenMod
             TileID.Sets.FramesOnKillWall[modTile.Type] = true;
         }
 
-        public class Shaker
+        public static void DropCustomBannerKillCount(this NPC npc, int killCount, int bannerItem)
         {
-            float str;
-            float deno;
-            
+            if (NPC.killCount[npc.type] % killCount == 0 && !(NPC.killCount[npc.type] % 50 == 0)) Item.NewItem(npc.GetSource_Death(), npc.Hitbox, bannerItem);
         }
     }
 }
