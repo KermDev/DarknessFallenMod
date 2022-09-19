@@ -42,10 +42,10 @@ namespace DarknessFallenMod.Tiles.Banners
 				switch (style)
 				{
 					case 0:
-						type = ModContent.NPCType<NPCs.GlowingSporeSlime>();
+						type = ModContent.NPCType<NPCs.SporeSlime1>();
 						break;
 					default:
-						type = ModContent.NPCType<NPCs.GlowingSporeSlime>();
+						type = ModContent.NPCType<NPCs.SporeSlime1>();
 						return;
 				}
 				Main.SceneMetrics.hasBanner = true;

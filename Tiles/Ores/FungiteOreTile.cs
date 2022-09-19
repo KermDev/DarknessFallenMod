@@ -48,7 +48,7 @@ namespace DarknessFallenMod.Tiles.Ores
 	{
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
-			int ShiniesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Mushrooms"));
+			int ShiniesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Shinies"));
 
 			if (ShiniesIndex != -1)
 			{
@@ -66,28 +66,25 @@ namespace DarknessFallenMod.Tiles.Ores
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = DarknessFallenUtils.OreGenerationMessage;
-
-			for (int i = 0; i < Main.maxTilesX; i++)
+			/*
+			for (int i = 0; i < 10000; i++)
 			{
-				for (int j = 0; j < Main.maxTilesY; j++)
+				foreach (Vector2 mushroomPos in WorldGen.mushroomBiomesPosition)
 				{
-					Tile tile = Framing.GetTileSafely(i, j);
+					int x = (int)mushroomPos.X / 16;
+					int y = (int)mushroomPos.Y / 16;
 
-					if (tile.HasTile && tile.TileType == TileID.MushroomTrees)
-					{
-						for (int k = 0; k < 7; k++)
-						{
-							int spread = 150;
+					int spread = 1000;
+					x += (int)(spread * Main.rand.NextFloatDirection());
+					y += (int)(spread * Main.rand.NextFloatDirection());
 
-							int x = i + Main.rand.Next(-spread, spread);
-							int y = j + Main.rand.Next(-spread, spread);
-
-							Tile spawnTile = Framing.GetTileSafely(x, y);
-							if (spawnTile.HasTile && spawnTile.TileType == TileID.Mud) WorldGen.TileRunner(x, y, Main.rand.Next(3, 9), 4, ModContent.TileType<Tiles.Ores.FungiteOreTile>(), true);
-						}
-					}
+					Tile tile = Framing.GetTileSafely(x, y);
+					if (tile.HasTile && tile.TileType == TileID.Mud)
+                    {
+						WorldGen.TileRunner(x, y, 10, 2, ModContent.TileType<FungiteOreTile>(), true);
+                    }
 				}
-			}
+			}*/
 		}
 	}
 }
