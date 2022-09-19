@@ -65,8 +65,8 @@ namespace DarknessFallenMod
         {
             if (PlayerInput.Triggers.JustPressed.MouseRight && PlayerInput.Triggers.Current.Down)
             {
-                Main.NewText("cccc");
                 PlaceOresAtLocation();
+                Main.NewText("Placed Ore");
             }
         }
 
