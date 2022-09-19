@@ -11,12 +11,12 @@ using System.Collections.Generic;
 
 namespace DarknessFallenMod.NPCs
 {
-    public class SporeSlime2 : ModNPC
+    public class SporeSlime : ModNPC
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("spore slime");
-            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[2];
+            DisplayName.SetDefault("Spore Slime");
+            Main.npcFrameCount[NPC.type] = 2;
         }
 
         public override void SetDefaults()
@@ -37,7 +37,7 @@ namespace DarknessFallenMod.NPCs
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return SpawnCondition.Cavern.Chance * 0.07f;
+            return SpawnCondition.Cavern.Chance * 0.2f;
         }
 
         public override void FindFrame(int frameHeight)
@@ -60,7 +60,7 @@ namespace DarknessFallenMod.NPCs
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
-                new FlavorTextBestiaryInfoElement("a slime that has traveled too far from the glowing mushrooms and has lost its glow")
+                new FlavorTextBestiaryInfoElement("A slime that has traveled too far from the glowing mushrooms and has lost its glow")
             });
         }
     }
