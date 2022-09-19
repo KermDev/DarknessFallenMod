@@ -1,15 +1,10 @@
-- 10 new banners
-- 10 new bestiary entries with spawn location, drop chances etc
-- new infinite potion
-- new enemy
-
-- fixed the phalorite axe name 
-- corruption tenticle and crimson tenticle no longer face the direction the player is in
-- red beetle now knocks you back further as a unqiue ability
-- holy bow shoots slower
-- new description for phalorite axe
-- new red chitin sprite
-- the tenticles both have more health
-- both beetles have more defense 
-- inferno rod projectiles now shoot out of the rod instead of the player
-- blue beetle now speeds up when close to player as a unique ability 
+- new ore
+- new ore tile
+- new set of tools
+- fixed hitboxes for loads of weapons
+- all pets move smoother 
+- added new movement item
+- nerfed valika
+- new armor set
+- new accessory
+- new sword
