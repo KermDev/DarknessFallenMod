@@ -11,11 +11,11 @@ using System.Collections.Generic;
 
 namespace DarknessFallenMod.NPCs
 {
-    public class SporeSlime2 : ModNPC
+    public class SporeSlime : ModNPC
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("spore slime");
+            DisplayName.SetDefault("Spore Slime");
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[2];
         }
 
@@ -37,7 +37,7 @@ namespace DarknessFallenMod.NPCs
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return SpawnCondition.Cavern.Chance * 0.07f;
+            return SpawnCondition.Cavern.Chance * 0.2f;
         }
 
         public override void FindFrame(int frameHeight)
