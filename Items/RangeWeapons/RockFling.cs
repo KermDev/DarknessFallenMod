@@ -14,19 +14,20 @@ namespace DarknessFallenMod.Items.RangeWeapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Rockfling");
+			Tooltip.SetDefault("[c/aaaaaa:Uses Stone Blocks as ammo]");
 		}
 
 		public override void SetDefaults()
 		{
-			Item.damage = 12;
+			Item.damage = 13;
 			Item.DamageType = DamageClass.Ranged;
 			Item.knockBack = 2;
 
 			Item.width = 29;
 			Item.height = 29;
 
-			Item.useTime = 45;
-			Item.useAnimation = 45;
+			Item.useTime = 40;
+			Item.useAnimation = 40;
 
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.value = 1025;
@@ -34,13 +35,18 @@ namespace DarknessFallenMod.Items.RangeWeapons
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 			Item.shoot = ProjectileID.Boulder;
-			Item.shootSpeed = 10f;
+			Item.shootSpeed = 11f;
 			Item.noMelee = true;
+		}
+
+        public override bool CanShoot(Player player)
+        {
+            return player.ConsumeItem(ItemID.StoneBlock);
 		}
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-			position.Y -= 35;
+			position.Y -= 40;
 			velocity = position.DirectionTo(Main.MouseWorld) * Item.shootSpeed;
         }
 
@@ -50,9 +56,20 @@ namespace DarknessFallenMod.Items.RangeWeapons
 			proj.friendly = true;
 			proj.hostile = false;
 			proj.DamageType = DamageClass.Ranged;
+			proj.usesLocalNPCImmunity = true;
+			proj.localNPCHitCooldown = 30;
+
 			proj.netUpdate = true;
 
             return false;
+        }
+
+        public override void AddRecipes()
+        {
+			CreateRecipe()
+				.AddIngredient(ItemID.StoneBlock, 20)
+				.AddTile(TileID.WorkBenches)
+				.Register();
         }
     }
 }

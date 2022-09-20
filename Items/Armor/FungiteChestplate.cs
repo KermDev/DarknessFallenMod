@@ -25,5 +25,13 @@ namespace DarknessFallenMod.Items.Armor
             Item.rare = ItemRarityID.LightPurple;
             Item.defense = 6;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Materials.FungiteBar>(), 30)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 }

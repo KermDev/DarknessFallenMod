@@ -67,9 +67,11 @@ namespace DarknessFallenMod.NPCs
                 int gore2 = Mod.Find<ModGore>("CorruptionMawGore2").Type;
                 int gore3 = Mod.Find<ModGore>("CorruptionMawGore3").Type;
 
-                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Unit() * 2, gore1);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Unit() * 2, gore2);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Unit() * 2, gore3);
+                float speed = 2.5f;
+
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, Main.rand.NextVector2Unit() * speed, gore1);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, Main.rand.NextVector2Unit() * speed, gore2);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.position, Main.rand.NextVector2Unit() * speed, gore3);
             }
         }
 

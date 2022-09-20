@@ -48,6 +48,14 @@ namespace DarknessFallenMod.Items.Armor
             Projectile proj = Main.projectile.FirstOrDefault(proj => proj.owner == player.whoAmI && proj.type == minionType);
             if (proj is not null) proj.timeLeft = 2;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Materials.FungiteBar>(), 20)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 
     public class FungiteArmorMinion : ModProjectile
