@@ -16,7 +16,7 @@ namespace DarknessFallenMod.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Nature DemonEye");
-            Main.npcFrameCount[NPC.type] = Main.npcFrameCount[2];
+            Main.npcFrameCount[NPC.type] = 2;
         }
 
         public override void SetDefaults()
@@ -37,17 +37,12 @@ namespace DarknessFallenMod.NPCs
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return SpawnCondition.SurfaceJungle.Chance * 0.04f;
+            return SpawnCondition.SurfaceJungle.Chance * 0.08f;
         }
 
         public override void FindFrame(int frameHeight)
         {
-            NPC.frameCounter++;
-            if (NPC.frameCounter >= 20)
-            {
-                NPC.frameCounter = 0;
-            }
-            NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
+            NPC.frame.Y = (int)NPC.frameCounter / 4 * frameHeight;
         }
 
         public override void HitEffect(int hitDirection, double damage)

@@ -68,7 +68,7 @@ namespace DarknessFallenMod.NPCs
             {
                 inRange = true;
 
-                if (Main.rand.NextBool(2)) Dust.NewDust(NPC.Hitbox.BottomLeft(), NPC.width, 2, DustID.Dirt);
+                if (Main.rand.NextBool(2) && NPC.velocity.Y == 0) Dust.NewDust(NPC.Hitbox.BottomLeft(), NPC.width, 2, DustID.Dirt);
             }
 
             if (((player.Center.Y < NPC.position.Y && inRange) || NPC.collideX) && NPC.velocity.Y == 0) NPC.velocity.Y -= 6f;
@@ -136,6 +136,8 @@ namespace DarknessFallenMod.NPCs
             {
                 NPC.frame.Y = 0; // Reset back to default
             }
+
+            if (NPC.velocity.Y != 0) NPC.frame.Y = 0;
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)

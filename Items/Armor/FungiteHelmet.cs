@@ -40,8 +40,8 @@ namespace DarknessFallenMod.Items.Armor
             int minionType = ModContent.ProjectileType<FungiteArmorMinion>();
             if (player.ownedProjectileCounts[minionType] == 0)
             {
-                Projectile minion = Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, minionType, 10, 1, player.whoAmI);
-                minion.originalDamage = 20;
+                Projectile minion = Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, minionType, 10, 0.1f, player.whoAmI);
+                minion.originalDamage = 6;
                 minion.netUpdate = true;
             }
 
@@ -64,7 +64,7 @@ namespace DarknessFallenMod.Items.Armor
         {
             Projectile.width = 26;
             Projectile.height = 26;
-            Projectile.friendly = true;
+            Projectile.friendly = false;
             Projectile.hostile = false;
             Projectile.timeLeft = 20;
             Projectile.penetrate = -1;
@@ -75,7 +75,7 @@ namespace DarknessFallenMod.Items.Armor
             Projectile.netImportant = true;
 
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 10;
+            Projectile.localNPCHitCooldown = 20;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity) => false;
@@ -127,15 +127,9 @@ namespace DarknessFallenMod.Items.Armor
             Projectile.velocity.Y += gravity;
             Projectile.velocity.X *= 0.6f;
 
-            if (Player.Center.DistanceSQ(Projectile.Center) > walkThreshold) aiState = AIState.Walk;
+            TryGetRollTarget();
 
-            if (DarknessFallenUtils.TryGetClosestEnemyNPC(Projectile.Center, out NPC npc, targetThreshold))
-            {
-                Target = npc;
-                aiState = AIState.Roll;
-                Projectile.tileCollide = false;
-                return;
-            }
+            if (Player.Center.DistanceSQ(Projectile.Center) > walkThreshold) aiState = AIState.Walk;
         }
 
         void Walk()
@@ -145,6 +139,8 @@ namespace DarknessFallenMod.Items.Armor
             Projectile.velocity.Y += gravity;
             Projectile.velocity.X += MathF.Sign(Projectile.Center.DirectionTo(Player.Center).X) * acceleration;
             Projectile.velocity.X = Math.Clamp(Projectile.velocity.X, -maxSpeed, maxSpeed);
+
+            TryGetRollTarget();
 
             float playerDistSQ = Player.Center.DistanceSQ(Projectile.Center);
             if (playerDistSQ < walkThreshold)
@@ -156,14 +152,6 @@ namespace DarknessFallenMod.Items.Armor
             {
                 Projectile.Center = Player.Center;
             }
-
-            if (DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC npc, npc => npc.boss, targetThreshold))
-            {
-                Target = npc;
-                aiState = AIState.Roll;
-                Projectile.tileCollide = false;
-                return;
-            }
         }
 
         NPC Target;
@@ -172,6 +160,8 @@ namespace DarknessFallenMod.Items.Armor
         float speed = 10;
         void Roll()
         {
+            TryGetRollTarget();
+
             if (shouldChase)
             {
                 Vector2 velToTarg = (Target.Center + Main.rand.NextVector2Unit() * Target.width * 0.5f).DirectionFrom(Projectile.Center) * speed;
@@ -179,17 +169,14 @@ namespace DarknessFallenMod.Items.Armor
             }
             else
             {
-                if (DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC npc, npc => npc.boss, targetThreshold))
-                {
-                    Target = npc;
-                    return;
-                }
+                if (TryGetRollTarget()) return;
 
                 float playerDistSQ = Player.Center.DistanceSQ(Projectile.Center);
                 if (playerDistSQ < walkThreshold)
                 {
                     aiState = AIState.Idle;
                     Projectile.tileCollide = true;
+                    Projectile.friendly = false;
                     return;
                 }
                 else
@@ -198,6 +185,19 @@ namespace DarknessFallenMod.Items.Armor
                     Projectile.velocity = (Projectile.velocity * (inertia - 1) + velToPlayer) / inertia;
                 }
             }
+        }
+
+        bool TryGetRollTarget()
+        {
+            if (DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC npc, npc => npc.boss, targetThreshold))
+            {
+                Target = npc;
+                aiState = AIState.Roll;
+                Projectile.tileCollide = false;
+                Projectile.friendly = true;
+                return true;
+            }
+            return false;
         }
 
         enum AIState

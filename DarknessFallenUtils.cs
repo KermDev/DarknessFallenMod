@@ -26,9 +26,9 @@ namespace DarknessFallenMod
             spritebatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
 
-        public static void DrawProjectileInHBCenter(this Projectile projectile, Color lightColor, bool animated = false, Vector2? offset = null, Vector2? origin = null)
+        public static void DrawProjectileInHBCenter(this Projectile projectile, Color lightColor, bool animated = false, Vector2? offset = null, Vector2? origin = null, Texture2D altTex = null)
         {
-            Texture2D texture = TextureAssets.Projectile[projectile.type].Value;
+            Texture2D texture = altTex ?? TextureAssets.Projectile[projectile.type].Value;
 
             Vector2 drawOrigin;
             Rectangle? sourceRectangle = null;
