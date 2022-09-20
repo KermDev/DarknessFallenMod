@@ -30,10 +30,10 @@ namespace DarknessFallenMod.Tiles.Ores
 			AddMapEntry(new Color(120, 130, 180), name);
 
 			DustType = 25;
-			ItemDrop = ModContent.ItemType<Items.Placeable.Ores.MagmiteOre>();
+			ItemDrop = ModContent.ItemType<Items.Placeable.Ores.FungiteOre>();
 			HitSound = SoundID.Tink;
-			MineResist = 3f;
-			MinPick = 100;
+			MineResist = 1.5f;
+			MinPick = 59;
 		}
 
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
@@ -48,11 +48,11 @@ namespace DarknessFallenMod.Tiles.Ores
 	{
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
-			int ShiniesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Shinies"));
+			int MushroomIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Mushrooms"));
 
-			if (ShiniesIndex != -1)
+			if (MushroomIndex != -1)
 			{
-				tasks.Insert(ShiniesIndex + 1, new FungiteOrePass(DarknessFallenUtils.OreGenerationMessage, 237.4298f));
+				tasks.Insert(MushroomIndex + 1, new FungiteOrePass(DarknessFallenUtils.OreGenerationMessage, 237.4298f));
 			}
 		}
 	}
@@ -66,25 +66,28 @@ namespace DarknessFallenMod.Tiles.Ores
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = DarknessFallenUtils.OreGenerationMessage;
-			/*
-			for (int i = 0; i < 10000; i++)
+
+			for (int i = 0; i < Main.maxTilesX; i++)
 			{
-				foreach (Vector2 mushroomPos in WorldGen.mushroomBiomesPosition)
+				for (int j = 0; j < Main.maxTilesY; j++)
 				{
-					int x = (int)mushroomPos.X / 16;
-					int y = (int)mushroomPos.Y / 16;
+					Tile tile = Framing.GetTileSafely(i, j);
 
-					int spread = 1000;
-					x += (int)(spread * Main.rand.NextFloatDirection());
-					y += (int)(spread * Main.rand.NextFloatDirection());
+					if (tile.HasTile && tile.TileType == TileID.MushroomGrass)
+					{
+						if (Main.rand.NextBool(7))
+                        {
+							int spread = 150;
 
-					Tile tile = Framing.GetTileSafely(x, y);
-					if (tile.HasTile && tile.TileType == TileID.Mud)
-                    {
-						WorldGen.TileRunner(x, y, 10, 2, ModContent.TileType<FungiteOreTile>(), true);
-                    }
+							int x = i + Main.rand.Next(-spread, spread);
+							int y = j + Main.rand.Next(-spread, spread);
+
+							Tile spawnTile = Framing.GetTileSafely(x, y);
+							if (spawnTile.HasTile && spawnTile.TileType == TileID.Mud) WorldGen.TileRunner(x, y, Main.rand.Next(3, 9), 4, ModContent.TileType<FungiteOreTile>());
+						}
+					}
 				}
-			}*/
+			}
 		}
 	}
 }
