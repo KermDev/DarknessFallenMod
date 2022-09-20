@@ -30,6 +30,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
 			Item.shoot = 1;
             Item.shoot = ProjectileID.Leaf;
             Item.shootSpeed = 6f;
+			Item.noMelee = true;
 		}
 
         public override Vector2? HoldoutOffset()

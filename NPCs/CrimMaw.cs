@@ -74,6 +74,22 @@ namespace DarknessFallenMod.NPCs
             }
         }
 
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (Main.netMode == NetmodeID.Server) return;
+
+            if (NPC.life <= 0)
+            {
+                int gore1 = Mod.Find<ModGore>("CrimsonMawGore1").Type;
+                int gore2 = Mod.Find<ModGore>("CrimsonMawGore2").Type;
+                int gore3 = Mod.Find<ModGore>("CrimsonMawGore3").Type;
+
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Unit() * 2, gore1);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Unit() * 2, gore2);
+                Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Unit() * 2, gore3);
+            }
+        }
+
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BloodyJaw>(), 10));

@@ -34,6 +34,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
             Projectile.tileCollide = true; // Can the projectile collide with tiles?
             Projectile.timeLeft = 600; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
             Projectile.extraUpdates = 4;
+
         }
         
         public override void AI()

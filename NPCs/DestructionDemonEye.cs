@@ -21,7 +21,7 @@ namespace DarknessFallenMod.NPCs
         {
             NPC.width = 32;
             NPC.height = 32;
-            NPC.damage = 21;
+            NPC.damage = 19;
             NPC.defense = 5;
             NPC.lifeMax = 82;
             NPC.value = 52f;
@@ -47,6 +47,8 @@ namespace DarknessFallenMod.NPCs
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.SoulOfDestruction>(), 5, minimumDropped: 1, maximumDropped: 3));
             npcLoot.Add(ItemDropRule.Common(ItemID.Lens, minimumDropped: 0, maximumDropped: 2));
+            npcLoot.Add(ItemDropRule.Common(ItemID.BlackLens, 100));
+            npcLoot.Add(ItemDropRule.Common(ItemID.DemoniteOre, minimumDropped: 0, maximumDropped: 4));
         }
     }
 }

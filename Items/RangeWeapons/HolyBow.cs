@@ -31,6 +31,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<HolyBowProjectile>();
 			Item.shootSpeed = 12f;
+			Item.noMelee = true;
 		}
 
 		public override Vector2? HoldoutOffset()
