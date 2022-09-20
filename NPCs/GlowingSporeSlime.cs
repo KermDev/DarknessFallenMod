@@ -88,9 +88,9 @@ namespace DarknessFallenMod.NPCs
                         );
                 }
 
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 8; i++)
                 {
-                    Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Unit() * 2, GoreID.Smoke1, Main.rand.NextFloat(0.3f, 1.5f));
+                    Gore.NewGore(NPC.GetSource_Death(), NPC.Center, Main.rand.NextVector2Unit() * 2, 375, Main.rand.NextFloat(0.3f, 1.5f));
                 }
 
                 if (!Main.dedServ) Lighting.AddLight(NPC.Center, 1.6f, 0.9f, 2f);
