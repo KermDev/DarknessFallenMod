@@ -38,7 +38,7 @@ namespace DarknessFallenMod
 
                 drawOrigin = origin ?? new Vector2(texture.Width, frameHeight / 2);
 
-                sourceRectangle = new Rectangle(0, frameHeight * projectile.frame, texture.Width, frameHeight);
+                sourceRectangle = new Rectangle(0, frameHeight * projectile.frame + 1, texture.Width, frameHeight);
             }
             else
             {
@@ -56,7 +56,7 @@ namespace DarknessFallenMod
                 projectile.rotation,
                 drawOrigin,
                 projectile.scale,
-                SpriteEffects.None,
+                projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                 0
                 );
         }
