@@ -15,7 +15,7 @@ namespace DarknessFallenMod.NPCs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Nature DemonEye");
+            DisplayName.SetDefault("Nature Demon Eye");
             Main.npcFrameCount[NPC.type] = 2;
         }
 
