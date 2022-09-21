@@ -198,5 +198,16 @@ namespace DarknessFallenMod
         {
             if (NPC.killCount[npc.type] % killCount == 0 && !(NPC.killCount[npc.type] % 50 == 0)) Item.NewItem(npc.GetSource_Death(), npc.Hitbox, bannerItem);
         }
+
+        public static void ShakeScreenInRange(float strenght, Vector2 center, float rangeSQ, float desolve = 0.95f)
+        {
+            foreach (Player player in Main.player)
+            {
+                if (player.DistanceSQ(center) < rangeSQ)
+                {
+                    player.GetModPlayer<DarknessFallenPlayer>().ShakeScreen(strenght, desolve);
+                }
+            }
+        }
     }
 }

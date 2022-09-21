@@ -48,6 +48,8 @@ namespace DarknessFallenMod.NPCs
                 NPC.frameCounter = 0;
             }
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
+
+            if (NPC.velocity.Y != 0) NPC.frame.Y = frameHeight;
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)

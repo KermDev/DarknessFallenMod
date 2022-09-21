@@ -40,7 +40,7 @@ namespace DarknessFallenMod.Items.Armor
             int minionType = ModContent.ProjectileType<FungiteArmorMinion>();
             if (player.ownedProjectileCounts[minionType] == 0)
             {
-                Projectile minion = Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, minionType, 10, 0.1f, player.whoAmI);
+                Projectile minion = Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, minionType, 10, 0, player.whoAmI);
                 minion.originalDamage = 6;
                 minion.netUpdate = true;
             }

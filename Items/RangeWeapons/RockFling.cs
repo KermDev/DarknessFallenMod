@@ -21,7 +21,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
 		{
 			Item.damage = 13;
 			Item.DamageType = DamageClass.Ranged;
-			Item.knockBack = 2;
+			Item.knockBack = 9;
 
 			Item.width = 29;
 			Item.height = 29;

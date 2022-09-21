@@ -28,7 +28,7 @@ namespace DarknessFallenMod.Items.SummonWeapons
             Item.useTime = 30;
             Item.useAnimation = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;
-            Item.knockBack = 2;
+            Item.knockBack = 0;
             Item.noMelee = true;
 
             Item.value = 34320;

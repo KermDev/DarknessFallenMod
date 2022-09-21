@@ -74,6 +74,7 @@ namespace DarknessFallenMod.Items.Armor
         void MagmiteExplosion(Vector2 center)
         {
             SoundEngine.PlaySound(SoundID.Item62, center);
+            DarknessFallenUtils.ShakeScreenInRange(3, center, 1638400, 0.87f);
 
             Rectangle rect = new Rectangle((int)center.X - blastWidth / 2, (int)center.Y - blastWidth / 2, blastWidth, blastWidth);
 

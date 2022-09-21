@@ -61,6 +61,7 @@ namespace DarknessFallenMod
             }
         }
 
+        /*
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             if (PlayerInput.Triggers.JustPressed.MouseRight && PlayerInput.Triggers.Current.Down)
@@ -72,7 +73,7 @@ namespace DarknessFallenMod
 
         private void PlaceOresAtLocation()
         {
-            /*
+            
             for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.001f); i++)
             {
                 int x = WorldGen.genRand.Next(0, Main.maxTilesX);
@@ -84,8 +85,8 @@ namespace DarknessFallenMod
                     WorldGen.TileRunner(x, y, 15, 2, ModContent.TileType<Tiles.Ores.FungiteOreTile>());
                 }
             }
-            */
-            /*
+            
+            
             foreach (Vector2 mushroomPos in WorldGen.mushroomBiomesPosition)
             {
                 for (int i = 0; i < 1000; i++)
@@ -104,7 +105,7 @@ namespace DarknessFallenMod
                     }
                 }
             }
-            */
+            
 
             for (int i = 0; i < Main.maxTilesX; i++)
             {
@@ -128,5 +129,6 @@ namespace DarknessFallenMod
                 }
             }
         }
+        */
     }
 }
