@@ -41,6 +41,14 @@ namespace DarknessFallenMod.Items.RangeWeapons
         {
             player.itemLocation += Vector2.UnitX.RotatedBy(player.itemRotation) * -8 * player.direction;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Materials.FungiteBar>(), 25)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 
 	public class FungiteArrowGlobalItem : GlobalProjectile

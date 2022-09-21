@@ -34,6 +34,7 @@ namespace DarknessFallenMod.Items.Pets
 			Projectile.tileCollide = false;
 		}
 
+		float spinRot;
 		public override void AI()
 		{
 			Player player = Main.player[Projectile.owner];
@@ -58,6 +59,20 @@ namespace DarknessFallenMod.Items.Pets
 			Projectile.Center = Vector2.Lerp(Projectile.Center, flyToPos, 0.2f);
 
 			Projectile.spriteDirection = -player.direction;
+
+			if (Main.rand.NextBool(999)) spinRot += MathHelper.TwoPi;
+
+			if (spinRot - Projectile.rotation > 0.02f) Projectile.rotation = MathHelper.Lerp(Projectile.rotation, spinRot, 0.05f);
+
+			Projectile.BasicAnimation(10, 120, 0);
 		}
-	}
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+			Projectile.DrawProjectileInHBCenter(Color.White, true, origin: new Vector2(21, 38));
+			return false;
+        }
+    }
+
+	
 }

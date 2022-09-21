@@ -58,7 +58,7 @@ namespace DarknessFallenMod.Tiles.Furniture
 
 			var name = CreateMapEntryName();
 			name.SetDefault(MapName);
-			AddMapEntry(new Color(66, 66, 66), name);
+			AddMapEntry(new Color(180, 180, 180), name);
         }
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY) => Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 32, 32, StatueItem);

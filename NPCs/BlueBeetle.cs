@@ -9,6 +9,7 @@ using Terraria.GameContent.Bestiary;
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.Audio;
 
 namespace DarknessFallenMod.NPCs
 {
@@ -31,8 +32,8 @@ namespace DarknessFallenMod.NPCs
             NPC.damage = 12;
             NPC.defense = 10;
             NPC.lifeMax = 250;
-            NPC.HitSound = SoundID.NPCHit50;
-            NPC.DeathSound = SoundID.NPCDeath53;
+            NPC.HitSound = Sounds.SoundManager.BeetleHit;
+            NPC.DeathSound = Sounds.SoundManager.BeetleDeath;
             NPC.value = 89f;
             NPC.knockBackResist = 0.5f;
             //NPC.aiStyle = 3;

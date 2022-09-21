@@ -7,16 +7,11 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.Placeable.Furniture
 {
-    public class BeetleStatue : ModItem
+    public class RedBeetleStatue : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Blue Beetle Statue");
-        }
-
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.BeetleStatueTile>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.RedBeetleStatueTile>());
             Item.width = 31;
             Item.height = 47;
             Item.maxStack = 99;

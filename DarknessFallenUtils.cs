@@ -15,6 +15,7 @@ namespace DarknessFallenMod
     public static class DarknessFallenUtils
     {
         public const string OreGenerationMessage = "Darkness Fallen Ore Generation";
+        public const string SoundsPath = "DarknessFallenMod/Sounds/";
 
         public static void BeginWithShaderOptions(this SpriteBatch spritebatch)
         {
@@ -26,7 +27,7 @@ namespace DarknessFallenMod
             spritebatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
 
-        public static void DrawProjectileInHBCenter(this Projectile projectile, Color lightColor, bool animated = false, Vector2? offset = null, Vector2? origin = null, Texture2D altTex = null)
+        public static void DrawProjectileInHBCenter(this Projectile projectile, Color lightColor, bool animated = false, Vector2? offset = null, Vector2? origin = null, Texture2D altTex = null, bool centerOrigin = false)
         {
             Texture2D texture = altTex ?? TextureAssets.Projectile[projectile.type].Value;
 
@@ -36,13 +37,13 @@ namespace DarknessFallenMod
             {
                 int frameHeight = texture.Height / Main.projFrames[projectile.type];
 
-                drawOrigin = origin ?? new Vector2(texture.Width, frameHeight / 2);
+                drawOrigin = origin ?? (centerOrigin ? new Vector2(texture.Width / 2, frameHeight / 2) : new Vector2(texture.Width, frameHeight / 2));
 
                 sourceRectangle = new Rectangle(0, frameHeight * projectile.frame + 1, texture.Width, frameHeight);
             }
             else
             {
-                drawOrigin = origin ?? new Vector2(texture.Width, texture.Height / 2);
+                drawOrigin = origin ?? (centerOrigin ? texture.Size() * 0.5f : new Vector2(texture.Width, texture.Height / 2));
             }
 
             Vector2 drawPos = projectile.Center - Main.screenPosition;
@@ -207,6 +208,31 @@ namespace DarknessFallenMod
                 {
                     player.GetModPlayer<DarknessFallenPlayer>().ShakeScreen(strenght, desolve);
                 }
+            }
+        }
+
+        public static void BasicAnimation(this Projectile proj, int speed)
+        {
+            BasicAnimation(proj, speed, 0, 0);
+        }
+
+        public static void BasicAnimation(this Projectile proj, int speed, int delay, int delayFrame)
+        {
+            proj.frameCounter++;
+            if (proj.frameCounter >= Main.projFrames[proj.type] * speed + delay)
+            {
+                proj.frameCounter = 0;
+            }
+
+            if (proj.frameCounter > delay) proj.frame = (int)(proj.frameCounter - delay) / speed;
+            else proj.frame = delayFrame;
+        }
+
+        public static void NewDustCircular(Vector2 center, int dustType, float radius, Vector2 dustVelocity = default, int alpha = 0, Color color = default, float scale = 1, int amount = 8, float rotation = 0)
+        {
+            foreach(Vector2 pos in GetCircularPositions(center, radius, amount, rotation))
+            {
+                Dust.NewDust(pos, 0, 0, dustType, dustVelocity.X, dustVelocity.Y, alpha, color, scale);
             }
         }
     }

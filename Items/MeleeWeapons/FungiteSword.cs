@@ -39,6 +39,14 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.NewProjectileDirect(Item.GetSource_FromThis(), target.Center, new Vector2(speed * randX, -speed * 2), ModContent.ProjectileType<FungiteSwordProjectile>(), dmg, knockBack, player.whoAmI).netUpdate = true;
             Projectile.NewProjectileDirect(Item.GetSource_FromThis(), target.Center, new Vector2(-speed * randX, -speed * 2), ModContent.ProjectileType<FungiteSwordProjectile>(), dmg, knockBack, player.whoAmI).netUpdate = true;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Materials.FungiteBar>(), 20)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 
 	public class FungiteSwordProjectile : ModProjectile
