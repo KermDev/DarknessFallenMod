@@ -98,6 +98,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override void Kill(int timeLeft)
         {
             for (int i = 0; i < 5; i++) Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GlowingMushroom, Scale: Main.rand.NextFloat(0.2f, 1f));
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.ShadowbeamStaff, 10, speedFromCenter: 8);
         }
     }
 }

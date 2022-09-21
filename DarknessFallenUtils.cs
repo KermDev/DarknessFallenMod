@@ -228,11 +228,14 @@ namespace DarknessFallenMod
             else proj.frame = delayFrame;
         }
 
-        public static void NewDustCircular(Vector2 center, int dustType, float radius, Vector2 dustVelocity = default, int alpha = 0, Color color = default, float scale = 1, int amount = 8, float rotation = 0)
+        public static void NewDustCircular(Vector2 center, int dustType, float radius, Vector2 dustVelocity = default, int alpha = 0, Color color = default, float scale = 1, int amount = 8, float rotation = 0, float speedFromCenter = 0)
         {
+            
             foreach(Vector2 pos in GetCircularPositions(center, radius, amount, rotation))
             {
-                Dust.NewDust(pos, 0, 0, dustType, dustVelocity.X, dustVelocity.Y, alpha, color, scale);
+                Vector2 velocity = dustVelocity;
+                velocity += center.DirectionTo(pos) * speedFromCenter;
+                Dust.NewDust(pos, 0, 0, dustType, velocity.X, velocity.Y, alpha, color, scale);
             }
         }
     }

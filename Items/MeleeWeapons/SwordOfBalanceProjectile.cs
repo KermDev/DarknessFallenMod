@@ -31,6 +31,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.light = 0.9f; // How much light emit around the projectile
             Projectile.tileCollide = true; // Can the projectile collide with tiles?
             Projectile.timeLeft = 180; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 20;
         }
 
         // Custom AI
@@ -47,56 +50,17 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override void AI()
         {
-            Random x = new Random();
-            int X = x.Next(-4, 4); //these 2 lines create a random number between -60 and 60
-            Random y = new Random();
-            int Y = y.Next(-20, 20);  //these 2 lines create another random number between -60 and 60
-
-            if (Main.rand.Next(0, 9) == 1)
+            if (Main.rand.NextBool(9))
             {
-                Dust.NewDust(Projectile.Center, 4, 4, DustID.BlueCrystalShard);
+                Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, DustID.BlueCrystalShard);
             }
 
             Projectile.rotation += 0.6f;
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
+        public override void Kill(int timeLeft)
         {
-            if(Projectile.penetrate <= 1)
-            {
-                Projectile.Kill();
-                return true;
-            }
-            
-            Collision.HitTiles(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
-
-            // If the projectile hits the left or right side of the tile, reverse the X velocity
-            if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > float.Epsilon)
-            {
-                Projectile.velocity.X = -oldVelocity.X;
-            }
-
-            // If the projectile hits the top or bottom side of the tile, reverse the Y velocity
-            if (Math.Abs(Projectile.velocity.Y - oldVelocity.Y) > float.Epsilon)
-            {
-                Projectile.velocity.Y = -oldVelocity.Y;
-            }
-
-
-            return false;
-        }
-
-        public override void Kill(int timeLeft) //this is caled whenever the projectile expires (only once);
-        {
-            for (int i = 0; i <= 30; i++) //repeats 50 times;
-            {
-                Random x = new Random();
-                int X = x.Next(-4, 4); //these 2 lines create a random number between -60 and 60
-                Random y = new Random();
-                int Y = y.Next(-20, 20);  //these 2 lines create another random number between -60 and 60
-
-                Dust.NewDust(Projectile.Center, 4, 4, DustID.BlueCrystalShard);
-            }
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.BlueCrystalShard, 5, speedFromCenter: 5, amount: 16);
         }
     }
 }
