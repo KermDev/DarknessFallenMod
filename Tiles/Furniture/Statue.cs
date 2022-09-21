@@ -41,7 +41,7 @@ namespace DarknessFallenMod.Tiles.Furniture
         }
 
         public virtual int[] CoordinateHeights => new int[3] { 18, 16, 18 };
-        public virtual string MapName => GetType().Name;
+        public virtual string MapName => "Statue";
         public virtual int StatueItem => 0;
         public virtual int[] NPCToSpawn => new int[] { 0 };
 
@@ -65,6 +65,7 @@ namespace DarknessFallenMod.Tiles.Furniture
 
         public override void HitWire(int i, int j)
         {
+            Main.NewText("l");
             NPC.NewNPC(null, i * 16, j * 16, Main.rand.NextFromList(NPCToSpawn));
         }
     }

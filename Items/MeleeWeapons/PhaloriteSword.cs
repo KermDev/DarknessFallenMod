@@ -12,7 +12,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Phalorite Sword"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
+            DisplayName.SetDefault("Phalorite Sword");
             Tooltip.SetDefault("The sword crafted from Phalorite Bars");
         }
 
@@ -20,8 +20,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         {
             Item.damage = 190;
             Item.DamageType = DamageClass.Melee;
-            Item.width = 60;
-            Item.height = 60;
+            Item.width = 62;
+            Item.height = 62;
             Item.useTime = 18;
             Item.useAnimation = 18;
             Item.useStyle = 1;
@@ -33,8 +33,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Item.shoot = ModContent.ProjectileType<PhaloriteSwordProjectile>();
             Item.shootSpeed = 21f;
         }
-
-
 
 
         public override void AddRecipes()
