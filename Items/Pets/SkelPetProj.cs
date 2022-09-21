@@ -57,6 +57,8 @@ namespace DarknessFallenMod.Items.Pets
 			Projectile.Center = Vector2.Lerp(Projectile.Center, flyToPos, 0.2f);
 
 			Projectile.spriteDirection = player.direction;
+
+			Projectile.BasicAnimation(10);
 		}
 	}
 }

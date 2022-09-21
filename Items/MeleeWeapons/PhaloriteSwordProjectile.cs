@@ -33,7 +33,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.timeLeft = 120; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
 
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 20;
+            Projectile.localNPCHitCooldown = 10;
         }
 
         public override void AI()

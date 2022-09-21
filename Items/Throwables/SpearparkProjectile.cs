@@ -142,7 +142,7 @@ namespace DarknessFallenMod.Items.Throwables
         float drawAlpha = 1;
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawProjectileInHBCenter(lightColor * drawAlpha, true, offset: Vector2.UnitX * 10);
+            Projectile.DrawProjectileInHBCenter(lightColor * drawAlpha, true, offset: Vector2.UnitX * 18);
 
             return false;
         }
