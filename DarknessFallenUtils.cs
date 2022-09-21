@@ -62,6 +62,27 @@ namespace DarknessFallenMod
                 );
         }
 
+        public static void DrawAfterImage(this Projectile projectile, Color color, bool transitioning = true)
+        {
+            Texture2D tex = TextureAssets.Projectile[projectile.type].Value;
+            for (int i = 0; i < projectile.oldPos.Length; i++)
+            {
+                Vector2 pos = projectile.oldPos[i];
+
+                Main.EntitySpriteDraw(
+                    tex,
+                    pos + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition,
+                    null,
+                    color * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length),
+                    projectile.rotation,
+                    tex.Size() * 0.5f,
+                    projectile.scale,
+                    projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                    0
+                    );
+            }
+        }
+
         public static void OffsetShootPos(ref Vector2 position, Vector2 velocity, Vector2 offset)
         {
             Vector2 shootOffset = offset.RotatedBy(velocity.ToRotation());

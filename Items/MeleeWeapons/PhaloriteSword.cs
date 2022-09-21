@@ -31,7 +31,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<PhaloriteSwordProjectile>();
-            Item.shootSpeed = 21f;
+            Item.shootSpeed = 9.5f;
         }
 
 

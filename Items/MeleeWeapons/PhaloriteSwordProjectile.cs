@@ -3,52 +3,74 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System;
+using Terraria.GameContent;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
-    // This Example show how to implement simple homing projectile
-    // Can be tested with ExampleCustomAmmoGun
     public class PhaloriteSwordProjectile : ModProjectile
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Phalorite Orb"); // Name of the projectile. It can be appear in chat
-            Main.projFrames[Projectile.type] = 1; //number of frames in the animation;
+            DisplayName.SetDefault("Phalorite Orb");
+            Main.projFrames[Projectile.type] = 1;
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 8;
+            ProjectileID.Sets.TrailingMode[Type] = 0;
         }
 
-        // Setting the default parameters of the projectile
-        // You can check most of Fields and Properties here https://github.com/tModLoader/tModLoader/wiki/Projectile-Class-Documentation
+        
         public override void SetDefaults()
         {
-            Projectile.width = 16; // The width of projectile hitbox
-            Projectile.height = 16; // The height of projectile hitbox
+            Projectile.width = 15;
+            Projectile.height = 15;
             Projectile.penetrate = 10;
-            Projectile.aiStyle = 1; // The ai style of the projectile (0 means custom AI). For more please reference the source code of Terraria
-            Projectile.DamageType = DamageClass.Melee; // What type of damage does this projectile affect?
-            Projectile.friendly = true; // Can the projectile deal damage to enemies?
-            Projectile.hostile = false; // Can the projectile deal damage to the player?
-            Projectile.ignoreWater = true; // Does the projectile's speed be influenced by water?
-            Projectile.light = 0.9f; // How much light emit around the projectile
-            Projectile.tileCollide = true; // Can the projectile collide with tiles?
-            Projectile.timeLeft = 120; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+            Projectile.aiStyle = 1;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 120;
+            Projectile.extraUpdates = 2;
 
+            Projectile.localNPCHitCooldown = 20;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 10;
         }
 
         public override void AI()
         {
-            if (Main.rand.NextBool(9))
+            if (Main.rand.NextBool(3))
             {
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.ShadowbeamStaff);
             }
 
-            Projectile.rotation += 0.2f;
+            if (Main.dedServ) Lighting.AddLight(Projectile.Center, 0.4f, 0.2f, 0.9f);
+
+            Projectile.rotation += 0.1f;
         }
 
         public override void Kill(int timeLeft)
         {
             DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.ShadowbeamStaff, 5, speedFromCenter: 5, amount: 16);
+            DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, 2500, npc =>
+            {
+                if (!npc.friendly && Projectile.localNPCImmunity[npc.whoAmI] <= 0) npc.StrikeNPC(Projectile.damage, 0, 0);
+            });
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginWithShaderOptions();
+
+            Projectile.DrawAfterImage(Color.White * 0.6f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginWithDefaultOptions();
+
+            //Projectile.DrawProjectileInHBCenter(Color.White);
+            return true;
         }
     }
 }
