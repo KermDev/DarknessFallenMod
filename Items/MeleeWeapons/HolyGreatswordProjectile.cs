@@ -26,8 +26,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override void SetDefaults()
         {
-            Projectile.width = 0;
-            Projectile.height = 0;
+            Projectile.width = 200;
+            Projectile.height = 200;
 
             Projectile.knockBack = 8;
 
@@ -37,7 +37,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.light = 0.4f;
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
             Projectile.timeLeft = 9999;
             Projectile.ownerHitCheck = true;
             Projectile.penetrate = -1;

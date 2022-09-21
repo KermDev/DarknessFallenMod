@@ -36,10 +36,15 @@ namespace DarknessFallenMod.Items.MagicWeapons
 			Item.noMelee = true;
         }
 
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+			DarknessFallenUtils.OffsetShootPos(ref position, velocity, Vector2.UnitX * 70);
+        }
+
         public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
-            recipe.AddIngredient<Materials.FungiteBar>(20);
+            recipe.AddIngredient<FungiteBar>(20);
             recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 		}

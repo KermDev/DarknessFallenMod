@@ -24,7 +24,7 @@ namespace DarknessFallenMod.Items.Tools
             Item.useTime = 14;
             Item.useAnimation = 14;
             Item.autoReuse = true;
-            Item.axe = 59;
+            Item.axe = 12;
             Item.useTurn = true;
 
             Item.DamageType = DamageClass.Melee;

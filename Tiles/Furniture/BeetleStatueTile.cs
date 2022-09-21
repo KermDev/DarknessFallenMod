@@ -14,6 +14,8 @@ namespace DarknessFallenMod.Tiles.Furniture
 {
     public class BeetleStatueTile : Statue
     {
+        public override int[] NPCToSpawn => new int[] { ModContent.NPCType<NPCs.BlueBeetle>(), ModContent.NPCType<NPCs.RedBeetle>() };
         public override int StatueItem => ModContent.ItemType<Items.Placeable.Furniture.BeetleStatue>();
+        public override string MapName => "Beetle Statue";
     }
 }
