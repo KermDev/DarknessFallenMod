@@ -25,9 +25,9 @@ namespace DarknessFallenMod
 		{
 			Player drawPlayer = drawInfo.drawPlayer;
 			Item item = drawPlayer.HeldItem;
-			DarknessFallenItem darknessFallenItem = item.GetGlobalItem<DarknessFallenItem>();
+			DarknessFallenItem darknessFallenItem;
 
-			if (!drawPlayer.ItemAnimationActive || darknessFallenItem.WorldGlowMask == null) return;
+			if (!item.TryGetGlobalItem(out darknessFallenItem) || !drawPlayer.ItemAnimationActive || darknessFallenItem.WorldGlowMask == null) return;
 
 			SpriteEffects drawEffect = drawPlayer.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 

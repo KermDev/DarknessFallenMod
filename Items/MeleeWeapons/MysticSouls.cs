@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,7 +9,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Mystic Souls Sword"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
+			DisplayName.SetDefault("Mystic Souls Sword");
 			Tooltip.SetDefault("A sword fused with the souls of the fallen");
 		}
 
@@ -28,6 +29,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.autoReuse = true;
 			Item.shoot = ProjectileID.StarWrath;
 			Item.shootSpeed = 6f;
+			Item.GetGlobalItem<DarknessFallenItem>().WorldGlowMask = ModContent.Request<Texture2D>(Texture).Value;
         }
 
 		public override void AddRecipes()
