@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
+using Terraria.GameContent.Personalities;
 
 namespace DarknessFallenMod.NPCs.TownNPCs
 {
@@ -19,6 +20,23 @@ namespace DarknessFallenMod.NPCs.TownNPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Slime Prince");
+
+            Main.npcFrameCount[NPC.type] = 26;
+            NPCID.Sets.ExtraFramesCount[NPC.type] = 0;
+            NPCID.Sets.AttackFrameCount[NPC.type] = 5;
+            NPCID.Sets.DangerDetectRange[NPC.type] = 450;
+            NPCID.Sets.AttackType[NPC.type] = 3;
+            NPCID.Sets.AttackTime[NPC.type] = 12;
+            NPCID.Sets.AttackAverageChance[NPC.type] = 20;
+
+            NPC.Happiness
+                .SetBiomeAffection<ForestBiome>(AffectionLevel.Love) // Example Person prefers the .
+                .SetBiomeAffection<SnowBiome>(AffectionLevel.Dislike) // Example Person dislikes the .
+                .SetBiomeAffection<UndergroundBiome>(AffectionLevel.Hate) // Example Person dislikes the .
+                .SetNPCAffection(NPCID.Dryad, AffectionLevel.Love) // understands the food chain of slimes;
+                .SetNPCAffection(NPCID.Guide, AffectionLevel.Dislike) // he always kills slimes;
+                .SetNPCAffection(NPCID.ArmsDealer, AffectionLevel.Like) // cool technology
+                .SetNPCAffection(NPCID.TaxCollector, AffectionLevel.Hate); // should be giving tax to the lsime npc
         }
 
         public override void SetDefaults()
@@ -33,25 +51,14 @@ namespace DarknessFallenMod.NPCs.TownNPCs
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
             NPC.knockBackResist = 0.5f;
-            Main.npcFrameCount[NPC.type] = 26;
-            NPCID.Sets.ExtraFramesCount[NPC.type] = 0;
-            NPCID.Sets.AttackFrameCount[NPC.type] = 5;
-            NPCID.Sets.DangerDetectRange[NPC.type] = 450;
-            NPCID.Sets.AttackType[NPC.type] = 3;
-            NPCID.Sets.AttackTime[NPC.type] = 12;
-            NPCID.Sets.AttackAverageChance[NPC.type] = 20;
             //NPCID.Sets.HatOffsetY[NPC.type] = 0;
             AnimationType = NPCID.Guide;
         }
 
-        public override void AI()
-        {
-
-        }
 
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
-            if(Systems.DownedBossSystem.downedPrinceSlime)
+            if (Systems.DownedBossSystem.downedPrinceSlime)
             {
                 return true;
             }
@@ -62,10 +69,22 @@ namespace DarknessFallenMod.NPCs.TownNPCs
         public override List<string> SetNPCNameList()
         {
             return new List<string>()
-            { "Billy bobby jimmy jonny",
-                "Got three balls into the goal last night",
-                "hes doing pretty well this season",
-                "...WHAAAAT"
+            { "Albert",
+                "Charles",
+                "Harry",
+                "Edward",
+                "Bert",
+                "Arthur",
+                "Uther",
+                "William",
+                //william;
+                "Henry",
+                "Steven",
+                //henry;
+                "Richard",
+                "John"
+                //oi;
+                //horrible historise king and squeen song;
             };
         }
 
@@ -76,7 +95,7 @@ namespace DarknessFallenMod.NPCs.TownNPCs
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
-            if(firstButton)
+            if (firstButton)
             {
                 shop = true;
             }
@@ -249,7 +268,7 @@ namespace DarknessFallenMod.NPCs.TownNPCs
         public override string GetChat()
         {
             NPC.FindFirstNPC(ModContent.NPCType<SlimePrinceNPC>());
-            switch(Main.rand.Next(6))
+            switch (Main.rand.Next(7))
             {
                 default:
                     {
@@ -279,7 +298,12 @@ namespace DarknessFallenMod.NPCs.TownNPCs
                     {
                         return "Im going to cover this place in slime.";
                     }
+                case 6:
+                    {
+                        return "Y'Know, once upon a slime, it was daylight savings slime. I was outside walking with a slime, having a great slime, when they asked if i had watched CSI: slime scene investigation. Have you?";
+                    }
             }
+
         }
 
         public override void TownNPCAttackStrength(ref int damage, ref float knockback)
@@ -309,9 +333,9 @@ namespace DarknessFallenMod.NPCs.TownNPCs
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
-                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Jungle,
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.DayTime,
                 new FlavorTextBestiaryInfoElement("The eldest son of the royal slime family. While he may be weaker than the king and queen, he is far from the slime army's weakest soilders.")
-            }) ;
+            });
         }
     }
 }
