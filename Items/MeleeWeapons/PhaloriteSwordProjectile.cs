@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using System;
 using Terraria.GameContent;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.Audio;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
@@ -31,7 +32,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = true;
-            Projectile.timeLeft = 120;
+            Projectile.timeLeft = 190;
             Projectile.extraUpdates = 2;
 
             Projectile.localNPCHitCooldown = 20;
@@ -57,6 +58,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             {
                 if (!npc.friendly && Projectile.localNPCImmunity[npc.whoAmI] <= 0) npc.StrikeNPC(Projectile.damage, 0, 0);
             });
+
+            SoundEngine.PlaySound(SoundID.Item30 with { Volume = 0.1f }, Projectile.Center);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -68,8 +71,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithDefaultOptions();
-
-            //Projectile.DrawProjectileInHBCenter(Color.White);
             return true;
         }
     }

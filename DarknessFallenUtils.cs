@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -73,7 +74,7 @@ namespace DarknessFallenMod
                     tex,
                     pos + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition,
                     null,
-                    color * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length),
+                    transitioning ? color * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length) : color,
                     projectile.rotation,
                     tex.Size() * 0.5f,
                     projectile.scale,
@@ -257,6 +258,16 @@ namespace DarknessFallenMod
                 Vector2 velocity = dustVelocity;
                 velocity += center.DirectionTo(pos) * speedFromCenter;
                 Dust.NewDust(pos, 0, 0, dustType, velocity.X, velocity.Y, alpha, color, scale);
+            }
+        }
+
+        public static void NewGoreCircular(Vector2 center, int goreType, float radius, Vector2 goreVelocity = default, float scale = 1, int amount = 4, float rotation = 0, float speedFromCenter = 0, IEntitySource source = null)
+        {
+            foreach (Vector2 pos in GetCircularPositions(center, radius, amount, rotation))
+            {
+                Vector2 velocity = goreVelocity;
+                velocity += center.DirectionTo(pos) * speedFromCenter;
+                Gore.NewGore(source, pos, velocity, goreType, scale);
             }
         }
     }

@@ -53,6 +53,11 @@ namespace DarknessFallenMod.NPCs
             if (NPC.velocity.Y != 0) NPC.frame.Y = frameHeight;
         }
 
+        public override void OnKill()
+        {
+            DarknessFallenUtils.NewDustCircular(NPC.Center, DustID.Demonite, NPC.width / 2, speedFromCenter: 2, amount: 24);
+        }
+
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 0, maximumDropped: 8));

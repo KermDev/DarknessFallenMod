@@ -69,6 +69,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 			NPC.boss = true;
 			NPC.npcSlots = 20;
 			NPC.aiStyle = -1;
+			NPC.netAlways = true;
 
 			BannerItem = ModContent.ItemType<Items.Placeable.Banners.PrinceSlimeBanner>();
 			Banner = Type;
@@ -242,6 +243,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 
         public override void OnSpawn(IEntitySource source)
         {
+			PrinceSlimeOnePerSlimeRain.PrinceSlimeSpawned = true;
 			ChatHelper.BroadcastChatMessage(Terraria.Localization.NetworkText.FromLiteral("His slimy excellency has arrived"), Color.Green);
 
 			NPC.TargetClosest();
@@ -252,7 +254,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-			if (Main.slimeRain && !NPC.AnyNPCs(NPC.type) && !NPC.AnyNPCs(NPCID.KingSlime))
+			if (Main.slimeRain && !PrinceSlimeOnePerSlimeRain.PrinceSlimeSpawned && !NPC.AnyNPCs(NPC.type) && !NPC.AnyNPCs(NPCID.KingSlime))
             {
 				return 0.3f;
             }
@@ -267,4 +269,13 @@ namespace DarknessFallenMod.NPCs.Bosses
 			return ModContent.Request<Texture2D>("DarknessFallenMod/NPCs/Bosses/PrinceSlime_Head_Boss");
 		}
 	}
+
+	public class PrinceSlimeOnePerSlimeRain : ModSystem
+	{
+		public static bool PrinceSlimeSpawned { get; set; } = false;
+        public override void PostUpdateEverything()
+        {
+			if (!Main.slimeRain) PrinceSlimeSpawned = false;
+        }
+    }
 }

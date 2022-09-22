@@ -14,40 +14,66 @@ using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.ObjectData;
 using Terraria.WorldBuilding;
-using static Terraria.ModLoader.ModContent;
+using System.Linq;
+using System;
 
 namespace DarknessFallenMod
 {
 	public class DarknessFallenWorld : ModSystem
 	{
-		// We can use PostWorldGen for world generation tasks that don't need to happen between vanilla world generation steps.
+		
 		public override void PostWorldGen()
 		{
-			// Place some items in Ice Chests
-			int[] CavernChestItems = { ModContent.ItemType<Items.Accessories.HellFlame>() };
-			int CavernChestChoice = 0;
-			for (int chestIndex = 0; chestIndex < 1000; chestIndex++)
+			// chest style 1 is gold chest
+			SpawnItemsInChest(new int[][]
 			{
-				Chest chest = Main.chest[chestIndex];
-				// If you look at the sprite for Chests by extracting Tiles_21.xnb, you'll see that the 12th chest is the Ice Chest. Since we are counting from 0, this is where 11 comes from. 36 comes from the width of each tile including padding. 
-				if (chest != null && Main.tile[chest.x, chest.y].TileType == TileID.Containers && Main.tile[chest.x, chest.y].TileFrameX == 1 * 36 && chest.y >= Main.maxTilesY - 400)
-				{
-					for (int inventoryIndex = 0; inventoryIndex < 40; inventoryIndex++)
+				SetChestItem(ModContent.ItemType<Items.Accessories.HellFlame>(), 21, 1, 1),
+				SetChestItem(ModContent.ItemType<Items.Throwables.Gearspark>(), 18, 1, 9, 29),
+				SetChestItem(ModContent.ItemType<Items.Accessories.BrokenGlove>(), 21, 1, 1)
+			});
+		}
+
+		void SpawnItemsInChest(int[][] items)
+        {
+			foreach (Chest chest in Main.chest)
+			{
+				if (chest == null) continue;
+				
+                for (int i = 0; i < items.Length; i++)
+                {
+					int chestStyle = items[i][2];
+
+					if (TileObjectData.GetTileStyle(Main.tile[chest.x, chest.y]) == chestStyle)
 					{
-						if (chest.item[inventoryIndex].type == ItemID.None)
+						int itemType = items[i][0];
+						int itemChanceDenominator = items[i][1];
+						int itemStack = items[i].Length > 4 ? Main.rand.Next(items[i][3], items[i][4]) : items[i][3];
+
+						int chestIndex = Array.FindIndex(chest.item, item => item.type == ItemID.None);
+
+						if (chestIndex >= 0 && Main.rand.NextBool(itemChanceDenominator))
 						{
-							if(Main.rand.Next(0, 21) == 2)
-							{
-								chest.item[inventoryIndex].SetDefaults(CavernChestItems[CavernChestChoice]);
-								CavernChestChoice = (CavernChestChoice + 1) % CavernChestItems.Length;
-								// Alternate approach: Random instead of cyclical: chest.item[inventoryIndex].SetDefaults(Main.rand.Next(itemsToPlaceInIceChests));
-								break;
-							}
+							Item item = chest.item[chestIndex];
+
+							item.SetDefaults(itemType);
+							item.stack = Math.Clamp(itemStack, 1, item.maxStack);
 						}
 					}
-				}
+                }
+				
 			}
+		}
+
+		int[] SetChestItem(int itemType, int chanceDenominator, int chestStyle, int itemStack)
+        {
+			return new int[] { itemType, chanceDenominator, chestStyle, itemStack};
+        }
+
+        int[] SetChestItem(int itemType, int chanceDenominator, int chestStyle, int itemStackMin, int itemStackMax)
+        {
+			return new int[] { itemType, chanceDenominator, chestStyle, itemStackMin, itemStackMax };
 		}
 	}
 }

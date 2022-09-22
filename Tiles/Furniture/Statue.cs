@@ -65,7 +65,6 @@ namespace DarknessFallenMod.Tiles.Furniture
 
         public override void HitWire(int i, int j)
         {
-            Main.NewText("l");
             NPC.NewNPC(null, i * 16, j * 16, Main.rand.NextFromList(NPCToSpawn));
         }
     }

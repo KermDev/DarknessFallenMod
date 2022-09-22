@@ -6,14 +6,11 @@ namespace DarknessFallenMod.Items.Accessories
 {
     public class CorruptedAntenna : ModItem
     {
-        private const float V = 0.25f;
-
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Corrupted Antenna"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
+            DisplayName.SetDefault("Corrupted Antenna");
             Tooltip.SetDefault("Slightly increases movement speed" + 
                 $"\n9% increased attack speed");
-            //ItemID.Sets.ItemIconPulse[Item.type] = true; // The item pulses while in the player's inventory
         }
 
         public override void SetDefaults()
