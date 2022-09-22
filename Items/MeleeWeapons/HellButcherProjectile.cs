@@ -3,6 +3,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.Graphics;
+using Terraria.Graphics.Shaders;
+using System.Linq;
+using Terraria.DataStructures;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
@@ -16,6 +21,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         {
             DisplayName.SetDefault("Hell Butcher"); // Name of the projectile. It can be appear in chat
             Main.projFrames[Projectile.type] = 1; //number of frames in the animation;
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 8;
+            ProjectileID.Sets.TrailingMode[Type] = 4;
         }
 
         // Setting the default parameters of the projectile
@@ -65,6 +73,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override void Kill(int timeLeft) //this is caled whenever the projectile expires (only once);
         {
+            /*
             for (int i = 0; i <= 30; i++) //repeats 50 times;
             {
                 Random x = new Random();
@@ -72,14 +81,62 @@ namespace DarknessFallenMod.Items.MeleeWeapons
                 Random y = new Random();
                 int Y = y.Next(-60, 60);  //these 2 lines create another random number between -60 and 60
 
+                
                 Dust.NewDust(new Vector2(Projectile.position.X + 5 + X, Projectile.position.Y + 5 + Y), 8, 8, 174);
-
 
                 int dust = Dust.NewDust(Projectile.Center, 1, 1, DustID.FireflyHit, 0f, 0f, 0, default(Color), 174f);
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].velocity *= 0.3f;
                 Main.dust[dust].scale = (float)Main.rand.Next(100, 135) * 0.013f;    
             }
+            */
+
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.InfernoFork, 10, speedFromCenter: 3, amount: 30);
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.RedTorch, 10, speedFromCenter: 6, amount: 10, noGravity: true);
+        }
+
+        VertexStrip vertexStripMM = new VertexStrip();
+        public override bool PreDraw(ref Color lightColor)
+        {
+            /*
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginWithShaderOptions();
+
+            GameShaders.Misc["FlameLash"]
+                .UseSaturation(-2f)
+                .UseOpacity(6)
+                .Apply(new DrawData?());
+
+            //Enumerable.Repeat<float>(0, Projectile.oldRot.Count()).ToArray()
+
+            vertexStripMM.PrepareStrip(Projectile.oldPos,
+                Enumerable.Repeat<float>(0, Projectile.oldRot.Count()).ToArray(),
+                prog => Color.Lerp(Color.Red, Color.Yellow * 0.5f, prog),
+                prog => MathHelper.Lerp(30, 1, prog),
+                Projectile.Hitbox.Size() * 0.5f - Main.screenPosition,
+                null,
+                true
+                );
+
+            vertexStripMM.PrepareStripWithProceduralPadding(Projectile.oldPos,
+                Projectile.oldRot,
+                prog => Color.Lerp(Color.Red, Color.Yellow * 0.5f, prog),
+                prog => MathHelper.Lerp(30, 1, prog),
+                Projectile.Hitbox.Size() * 0.5f - Main.screenPosition,
+                true,
+                true
+                );
+
+            vertexStripMM.DrawTrail();
+
+            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginWithDefaultOptions();
+
+            */
+            Projectile.DrawProjectileInHBCenter(lightColor, centerOrigin: true);
+            return false;
         }
     }
 }

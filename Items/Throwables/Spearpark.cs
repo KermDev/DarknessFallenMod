@@ -57,15 +57,4 @@ namespace DarknessFallenMod.Items.Throwables
             return 0;
         }
     }
-
-    public class SpearparkMerchantGlobalNPC : GlobalNPC
-    {
-        public override void SetupShop(int type, Chest shop, ref int nextSlot)
-        {
-            if (type != NPCID.Merchant) return;
-
-            shop.item[nextSlot] = new Item(ModContent.ItemType<Spearpark>());
-            nextSlot++;
-        }
-    }
 }

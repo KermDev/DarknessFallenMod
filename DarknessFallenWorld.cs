@@ -30,7 +30,7 @@ namespace DarknessFallenMod
 			SpawnItemsInChest(new int[][]
 			{
 				SetChestItem(ModContent.ItemType<Items.Accessories.HellFlame>(), 21, 1, 1),
-				SetChestItem(ModContent.ItemType<Items.Throwables.Gearspark>(), 18, 1, 9, 29),
+				SetChestItem(ModContent.ItemType<Items.Throwables.Gearspark>(), 18, 1, 5, 18),
 				SetChestItem(ModContent.ItemType<Items.Accessories.BrokenGlove>(), 21, 1, 1)
 			});
 		}

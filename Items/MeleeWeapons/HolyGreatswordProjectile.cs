@@ -108,13 +108,40 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             swingSpeed = reader.ReadSingle();
         }
 
+        VertexStrip vertexStripMM = new VertexStrip();
         public override bool PreDraw(ref Color lightColor)
         {
+
             Texture2D tex = TextureAssets.Projectile[Type].Value;
 
             Vector2 offset = Vector2.One * swordResize;
             Vector2 positionOffset = Projectile.rotation.ToRotationVector2() * 53 + new Vector2(-10, 0) * Player.direction;
             positionOffset += positionOffset * swordResize;
+            /*
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginWithShaderOptions();
+
+            GameShaders.Misc["EmpressBlade"]
+                .UseShaderSpecificData(new Vector4(1f, 0.0f, 0.0f, 0.6f))
+                .Apply(new DrawData?());
+
+            vertexStripMM.PrepareStripWithProceduralPadding(
+                Projectile.oldPos,
+                Projectile.oldRot,
+                prog => Color.Lerp(Color.Red, Color.Yellow * 0.5f, prog),
+                prog => 100 + MathHelper.Lerp(100, 1, prog) * swordResize,
+                50 * Projectile.rotation.ToRotationVector2() - Main.screenPosition,
+                true,
+                true
+                );
+
+            vertexStripMM.DrawTrail();
+
+            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginWithDefaultOptions();
+            */
 
             Main.EntitySpriteDraw(
                 tex,

@@ -63,9 +63,15 @@ namespace DarknessFallenMod
                 );
         }
 
-        public static void DrawAfterImage(this Projectile projectile, Color color, bool transitioning = true)
+        public static void DrawAfterImage(this Projectile projectile, Color color, bool transitioning = true, bool animated = false, bool centerOrigin = true)
         {
             Texture2D tex = TextureAssets.Projectile[projectile.type].Value;
+
+            int frameHeight = tex.Height / Main.projFrames[projectile.type];
+            Rectangle? source = animated ? new Rectangle(0, frameHeight * projectile.frame + 1, tex.Width, frameHeight) : null;
+
+            Vector2 origin = centerOrigin ? new Vector2(tex.Width * 0.5f, frameHeight * 0.5f) : tex.Size() * 0.5f;
+
             for (int i = 0; i < projectile.oldPos.Length; i++)
             {
                 Vector2 pos = projectile.oldPos[i];
@@ -73,10 +79,10 @@ namespace DarknessFallenMod
                 Main.EntitySpriteDraw(
                     tex,
                     pos + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition,
-                    null,
+                    source,
                     transitioning ? color * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length) : color,
                     projectile.rotation,
-                    tex.Size() * 0.5f,
+                    origin,
                     projectile.scale,
                     projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                     0
@@ -250,14 +256,26 @@ namespace DarknessFallenMod
             else proj.frame = delayFrame;
         }
 
-        public static void NewDustCircular(Vector2 center, int dustType, float radius, Vector2 dustVelocity = default, int alpha = 0, Color color = default, float scale = 1, int amount = 8, float rotation = 0, float speedFromCenter = 0)
+        public static void NewDustCircular(
+            Vector2 center,
+            int dustType,
+            float radius,
+            Vector2 dustVelocity = default,
+            int alpha = 0,
+            Color color = default,
+            float scale = 1, int amount = 8,
+            float rotation = 0,
+            float speedFromCenter = 0,
+            bool? noGravity = null
+            )
         {
             
             foreach(Vector2 pos in GetCircularPositions(center, radius, amount, rotation))
             {
                 Vector2 velocity = dustVelocity;
                 velocity += center.DirectionTo(pos) * speedFromCenter;
-                Dust.NewDust(pos, 0, 0, dustType, velocity.X, velocity.Y, alpha, color, scale);
+                int dust = Dust.NewDust(pos, 0, 0, dustType, velocity.X, velocity.Y, alpha, color, scale);
+                Main.dust[dust].noGravity = noGravity ?? Main.dust[dust].noGravity;
             }
         }
 

@@ -20,18 +20,23 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 		{
 			Item.damage = 45;
 			Item.DamageType = DamageClass.Melee;
-			Item.width = 40;
-			Item.height = 40;
+			Item.width = 43;
+			Item.height = 41;
 			Item.useTime = 25;
 			Item.useAnimation = 25;
-			Item.useStyle = 1;
+			Item.useStyle = ItemUseStyleID.Swing;
 			Item.knockBack = 7;
 			Item.value = 13240;
-			Item.rare = 3;
+			Item.rare = ItemRarityID.Orange;
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<UnholyGreatSwordProjectile>();
 			Item.shootSpeed = 20f;
+		}
+
+        public override void UseItemFrame(Player player)
+        {
+
 		}
 
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)

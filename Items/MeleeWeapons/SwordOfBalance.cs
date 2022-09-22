@@ -9,7 +9,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sword of Balance"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
+			DisplayName.SetDefault("Sword of Balance");
 			Tooltip.SetDefault("Nature and Destruction combined");
 		}
 
@@ -17,8 +17,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 		{
 			Item.damage = 54;
 			Item.DamageType = DamageClass.Melee;
-			Item.width = 60;
-			Item.height = 60;
+			Item.width = 63;
+			Item.height = 63;
 			Item.useTime = 18;
 			Item.useAnimation = 18;
 			Item.useStyle = 1;

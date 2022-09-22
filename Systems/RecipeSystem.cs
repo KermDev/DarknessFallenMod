@@ -24,6 +24,7 @@ namespace DarknessFallenMod.Systems
 
             RecipeGroup consumables = new RecipeGroup(() => "Consumables", types.ToArray());
             consumables.IconicItemId = ItemID.PotionOfReturn;
+            consumables.GetText = () => "Potions, food etc.";
             RecipeGroup.RegisterGroup("Consumables", consumables);
         }
     }

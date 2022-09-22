@@ -226,6 +226,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.Slimescaliber>(), 5));
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.SummonWeapons.CultSlime>(), 5));
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Accessories.BottleOSlime>(), 3));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.SlimeBoomerang>(), 5));
 
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MagicWeapons.SlimyRain>(), 100));
 

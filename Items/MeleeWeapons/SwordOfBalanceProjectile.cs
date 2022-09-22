@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System;
+using Terraria.GameContent.Shaders;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
@@ -14,6 +15,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         {
             DisplayName.SetDefault("Orb of Balance"); // Name of the projectile. It can be appear in chat
             Main.projFrames[Projectile.type] = 2; //number of frames in the animation;
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 5;
+            ProjectileID.Sets.TrailingMode[Type] = 1;
         }
 
         // Setting the default parameters of the projectile
@@ -50,7 +54,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override void AI()
         {
-            if (Main.rand.NextBool(9))
+            if (Main.rand.NextBool(5))
             {
                 Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, DustID.BlueCrystalShard);
             }
@@ -61,6 +65,20 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override void Kill(int timeLeft)
         {
             DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.BlueCrystalShard, 5, speedFromCenter: 5, amount: 16);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginWithShaderOptions();
+
+            Projectile.DrawAfterImage(Color.White * 0.6f, animated: true);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginWithDefaultOptions();
+
+            Projectile.DrawProjectileInHBCenter(Color.White * 0.9f, true, centerOrigin: true);
+            return false;
         }
     }
 }
