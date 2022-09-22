@@ -42,4 +42,4 @@ namespace DarknessFallenMod.Items.Potions
 		}
 	}
 }
-}
+
