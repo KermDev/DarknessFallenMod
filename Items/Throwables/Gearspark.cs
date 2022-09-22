@@ -43,7 +43,7 @@ namespace DarknessFallenMod.Items.Throwables
 
             Item.noMelee = true;
 
-            Item.rare = 2;
+            Item.rare = ItemRarityID.LightRed;
             Item.knockBack = 1;
         }
 

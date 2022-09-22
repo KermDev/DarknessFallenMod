@@ -90,17 +90,7 @@ namespace DarknessFallenMod.NPCs
         {
             if (Main.netMode == NetmodeID.Server) return;
 
-            if (NPC.life < 0)
-            {
-                int LegGore = Mod.Find<ModGore>("YanagidakoGore0").Type;
-                int HeadGore = Mod.Find<ModGore>("YanagidakoGore1").Type;
-
-                for (int i = 0; i < 3; i++)
-                {
-                    Gore.NewGore(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, LegGore);
-                }
-                Gore.NewGore(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, HeadGore);
-            }
+            NPC.SpawnGoreOnDeath("YanagidakoGore0", "YanagidakoGore1");
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)

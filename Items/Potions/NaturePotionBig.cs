@@ -22,7 +22,7 @@ namespace DarknessFallenMod.Items.Potions
 			Item.height = 40;
 			Item.useTime = 25;
 			Item.useAnimation = 25;
-			Item.useStyle = ItemUseStyleID.EatFood;
+			Item.useStyle = ItemUseStyleID.DrinkLiquid;
 			Item.value = 17234;
 			Item.rare = ItemRarityID.White;
 			Item.UseSound = SoundID.Item3;

@@ -270,5 +270,31 @@ namespace DarknessFallenMod
                 Gore.NewGore(source, pos, velocity, goreType, scale);
             }
         }
+
+        public static void SpawnGoreOnDeath(this NPC npc, float speed = 2.5f, params string[] names)
+        {
+            if (npc.life <= 0)
+            {
+                foreach (string name in names)
+                {
+                    int gore = ModContent.Find<ModGore>(name).Type;
+                    Gore.NewGore(npc.GetSource_Death(), npc.position, Main.rand.NextVector2Unit() * speed, gore);
+                }
+            }
+        }
+
+        public static void SpawnGoreOnDeath(this NPC npc, params string[] names)
+        {
+            if (Main.netMode == NetmodeID.Server) return;
+
+            if (npc.life <= 0)
+            {
+                foreach (string name in names)
+                {
+                    int gore = npc.ModNPC.Mod.Find<ModGore>(name).Type;
+                    Gore.NewGore(npc.GetSource_Death(), npc.position, Main.rand.NextVector2Unit() * 2.5f, gore);
+                }
+            }
+        }
     }
 }

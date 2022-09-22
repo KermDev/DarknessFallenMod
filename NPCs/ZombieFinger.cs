@@ -82,14 +82,9 @@ namespace DarknessFallenMod.NPCs
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
         }
 
-        public override void OnKill()
+        public override void HitEffect(int hitDirection, double damage)
         {
-            int LegGore = GoreID.MaggotZombieMaggotPieces;
-
-            for (int i = 0; i < 3; i++)
-            {
-                Gore.NewGore(NPC.GetSource_FromThis(), NPC.position, new Vector2(Main.rand.Next(-6, 7), Main.rand.Next(-6, 7)), LegGore);
-            }
+            NPC.SpawnGoreOnDeath("ZombieFingerGore1", "ZombieFingerGore2", "ZombieFingerGore3");
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -98,7 +93,7 @@ namespace DarknessFallenMod.NPCs
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Visuals.Moon,
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
-                new FlavorTextBestiaryInfoElement("A finger from a zombie, at least thats what it looks like. I wonder where its from")
+                new FlavorTextBestiaryInfoElement("A finger from a zombie, at least thats what it looks like. I wonder where its from?")
             });
         }
     }

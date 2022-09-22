@@ -86,43 +86,10 @@ namespace DarknessFallenMod.NPCs
             NPC.velocity.X = Math.Clamp(NPC.velocity.X, -maxSpeed, maxSpeed);
         }
 
-        /* Some effects that dont work rn
-        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        public override void HitEffect(int hitDirection, double damage)
         {
-            if (inRange)
-            {
-                Texture2D tex = ModContent.Request<Texture2D>(Texture).Value;
-
-                Main.spriteBatch.End();
-                Main.spriteBatch.BeginWithShaderOptions();
-
-                for (int i = 0; i < NPC.oldPos.Length; i++)
-                {
-                    if (i % 3 == 0)
-                    {
-                        Vector2 pos = NPC.oldPos[i];
-
-                        Main.EntitySpriteDraw(
-                            tex,
-                            pos - Main.screenPosition + NPC.Hitbox.Size() * 0.5f,
-                            NPC.frame,
-                            drawColor * 0.5f,
-                            NPC.rotation,
-                            NPC.frame.Size() * 0.5f,
-                            NPC.scale,
-                            NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-                            0
-                            );
-                    }
-                }
-
-                Main.spriteBatch.End();
-                Main.spriteBatch.BeginWithDefaultOptions();
-            }
-
-            return true;
+            NPC.SpawnGoreOnDeath("BlueBeetleGore1", "BlueBeetleGore2", "BlueBeetleGore3", "BlueBeetleGore4");
         }
-        */
 
         public override void FindFrame(int frameHeight)
         {

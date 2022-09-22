@@ -59,6 +59,13 @@ namespace DarknessFallenMod.NPCs
             }
         }
 
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (Main.netMode == NetmodeID.Server) return;
+
+            NPC.SpawnGoreOnDeath("RedBeetleGore1", "RedBeetleGore2", "RedBeetleGore3");
+        }
+
         public override void FindFrame(int frameHeight)
         {
             NPC.spriteDirection = -NPC.direction;

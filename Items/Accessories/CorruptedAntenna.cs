@@ -26,9 +26,6 @@ namespace DarknessFallenMod.Items.Accessories
         {
             Player.moveSpeed += 0.12f;
             Player.GetAttackSpeed(DamageClass.Generic) += 0.09f;
-
         }
-
-
     }
 }

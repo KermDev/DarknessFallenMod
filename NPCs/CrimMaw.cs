@@ -78,18 +78,7 @@ namespace DarknessFallenMod.NPCs
         {
             if (Main.netMode == NetmodeID.Server) return;
 
-            if (NPC.life <= 0)
-            {
-                int gore1 = Mod.Find<ModGore>("CrimsonMawGore1").Type;
-                int gore2 = Mod.Find<ModGore>("CrimsonMawGore2").Type;
-                int gore3 = Mod.Find<ModGore>("CrimsonMawGore3").Type;
-
-                float speed = 2.5f;
-
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, Main.rand.NextVector2Unit() * speed, gore1);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, Main.rand.NextVector2Unit() * speed, gore2);
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, Main.rand.NextVector2Unit() * speed, gore3);
-            }
+            NPC.SpawnGoreOnDeath("CrimsonMawGore1", "CrimsonMawGore2", "CrimsonMawGore3");
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)

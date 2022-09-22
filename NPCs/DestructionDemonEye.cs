@@ -43,6 +43,13 @@ namespace DarknessFallenMod.NPCs
             NPC.frame.Y = (int)NPC.frameCounter / 4 * frameHeight;
         }
 
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (Main.netMode == NetmodeID.Server) return;
+
+            NPC.SpawnGoreOnDeath("DestructionEyeGore1", "DestructionEyeGore2", "DestructionEyeGore3", "DestructionEyeGore4");
+        }
+
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.SoulOfDestruction>(), 5, minimumDropped: 1, maximumDropped: 3));
