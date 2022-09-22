@@ -59,5 +59,14 @@ namespace DarknessFallenMod.Items.Throwables
         {
             return 0;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Spearpark>())
+                .AddIngredient(ItemID.Bomb)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 }

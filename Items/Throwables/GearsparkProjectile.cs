@@ -153,7 +153,7 @@ namespace DarknessFallenMod.Items.Throwables
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
 
-        const int explosionDamage = 60;
+        const int explosionDamage = 25;
         void Explode()
         {
             SoundEngine.PlaySound(SoundID.DD2_GoblinBomb, Projectile.Center);
