@@ -1,4 +1,5 @@
 using DarknessFallenMod.Items.MagicWeapons;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -30,8 +31,14 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Item.shoot = ModContent.ProjectileType<HellButcherProjectile>();
             Item.shootSpeed = 20f;
         }
-
-		public override void AddRecipes()
+		/*
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+			position.Y -= 20;
+			velocity = Item.shootSpeed * position.DirectionTo(Main.MouseWorld);
+        }
+		*/
+        public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
 			recipe.AddIngredient(ItemID.MeteoriteBar, 35);

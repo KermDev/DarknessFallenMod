@@ -48,7 +48,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override void AI()
         {
-            if (Main.rand.NextBool(5)) Dust.NewDust(Projectile.position, Projectile.width, 2, DustID.TintableDust, SpeedY: Projectile.velocity.Y, SpeedX: Projectile.velocity.X, Scale: Main.rand.NextFloat(0.7f, 1.5f), newColor: new Color(0, 255, 80), Alpha: 170);
+            if (Main.rand.NextBool(5)) Dust.NewDust(Projectile.position, Projectile.width, 2, DustID.TintableDust, SpeedY: Projectile.velocity.Y, SpeedX: Projectile.velocity.X, Scale: Main.rand.NextFloat(0.7f, 1.5f), newColor: new Color(0, 30, 255), Alpha: 170);
         }
     }
 }

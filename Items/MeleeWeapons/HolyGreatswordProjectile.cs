@@ -18,6 +18,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
     {
         Player Player => Main.player[Projectile.owner];
 
+        public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/HolyGreatsword";
+
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
@@ -36,12 +38,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.ignoreWater = true;
-            Projectile.light = 0.4f;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 9999;
             Projectile.ownerHitCheck = true;
             Projectile.penetrate = -1;
             Projectile.MaxUpdates = 3;
+
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
             
@@ -93,9 +95,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         float swordResize => swingSpeed * 0.6f;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            float normalBladeLenght = 100;
+            float normalBladeLenght = 68;
             Vector2 bladeDir = Projectile.rotation.ToRotationVector2();
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center + bladeDir * 30, Projectile.Center + bladeDir * (normalBladeLenght + normalBladeLenght * swordResize));
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + bladeDir * (normalBladeLenght + normalBladeLenght * swordResize));
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -115,7 +117,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Texture2D tex = TextureAssets.Projectile[Type].Value;
 
             Vector2 offset = Vector2.One * swordResize;
-            Vector2 positionOffset = Projectile.rotation.ToRotationVector2() * 53 + new Vector2(-10, 0) * Player.direction;
+            Vector2 positionOffset = Projectile.rotation.ToRotationVector2() * 42 + new Vector2(-8, 0) * Player.direction;
             positionOffset += positionOffset * swordResize;
             /*
             Main.spriteBatch.End();
@@ -155,6 +157,19 @@ namespace DarknessFallenMod.Items.MeleeWeapons
                 0
                 );
 
+            Texture2D glowMaskTex = ModContent.Request<Texture2D>("DarknessFallenMod/Items/MeleeWeapons/HolyGreatSwordGlowmask").Value;
+
+            Main.EntitySpriteDraw(
+                glowMaskTex,
+                Projectile.Center - Main.screenPosition + positionOffset,
+                null,
+                Color.White,
+                Projectile.rotation + MathHelper.PiOver4,
+                tex.Size() * 0.5f,
+                Vector2.One + offset,
+                SpriteEffects.None,
+                0
+                );
 
             return false;
         }

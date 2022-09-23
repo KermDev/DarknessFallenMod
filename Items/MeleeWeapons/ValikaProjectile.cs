@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
+using System;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
@@ -16,6 +17,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         {
             Main.projFrames[Projectile.type] = 3;
             DisplayName.SetDefault("Valika");
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 12;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
         public override void SetDefaults()
@@ -28,11 +32,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.hostile = false;
             Projectile.penetrate = 10;
             Projectile.timeLeft = 600;
-            Projectile.light = 0.50f;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = false;
+            Projectile.alpha = 140;
 
-            Projectile.localNPCHitCooldown = 6;
+            Projectile.localNPCHitCooldown = 20;
             Projectile.usesLocalNPCImmunity = true;
         }
 
@@ -54,7 +58,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             }
         }
 
-        
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            return false;
+        }
+
         public override void AI()
         {
             /*
@@ -85,7 +93,14 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             // Use the SafeNormalize extension method to avoid NaNs returned by Vector2.Normalize when the vector is zero 
             Projectile.velocity = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero) * projSpeed;
             */
+
+            Projectile.ManualFriendlyLocalCollision();
             Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.BasicAnimation(10);
+
+            if (!Main.dedServ) Lighting.AddLight(Projectile.Center, 0.4f, 1.8f, 0);
+
+            //Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.MinecartSpark);
         }
 
         // Finding the closest NPC to attack within maxDetectDistance range
@@ -101,13 +116,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             for (int k = 0; k < Main.maxNPCs; k++)
             {
                 NPC target = Main.npc[k];
-                // Check if NPC able to be targeted. It means that NPC is
-                // 1. active (alive)
-                // 2. chaseable (e.g. not a cultist archer)
-                // 3. max life bigger than 5 (e.g. not a critter)
-                // 4. can take damage (e.g. moonlord core after all it's parts are downed)
-                // 5. hostile (!friendly)
-                // 6. not immortal (e.g. not a target dummy)
                 if (target.CanBeChasedBy() && !HitNPCs.Contains(target))
                 {
                     // The DistanceSquared function returns a squared distance between 2 points, skipping relatively expensive square root calculations
@@ -124,6 +132,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
             return closestNPC;
         }
-        
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Projectile.DrawAfterImage(prog => Color.Lerp(Color.Yellow, Color.Red, prog) * (MathF.Sin(Main.GameUpdateCount * 0.1f) * 0.2f + 0.6f), true, true);
+            return true;
+        }
     }
 }

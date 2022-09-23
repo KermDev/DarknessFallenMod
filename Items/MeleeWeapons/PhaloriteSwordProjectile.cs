@@ -39,8 +39,15 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.usesLocalNPCImmunity = true;
         }
 
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            return false;
+        }
+
         public override void AI()
         {
+            Projectile.ManualFriendlyLocalCollision();
+
             if (Main.rand.NextBool(3))
             {
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.ShadowbeamStaff);
@@ -67,7 +74,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithShaderOptions();
 
-            Projectile.DrawAfterImage(Color.White * 0.6f);
+            Projectile.DrawAfterImage(prog => Color.White * 0.6f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithDefaultOptions();

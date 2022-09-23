@@ -29,7 +29,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<ValikaProjectile>();
-			Item.shootSpeed = 18f;
+			Item.shootSpeed = 22f;
         }
 
 		public override void AddRecipes()

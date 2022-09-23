@@ -63,7 +63,7 @@ namespace DarknessFallenMod
                 );
         }
 
-        public static void DrawAfterImage(this Projectile projectile, Color color, bool transitioning = true, bool animated = false, bool centerOrigin = true)
+        public static void DrawAfterImage(this Projectile projectile, Func<float, Color> color, bool transitioning = true, bool animated = false, bool centerOrigin = true)
         {
             Texture2D tex = TextureAssets.Projectile[projectile.type].Value;
 
@@ -80,7 +80,7 @@ namespace DarknessFallenMod
                     tex,
                     pos + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition,
                     source,
-                    transitioning ? color * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length) : color,
+                    transitioning ? color.Invoke((float)i / projectile.oldPos.Length) * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length) : color.Invoke((float)i / projectile.oldPos.Length),
                     projectile.rotation,
                     origin,
                     projectile.scale,
@@ -312,6 +312,22 @@ namespace DarknessFallenMod
                     int gore = npc.ModNPC.Mod.Find<ModGore>(name).Type;
                     Gore.NewGore(npc.GetSource_Death(), npc.position, Main.rand.NextVector2Unit() * 2.5f, gore);
                 }
+            }
+        }
+
+        public static void ManualFriendlyLocalCollision(this Projectile projectile)
+        {
+            if (projectile.friendly)
+            {
+                ForeachNPCInRectangle(projectile.Hitbox, npc =>
+                {
+                    if (!npc.friendly && projectile.localNPCImmunity[npc.whoAmI] <= 0)
+                    {
+                        npc.StrikeNPC(projectile.damage, projectile.knockBack, (int)(npc.Center.X - projectile.Center.X));
+                        projectile.localNPCImmunity[npc.whoAmI] = projectile.localNPCHitCooldown;
+                        projectile.penetrate--;
+                    }
+                });
             }
         }
     }

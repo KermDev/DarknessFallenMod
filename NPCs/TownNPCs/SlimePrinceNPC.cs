@@ -28,6 +28,7 @@ namespace DarknessFallenMod.NPCs.TownNPCs
             NPCID.Sets.AttackType[NPC.type] = 3;
             NPCID.Sets.AttackTime[NPC.type] = 12;
             NPCID.Sets.AttackAverageChance[NPC.type] = 20;
+            //NPCID.Sets.HatOffsetY[NPC.type] = 0;
 
             NPC.Happiness
                 .SetBiomeAffection<ForestBiome>(AffectionLevel.Love) // Example Person prefers the .
@@ -51,7 +52,7 @@ namespace DarknessFallenMod.NPCs.TownNPCs
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
             NPC.knockBackResist = 0.5f;
-            //NPCID.Sets.HatOffsetY[NPC.type] = 0;
+            
             AnimationType = NPCID.Guide;
         }
 

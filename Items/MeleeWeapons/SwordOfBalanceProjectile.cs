@@ -72,7 +72,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithShaderOptions();
 
-            Projectile.DrawAfterImage(Color.White * 0.6f, animated: true);
+            Projectile.DrawAfterImage(prog => Color.White * 0.6f, animated: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithDefaultOptions();
