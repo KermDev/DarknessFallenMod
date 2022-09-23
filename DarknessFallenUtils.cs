@@ -160,26 +160,29 @@ namespace DarknessFallenMod
 
         public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, float rangeSQ = float.MaxValue)
         {
-            return TryGetClosestEnemyNPC(center, out closest, npc => true, rangeSQ);
+            return TryGetClosestEnemyNPC(center, out closest, npc => false, rangeSQ);
         }
 
         public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, Func<NPC, bool> condition, float rangeSQ = float.MaxValue)
         {
             closest = null;
             NPC closestCondition = null;
+            float minDistCondition = rangeSQ;
             float minDist = rangeSQ;
             foreach (NPC npc in Main.npc)
             {
-                if (npc.CanBeChasedBy() && npc.DistanceSQ(center) < minDist)
+                if (!npc.CanBeChasedBy()) continue;
+                float dist = npc.DistanceSQ(center);
+
+                if (condition(npc) && dist < minDistCondition)
                 {
-                    if (condition(npc))
-                    {
-                        closestCondition = npc;
-                    }
-                    else
-                    {
-                        closest = npc;
-                    }
+                    closestCondition = npc;
+                    minDistCondition = dist;
+                }
+                else if (dist < minDist)
+                {
+                    closest = npc;
+                    minDist = dist;
                 }
             }
 

@@ -79,7 +79,7 @@ namespace DarknessFallenMod.Items.SummonWeapons
             Projectile.height = 34;
             Projectile.friendly = true;
             Projectile.ignoreWater = false;
-            Projectile.timeLeft = 7200;
+            Projectile.timeLeft = 2;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.minion = true;

@@ -56,7 +56,6 @@ namespace DarknessFallenMod.NPCs.TownNPCs
             AnimationType = NPCID.Guide;
         }
 
-
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
             if (Systems.DownedBossSystem.downedPrinceSlime)
