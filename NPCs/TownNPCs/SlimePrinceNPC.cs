@@ -56,6 +56,15 @@ namespace DarknessFallenMod.NPCs.TownNPCs
             AnimationType = NPCID.Guide;
         }
 
+        public override void AI()
+        {
+            if (NPC.collideY && NPC.velocity.X != 0 && new Random().Next(0, 100) <= 30)
+            {
+                int dust = Dust.NewDust(NPC.Center + new Vector2(new Random().Next(-14, 14), 24), 7, 7, DustID.GreenFairy, 0, 0, 0, new Color(150, 150, 150), 1.5f);
+                Main.dust[dust].velocity = Vector2.Zero;
+            }
+        }
+
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
             if (Systems.DownedBossSystem.downedPrinceSlime)
