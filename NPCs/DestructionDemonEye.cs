@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -56,6 +57,14 @@ namespace DarknessFallenMod.NPCs
             npcLoot.Add(ItemDropRule.Common(ItemID.Lens, minimumDropped: 0, maximumDropped: 2));
             npcLoot.Add(ItemDropRule.Common(ItemID.BlackLens, 100));
             npcLoot.Add(ItemDropRule.Common(ItemID.DemoniteOre, minimumDropped: 0, maximumDropped: 4));
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Times.NightTime,
+                new FlavorTextBestiaryInfoElement("Demon eyes whos corpses are infected by hatred and desctruction are reborn with will to destroy the environment and spread darkness.")
+            });
         }
     }
 }

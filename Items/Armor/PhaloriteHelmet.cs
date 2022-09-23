@@ -48,7 +48,6 @@ namespace DarknessFallenMod.Items.Armor
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemID.Gel, 15)
                 .AddIngredient(ModContent.ItemType<Items.Materials.PhaloriteBar>(), 15)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

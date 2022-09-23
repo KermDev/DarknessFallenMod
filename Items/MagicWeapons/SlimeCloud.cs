@@ -13,7 +13,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
     {
         public override void SetStaticDefaults()
         {
-			Tooltip.SetDefault("Creates a cloud that slows and poison enemies");
+			Tooltip.SetDefault("Creates a cloud that damages and slows enemies.");
 		}
 
         public override void SetDefaults()

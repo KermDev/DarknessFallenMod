@@ -26,7 +26,7 @@ namespace DarknessFallenMod.Items.Tools
             Item.useTurn = true;
 
             Item.DamageType = DamageClass.Melee;
-            Item.damage = 41;
+            Item.damage = 22;
             Item.knockBack = 3.2f;
             Item.crit = 4;
 
@@ -39,7 +39,7 @@ namespace DarknessFallenMod.Items.Tools
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient<MagmiteBar>(10);
+            recipe.AddIngredient<MagmiteBar>(15);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }

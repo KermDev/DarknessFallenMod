@@ -64,17 +64,9 @@ namespace DarknessFallenMod.Items.MagicWeapons
                 Projectile.frameCounter = 0;
             }
         }
-        public override void Kill(int timeLeft) //this is caled whenever the projectile expires (only once);
+        public override void Kill(int timeLeft)
         {
-            for (int i = 0; i <= 49; i++) //repeats 50 times;
-            {
-                Random x = new Random();
-                int X = x.Next(-60, 60); //these 2 lines create a random number between -60 and 60
-                Random y = new Random();
-                int Y = y.Next(-60, 60);  //these 2 lines create another random number between -60 and 60
-
-                Dust.NewDust(new Vector2(Projectile.position.X + 5 + X, Projectile.position.Y + 5 + Y), 8, 8, 5);
-            }
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, 5, 10, speedFromCenter: 6, amount: 18);
         }
 
         public override bool PreDraw(ref Color lightColor)

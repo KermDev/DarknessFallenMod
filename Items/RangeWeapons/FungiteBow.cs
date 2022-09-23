@@ -45,7 +45,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ModContent.ItemType<Materials.FungiteBar>(), 25)
+                .AddIngredient(ModContent.ItemType<Materials.FungiteBar>(), 15)
                 .AddTile(TileID.Anvils)
                 .Register();
         }

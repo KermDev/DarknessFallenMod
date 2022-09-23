@@ -17,7 +17,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
         }
         public override void SetDefaults()
         {
-            Item.damage = 34;
+            Item.damage = 170;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 17;
             Item.height = 39;
@@ -38,6 +38,14 @@ namespace DarknessFallenMod.Items.RangeWeapons
         public override Vector2? HoldoutOffset()
         {
             return new Vector2(-3, 0);
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ModContent.ItemType<Materials.PhaloriteBar>(), 15)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 

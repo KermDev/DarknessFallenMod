@@ -26,7 +26,7 @@ namespace DarknessFallenMod.Items.Potions
 
 		public override void SetDefaults()
 		{
-			buffs = Enumerable.Range(1, BuffLoader.BuffCount).Where(type => !blackListedBuffs.Contains(type)).ToArray();
+			buffs = Enumerable.Range(1, Main.maxBuffTypes - 1).Where(type => !blackListedBuffs.Contains(type) && !Main.buffNoTimeDisplay[type]).ToArray();
 
 			Item.width = 23;
 			Item.height = 31;

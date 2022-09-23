@@ -1,3 +1,5 @@
 displayName = Darkness Fallen
 author = Kermit
+hideCode = true
+hideResources = true
 version = 0.40

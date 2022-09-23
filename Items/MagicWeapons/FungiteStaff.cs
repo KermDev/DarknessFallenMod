@@ -44,7 +44,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
         public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
-            recipe.AddIngredient<FungiteBar>(20);
+            recipe.AddIngredient<FungiteBar>(15);
             recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 		}

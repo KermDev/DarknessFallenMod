@@ -40,7 +40,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
                 NPC temptarget = Main.npc[k];
 
                 float sqrDistanceToTarget = Vector2.Distance(temptarget.Center, player.Center);
-                float sqrMaxDetectDistance = 100;
+                float sqrMaxDetectDistance = 150;
                 
                 if (temptarget.CanBeChasedBy() && sqrDistanceToTarget < sqrMaxDetectDistance)
                 {

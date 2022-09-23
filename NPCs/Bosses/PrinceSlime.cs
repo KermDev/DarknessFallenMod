@@ -12,6 +12,7 @@ using Terraria.Audio;
 using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -260,7 +261,15 @@ namespace DarknessFallenMod.NPCs.Bosses
             }
 			return 0;
         }
-    }
+
+		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+		{
+			bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Events.SlimeRain,
+				new FlavorTextBestiaryInfoElement("The prince of all that is slime, it has somehow acquired a crown with magic powers.")
+			});
+		}
+	}
 
 	public class PrinceSlimeBossBar : ModBossBar
     {

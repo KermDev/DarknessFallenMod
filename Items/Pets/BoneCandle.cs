@@ -36,9 +36,8 @@ namespace DarknessFallenMod.Items.Pets
 		public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
-			recipe.AddIngredient(ItemID.Bone, 100);
-			recipe.AddIngredient(ItemID.WaterCandle, 1);
-			recipe.AddIngredient(ItemID.Torch, 10);
+			recipe.AddIngredient(ItemID.Bone, 50);
+			recipe.AddIngredient(ItemID.Candle, 1);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 		}

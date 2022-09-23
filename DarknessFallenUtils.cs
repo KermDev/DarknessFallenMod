@@ -324,7 +324,7 @@ namespace DarknessFallenMod
             {
                 ForeachNPCInRectangle(projectile.Hitbox, npc =>
                 {
-                    if (!npc.friendly && projectile.localNPCImmunity[npc.whoAmI] <= 0)
+                    if (!npc.friendly && npc.active && npc.life > 0 && projectile.localNPCImmunity[npc.whoAmI] <= 0)
                     {
                         npc.StrikeNPC(projectile.damage, projectile.knockBack, (int)(npc.Center.X - projectile.Center.X));
                         projectile.localNPCImmunity[npc.whoAmI] = projectile.localNPCHitCooldown;

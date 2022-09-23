@@ -30,7 +30,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.aiStyle = 0;
             Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = 10;
+            Projectile.penetrate = -1;
             Projectile.timeLeft = 600;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = false;

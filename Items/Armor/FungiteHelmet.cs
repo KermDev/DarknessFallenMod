@@ -52,7 +52,7 @@ namespace DarknessFallenMod.Items.Armor
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ModContent.ItemType<Materials.FungiteBar>(), 20)
+                .AddIngredient(ModContent.ItemType<Materials.FungiteBar>(), 15)
                 .AddTile(TileID.Anvils)
                 .Register();
         }

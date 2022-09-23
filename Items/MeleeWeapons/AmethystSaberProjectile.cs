@@ -27,9 +27,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.light = 2.50f;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = true;
-
-
-
+            Projectile.alpha = 255;
         }
 
 

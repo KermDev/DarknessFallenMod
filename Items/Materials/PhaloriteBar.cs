@@ -23,9 +23,9 @@ namespace DarknessFallenMod.Items.Materials
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.MythrilBar, 3);
-            recipe.AddIngredient(ItemID.DemoniteBar, 3);
-            recipe.AddIngredient(ItemID.ChlorophyteBar, 3);
+            recipe.AddIngredient(ItemID.MythrilBar);
+            recipe.AddIngredient(ItemID.DemoniteBar);
+            recipe.AddIngredient(ItemID.ChlorophyteBar);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.Register();
         }
