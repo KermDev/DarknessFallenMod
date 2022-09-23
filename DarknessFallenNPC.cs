@@ -28,6 +28,8 @@ namespace DarknessFallenMod
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.SlimeBoomerang>(), 5));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MagicWeapons.SlimeCloud>(), 5));
                     break;
+                case NPCID.FlyingFish:
+                    break;
             }
         }
     }
