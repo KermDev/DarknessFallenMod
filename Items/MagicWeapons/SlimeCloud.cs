@@ -18,7 +18,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 
         public override void SetDefaults()
         {
-			Item.damage = 0;
+			Item.damage = 9;
 			Item.mana = 6;
 			Item.DamageType = DamageClass.Magic;
 			Item.width = 45;
@@ -81,11 +81,11 @@ namespace DarknessFallenMod.Items.MagicWeapons
 					Vector2.UnitY * 7,
 					ModContent.ProjectileType<SlimeCloudProjectileRain>(),
 					Projectile.damage,
-					0,
+					9,
 					Projectile.owner
 					);
 
-				Dust.NewDust(pos + Vector2.UnitY * -20, 1, 1, DustID.TintableDustLighted, SpeedY: 2, SpeedX: Main.rand.Next(-1, 1), Scale: Main.rand.NextFloat(0.4f, 1.5f), newColor: new Color(255, 0, 80), Alpha: 200);
+				Dust.NewDust(pos + Vector2.UnitY * -20, 1, 1, DustID.BlueFairy, SpeedY: 2, SpeedX: Main.rand.Next(-1, 1), Scale: Main.rand.NextFloat(0.4f, 1.5f), newColor: new Color(255, 0, 80), Alpha: 200);
 
 				Main.projectile[proj].friendly = true;
 				Main.projectile[proj].hostile = false;
@@ -140,14 +140,9 @@ namespace DarknessFallenMod.Items.MagicWeapons
 			Projectile.aiStyle = 1;
         }
 
-        public override bool? CanHitNPC(NPC target)
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-			if (target.Hitbox.Intersects(Projectile.Hitbox) && !target.friendly)
-            {
-				target.velocity.X *= 0.96f;
-				target.AddBuff(BuffID.Poisoned, 600);
-			}
-            return false;
-        }
+			target.velocity.X *= 0.96f;
+		}
     }
 }

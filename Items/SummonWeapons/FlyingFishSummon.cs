@@ -43,13 +43,25 @@ namespace DarknessFallenMod.Items.SummonWeapons
             Item.buffType = ModContent.BuffType<FlyingFishSummonBuff>();
         }
 
+        public override void UseItemFrame(Player player)
+        {
+            player.itemLocation -= Vector2.UnitY * 12;
+        }
+
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+            position = Main.MouseWorld;
+        }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             player.AddBuff(Item.buffType, 2);
 
+            
             int proj = Projectile.NewProjectile(source, position, Vector2.Zero, type, damage, knockback, player.whoAmI);
             Main.projectile[proj].originalDamage = damage;
+
+            DarknessFallenUtils.NewDustCircular(position, DustID.ShadowbeamStaff, 10, speedFromCenter: 5, noGravity: true);
 
             return false;
         }
@@ -78,8 +90,8 @@ namespace DarknessFallenMod.Items.SummonWeapons
 
         public override void SetDefaults()
         {
-            Projectile.width = 21;
-            Projectile.height = 34;
+            Projectile.width = 35;
+            Projectile.height = 18;
             Projectile.friendly = true;
             Projectile.ignoreWater = false;
             Projectile.timeLeft = 2;
@@ -90,9 +102,15 @@ namespace DarknessFallenMod.Items.SummonWeapons
             Projectile.damage = 0;
             Projectile.minionSlots = 1f;
             Projectile.aiStyle = -1;
+            Projectile.netImportant = true;
 
             Projectile.localNPCHitCooldown = 20;
             Projectile.usesLocalNPCImmunity = true;
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            currentTarget = Player.Center;
         }
 
         Vector2 currentTarget;
@@ -111,11 +129,12 @@ namespace DarknessFallenMod.Items.SummonWeapons
             }
             else
             {
-                if (Main.rand.NextBool(8)) currentTarget = Player.Center + Main.rand.NextVector2Unit() * 50;
-                moveSpeed = Projectile.DistanceSQ(Player.Center) * 0.0001f;
+
+                if (Main.rand.NextBool(20)) currentTarget = Player.Center + Main.rand.NextVector2Unit() * 120;
+                moveSpeed = Math.Clamp(Projectile.DistanceSQ(currentTarget) * 0.0001f, 1f, 1000f);
             }
 
-            Vector2 velToTarg = currentTarget.DirectionFrom(Projectile.Center) * moveSpeed;
+            Vector2 velToTarg = Projectile.Center.DirectionTo(currentTarget) * moveSpeed;
             Projectile.velocity = (Projectile.velocity * (inertia - 1) + velToTarg) / inertia;
 
             Projectile.spriteDirection = -Math.Sign(Projectile.velocity.X);
@@ -125,7 +144,12 @@ namespace DarknessFallenMod.Items.SummonWeapons
         }
 
         public override bool MinionContactDamage() => true;
-        
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            DarknessFallenUtils.DrawProjectileInHBCenter(Projectile, lightColor, true, centerOrigin: true);
+            return false;
+        }
     }
 
     public class FlyingFishSummonBuff : ModBuff

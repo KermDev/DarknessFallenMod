@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.Accessories
 {
-    
+    [AutoloadEquip(EquipType.Body)]
     public class MagmiteShield : ModItem
     {
         public override void SetStaticDefaults()

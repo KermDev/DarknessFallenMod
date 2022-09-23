@@ -23,8 +23,8 @@ namespace DarknessFallenMod.Items.MagicWeapons
 			Item.DamageType = DamageClass.Magic;
 			Item.width = 30;
 			Item.height = 46;
-			Item.useTime = 28;
-			Item.useAnimation = 28;
+			Item.useTime = 24;
+			Item.useAnimation = 24;
 			Item.useStyle = 5;
 			Item.knockBack = 3;
 			Item.value = 18764;
@@ -32,7 +32,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 			Item.UseSound = SoundID.Item8;
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<FungiteStaffProjectile>();
-			Item.shootSpeed = 8f;
+			Item.shootSpeed = 13f;
 			Item.noMelee = true;
         }
 

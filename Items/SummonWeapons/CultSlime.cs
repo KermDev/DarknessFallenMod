@@ -87,7 +87,7 @@ namespace DarknessFallenMod.Items.SummonWeapons
             Projectile.damage = 0;
             Projectile.alpha = 50;
             Projectile.minionSlots = 0.33333333333333333333334f;
-            
+            Projectile.netImportant = true;
 
             Projectile.localNPCHitCooldown = 20;
             Projectile.usesLocalNPCImmunity = true;

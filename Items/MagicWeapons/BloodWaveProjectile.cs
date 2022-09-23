@@ -24,8 +24,8 @@ namespace DarknessFallenMod.Items.MagicWeapons
         // You can check most of Fields and Properties here https://github.com/tModLoader/tModLoader/wiki/Projectile-Class-Documentation
         public override void SetDefaults()
         {
-            Projectile.width = 48; // The width of projectile hitbox
-            Projectile.height = 48; // The height of projectile hitbox
+            Projectile.width = 35; // The width of projectile hitbox
+            Projectile.height = 35; // The height of projectile hitbox
             Projectile.light = 0.75f;
             Projectile.aiStyle = 0; // The ai style of the projectile (0 means custom AI). For more please reference the source code of Terraria
             Projectile.DamageType = DamageClass.Magic; // What type of damage does this projectile affect?
@@ -75,6 +75,12 @@ namespace DarknessFallenMod.Items.MagicWeapons
 
                 Dust.NewDust(new Vector2(Projectile.position.X + 5 + X, Projectile.position.Y + 5 + Y), 8, 8, 5);
             }
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Projectile.DrawProjectileInHBCenter(Color.White, true, centerOrigin: true);
+            return false;
         }
     }
 }

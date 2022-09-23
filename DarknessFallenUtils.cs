@@ -333,5 +333,26 @@ namespace DarknessFallenMod
                 });
             }
         }
+
+        public static string GetColored(this string text, Color color)
+        {
+            return $"[c/{color.Hex3()}:{text}]";
+        }
+
+        public static void KillOldestProjectile(this Player player, int projType)
+        {
+            Projectile oldest = null;
+            float minTimeLeft = float.MaxValue;
+            foreach (Projectile proj in Main.projectile)
+            {
+                if (proj.type == projType && proj.owner == player.whoAmI && proj.timeLeft < minTimeLeft)
+                {
+                    oldest = proj;
+                    minTimeLeft = proj.timeLeft;
+                }
+            }
+
+            oldest?.Kill();
+        }
     }
 }

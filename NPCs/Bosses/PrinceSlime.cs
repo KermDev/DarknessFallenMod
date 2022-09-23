@@ -223,22 +223,22 @@ namespace DarknessFallenMod.NPCs.Bosses
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.Slimescaliber>(), 5));
-			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.SummonWeapons.CultSlime>(), 5));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.Slimescaliber>(), 2));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.SummonWeapons.CultSlime>(), 4));
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Accessories.BottleOSlime>(), 3));
 
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MagicWeapons.SlimyRain>(), 100));
 
-			// vanity set
-			npcLoot.Add(ItemDropRule.OneFromOptions(3,
-				ModContent.ItemType<Items.Vanity.SlimeGuardHelmet>(),
-				ModContent.ItemType<Items.Vanity.SlimeGuardChestplate>(),
-				ModContent.ItemType<Items.Vanity.SlimeGuardLeggings>()));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Vanity.SlimeGuardHelmet>(), 3));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Vanity.SlimeGuardChestplate>(), 3));
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Vanity.SlimeGuardLeggings>(), 3));
 
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Placeable.Furniture.PrinceSlimeTrophy>(), 10));
 			npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<Items.Placeable.Furniture.PrinceSlimeRelic>()));
 
-			npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 2, maximumDropped: 10));
+			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<Items.Consumables.PrinceSlimeBossBag>()));
+
+			npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 2, maximumDropped: 12));
 		}
 
         public override void OnSpawn(IEntitySource source)

@@ -29,9 +29,11 @@ namespace DarknessFallenMod
 			// chest style 1 is gold chest
 			SpawnItemsInChest(new int[][]
 			{
-				SetChestItem(ModContent.ItemType<Items.Accessories.HellFlame>(), 21, 1, 1),
-				SetChestItem(ModContent.ItemType<Items.Throwables.Gearspark>(), 18, 1, 5, 18),
-				SetChestItem(ModContent.ItemType<Items.Accessories.BrokenGlove>(), 21, 1, 1)
+				SetChestItem(ModContent.ItemType<Items.Accessories.HellFlame>(), 12, 1, 1),
+				SetChestItem(ModContent.ItemType<Items.Throwables.Gearspark>(), 4, 1, 5, 18),
+				SetChestItem(ModContent.ItemType<Items.Accessories.BrokenGlove>(), 12, 1, 1),
+				SetChestItem(ModContent.ItemType<Items.Materials.FungiteBar>(), 20, 32, 1, 5), //mushroom chest
+				SetChestItem(ModContent.ItemType<Items.MagicWeapons.FungiteStaff>(), 100, 32, 1) //mushroom chest
 			});
 		}
 
