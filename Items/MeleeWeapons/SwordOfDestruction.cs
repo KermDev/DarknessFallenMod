@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 using DarknessFallenMod.Items.Materials;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
@@ -75,7 +76,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Projectile.extraUpdates = 4;
 
 			Projectile.usesLocalNPCImmunity = true;
-			Projectile.localNPCHitCooldown = Projectile.extraUpdates * Player.itemAnimationMax - 10;
+			Projectile.localNPCHitCooldown = Projectile.extraUpdates * Player.itemAnimationMax - 1;
 		}
 
 		ref float startAngle => ref Projectile.ai[0];
@@ -116,9 +117,13 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             {
 				target.StrikeNPC(5000000, Projectile.knockBack, (int)Projectile.Center.DirectionTo(target.Center).X, noEffect: true, crit: true);
 
-				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Blood, 1, speedFromCenter: 4, amount: 128);
-				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Ghost, 30, speedFromCenter: 4, amount: 64);
+				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Blood, 1, speedFromCenter: 4, amount: 48);
 			}
+        }
+
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+			hitDirection = Math.Sign(Projectile.Center.DirectionTo(target.Center).X);
         }
 
         public override bool PreDraw(ref Color lightColor)
