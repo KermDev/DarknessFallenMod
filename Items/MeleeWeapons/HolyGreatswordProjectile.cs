@@ -23,7 +23,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 20;
+            ProjectileID.Sets.TrailCacheLength[Type] = 30;
         }
 
         public override void SetDefaults()
@@ -81,9 +81,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Vector2 rotVector = Projectile.rotation.ToRotationVector2();
             Vector2 rotVector90 = rotVector.RotatedBy(-MathHelper.PiOver2);
 
-            Dust.NewDust(Projectile.Center + rotVector * Main.rand.NextFloat(40, SwordResize * 100 + 100) + rotVector90 * 45 * Player.direction, 1, 1, DustID.ShadowbeamStaff, Scale: 0.4f);
-            
-            
+            Dust.NewDust(Projectile.Center + rotVector * Main.rand.NextFloat(40, SwordResize * 100 + 100) + rotVector90 * 20 * Player.direction, 1, 1, DustID.ShadowbeamStaff, Scale: 0.4f);
         }
         public override bool? CanCutTiles()
         {
@@ -91,11 +89,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         }
 
         float SwordResize => swingSpeed * 0.6f;
+        const int bladeLenght = 68;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            float normalBladeLenght = 68;
             Vector2 bladeDir = Projectile.rotation.ToRotationVector2();
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + bladeDir * (normalBladeLenght + normalBladeLenght * SwordResize));
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + bladeDir * (bladeLenght + bladeLenght * SwordResize));
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -113,14 +111,36 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
             Texture2D tex = TextureAssets.Projectile[Type].Value;
 
-            Vector2 offset = Vector2.One * SwordResize;
-            Vector2 positionOffset = Projectile.rotation.ToRotationVector2() * 42 + new Vector2(-8, 0) * Player.direction;
-            positionOffset += positionOffset * SwordResize;
-            
+            Vector2 scale = Vector2.One *  (1 + SwordResize);
+            Vector2 origin = new Vector2(-18, 67);
+            Vector2 posOffset = -Projectile.rotation.ToRotationVector2() * bladeLenght * SwordResize;
+
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithShaderOptions();
 
-            Projectile.DrawAfterImage(prog => Color.White * 0.2f, centerOrigin: true, posOffset: positionOffset, scaleOffset: offset, rotOffset: MathHelper.PiOver4);
+            //Projectile.DrawAfterImage(prog => Color.Lerp(Color.LightGoldenrodYellow, Color.Black, prog) * 0.1f, origin: origin, posOffset: posOffset, scaleOffset: scale - Vector2.One, rotOffset: MathHelper.PiOver4, oldPos: false);
+
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
+            {
+                float prog = (float)i / Projectile.oldPos.Length;
+                Color color = Color.Lerp(Color.Gray, Color.White, prog) * 0.1f * ((float)(Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
+
+                float oldRot = Projectile.oldRot[i];
+                if (oldRot == 0) continue;
+                Vector2 posOffset2 = -oldRot.ToRotationVector2() * bladeLenght * SwordResize;
+
+                Main.EntitySpriteDraw(
+                    tex,
+                    Projectile.Center - Main.screenPosition + posOffset2,
+                    null,
+                    color,
+                    oldRot + MathHelper.PiOver4,
+                    origin,
+                    scale,
+                    SpriteEffects.None,
+                    0
+                    );
+            }
 
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithDefaultOptions();
@@ -128,12 +148,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
             Main.EntitySpriteDraw(
                 tex,
-                Projectile.Center - Main.screenPosition + positionOffset,
+                Projectile.Center - Main.screenPosition + posOffset,
                 null,
                 lightColor,
                 Projectile.rotation + MathHelper.PiOver4,
-                tex.Size() * 0.5f,
-                Vector2.One + offset,
+                origin,
+                scale,
                 SpriteEffects.None,
                 0
                 );
@@ -142,12 +162,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
             Main.EntitySpriteDraw(
                 glowMaskTex,
-                Projectile.Center - Main.screenPosition + positionOffset,
+                Projectile.Center - Main.screenPosition + posOffset,
                 null,
                 Color.White,
                 Projectile.rotation + MathHelper.PiOver4,
-                tex.Size() * 0.5f,
-                Vector2.One + offset,
+                origin,
+                scale,
                 SpriteEffects.None,
                 0
                 );

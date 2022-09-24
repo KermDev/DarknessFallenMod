@@ -12,7 +12,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Sword of Destruction");
-			Tooltip.SetDefault("The sword powered by destruction souls");
+			Tooltip.SetDefault("The sword powered by destruction souls".GetColored(Color.DimGray) + "\n" + "10% chance to one shot a non boss enemy".GetColored(Color.DarkGray));
 		}
 
 		public override void SetDefaults()
@@ -21,10 +21,10 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 2;
 			Item.height = 2;
-			Item.useTime = 12;
-			Item.useAnimation = 12;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
 			Item.useStyle = 1;
-			Item.knockBack = 6;
+			Item.knockBack = 5;
 			Item.value = 4300;
 			Item.rare = 0;
 			Item.UseSound = SoundID.Item1;
@@ -61,7 +61,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Projectile.width = 40;
 			Projectile.height = 40;
 
-			Projectile.knockBack = 8;
+			Projectile.knockBack = 5;
 
 			Projectile.aiStyle = -1;
 			Projectile.DamageType = DamageClass.MeleeNoSpeed;
@@ -72,17 +72,18 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Projectile.timeLeft = 9999;
 			Projectile.ownerHitCheck = true;
 			Projectile.penetrate = -1;
-			Projectile.MaxUpdates = 3;
+			Projectile.extraUpdates = 4;
 
 			Projectile.usesLocalNPCImmunity = true;
-			Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
+			Projectile.localNPCHitCooldown = Projectile.extraUpdates * Player.itemAnimationMax - 10;
 		}
 
-		const float swingAngle = 0.2f;
+		ref float startAngle => ref Projectile.ai[0];
+		const float swingAngle = 1.3f;
 		static int swingDir = 1;
         public override void OnSpawn(IEntitySource source)
         {
-			Projectile.rotation = Projectile.velocity.ToRotation() - swingAngle * Player.direction * swingDir;
+			startAngle = Projectile.velocity.ToRotation() - swingAngle * Player.direction * swingDir;
 			Projectile.velocity = Vector2.Zero;
 		}
 
@@ -95,7 +96,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 				return;
             }
 
-			Projectile.rotation += (float)(swingAngle * 4f * Player.direction * swingDir) / Player.itemAnimationMax;
+			Projectile.rotation = startAngle + 4 * swingAngle * swingDir * Player.direction * ((float)(Player.itemAnimationMax - Player.itemAnimation) / Player.itemAnimationMax);
 
 			Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter, true);
 			Player.heldProj = Projectile.whoAmI;
@@ -111,14 +112,13 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (target.lifeMax < 2000 && target.type != NPCID.TargetDummy && Main.rand.NextBool(10))
+            if (!target.boss && target.life < 2000 && target.type != NPCID.TargetDummy && Main.rand.NextBool(10))
             {
-				target.life -= 2000;
-				target.checkDead();
-				CombatText.NewText(target.Hitbox, Color.OrangeRed, "INSTAKILL", dramatic: true);
+				target.StrikeNPC(5000000, Projectile.knockBack, (int)Projectile.Center.DirectionTo(target.Center).X, noEffect: true, crit: true);
 
-				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Blood, 1, speedFromCenter: 4, amount: 64);
-            }
+				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Blood, 1, speedFromCenter: 4, amount: 128);
+				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Ghost, 30, speedFromCenter: 4, amount: 64);
+			}
         }
 
         public override bool PreDraw(ref Color lightColor)
