@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,8 +19,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;
-			Item.useTime = 19;
-			Item.useAnimation = 19;
+			Item.useTime = 17;
+			Item.useAnimation = 17;
 			Item.useStyle = 1;
 			Item.knockBack = 8;
 			Item.value = 13764;
@@ -27,11 +28,16 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<AmethystSaberProjectile>();
-            Item.shootSpeed = 6f;
+            Item.shootSpeed = 8f;
 			Item.mana = 2;
         }
 
-		public override void AddRecipes()
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+			velocity = velocity.RotatedByRandom(MathHelper.PiOver4 * 0.25f);
+        }
+
+        public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
 			recipe.AddIngredient(ItemID.MeteoriteBar, 15);

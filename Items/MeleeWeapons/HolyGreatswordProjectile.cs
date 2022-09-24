@@ -23,7 +23,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 30;
+            ProjectileID.Sets.TrailCacheLength[Type] = 20;
         }
 
         public override void SetDefaults()
@@ -46,7 +46,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
-            
+
         }
 
         float goBackAngle = MathHelper.PiOver2 * 1.75f;
@@ -77,27 +77,25 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             }
 
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
-
-            /*
+            
             Vector2 rotVector = Projectile.rotation.ToRotationVector2();
             Vector2 rotVector90 = rotVector.RotatedBy(-MathHelper.PiOver2);
-            for (int i = 0; i < 2; i++)
-            {
-                Dust.NewDust(Projectile.Center + rotVector * Main.rand.NextFloat(40, swordResize * 100 + 100) + rotVector90 * 45 * Player.direction, 1, 1, DustID.TerraBlade, Scale: 0.4f);
-            }
-            */
+
+            Dust.NewDust(Projectile.Center + rotVector * Main.rand.NextFloat(40, SwordResize * 100 + 100) + rotVector90 * 45 * Player.direction, 1, 1, DustID.ShadowbeamStaff, Scale: 0.4f);
+            
+            
         }
         public override bool? CanCutTiles()
         {
             return true;
         }
 
-        float swordResize => swingSpeed * 0.6f;
+        float SwordResize => swingSpeed * 0.6f;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float normalBladeLenght = 68;
             Vector2 bladeDir = Projectile.rotation.ToRotationVector2();
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + bladeDir * (normalBladeLenght + normalBladeLenght * swordResize));
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + bladeDir * (normalBladeLenght + normalBladeLenght * SwordResize));
         }
 
         public override void SendExtraAI(BinaryWriter writer)
@@ -110,40 +108,23 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             swingSpeed = reader.ReadSingle();
         }
 
-        VertexStrip vertexStripMM = new VertexStrip();
         public override bool PreDraw(ref Color lightColor)
         {
 
             Texture2D tex = TextureAssets.Projectile[Type].Value;
 
-            Vector2 offset = Vector2.One * swordResize;
+            Vector2 offset = Vector2.One * SwordResize;
             Vector2 positionOffset = Projectile.rotation.ToRotationVector2() * 42 + new Vector2(-8, 0) * Player.direction;
-            positionOffset += positionOffset * swordResize;
-            /*
+            positionOffset += positionOffset * SwordResize;
+            
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithShaderOptions();
 
-            GameShaders.Misc["EmpressBlade"]
-                .UseShaderSpecificData(new Vector4(1f, 0.0f, 0.0f, 0.6f))
-                .Apply(new DrawData?());
-
-            vertexStripMM.PrepareStripWithProceduralPadding(
-                Projectile.oldPos,
-                Projectile.oldRot,
-                prog => Color.Lerp(Color.Red, Color.Yellow * 0.5f, prog),
-                prog => 100 + MathHelper.Lerp(100, 1, prog) * swordResize,
-                50 * Projectile.rotation.ToRotationVector2() - Main.screenPosition,
-                true,
-                true
-                );
-
-            vertexStripMM.DrawTrail();
-
-            Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+            Projectile.DrawAfterImage(prog => Color.White * 0.2f, centerOrigin: true, posOffset: positionOffset, scaleOffset: offset, rotOffset: MathHelper.PiOver4);
 
             Main.spriteBatch.End();
             Main.spriteBatch.BeginWithDefaultOptions();
-            */
+            
 
             Main.EntitySpriteDraw(
                 tex,

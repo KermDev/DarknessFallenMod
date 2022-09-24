@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -32,7 +33,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.GetGlobalItem<DarknessFallenItem>().WorldGlowMask = ModContent.Request<Texture2D>(Texture).Value;
         }
 
-		public override void AddRecipes()
+        public override void MeleeEffects(Player player, Rectangle hitbox)
+        {
+			if (Main.rand.NextBool(5)) Dust.NewDust(hitbox.TopLeft(), hitbox.Width, hitbox.Height, DustID.YellowStarDust);
+        }
+
+        public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
 			recipe.AddIngredient(ItemID.SoulofNight, 25);

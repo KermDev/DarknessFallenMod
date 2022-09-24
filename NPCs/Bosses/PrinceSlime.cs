@@ -121,6 +121,15 @@ namespace DarknessFallenMod.NPCs.Bosses
 				Vector2 dirToPlayer = NPC.Center.DirectionTo(target.Center);
 				int xdir = MathF.Sign(dirToPlayer.X);
 
+				if (NPC.wet)
+				{
+					NPC.velocity.X += xdir * 0.3f;
+					NPC.velocity.Y -= 0.3f;
+
+					NPC.velocity.X = Math.Clamp(NPC.velocity.X, -1.5f, 1.5f);
+					return;
+				}
+
 				if (NPC.velocity.Y == 0 && aiTimer >= 90 && laserTimer > 60)
 				{
 					NPC.velocity.Y += Main.rand.Next(-10, -5);

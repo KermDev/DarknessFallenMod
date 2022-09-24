@@ -28,22 +28,29 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.ignoreWater = false;
             Projectile.tileCollide = true;
             Projectile.alpha = 255;
+
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 20;
         }
 
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            return false;
+        }
 
-        
         public override void AI()
         {
-            int dust = Dust.NewDust(Projectile.Center, 1, 1, DustID.GemAmethyst, 0f, 0f, 0, default(Color), 1f);
+            Projectile.ManualFriendlyLocalCollision();
+
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemAmethyst, 0f, 0f, 0, default(Color), 1f);
             Main.dust[dust].noGravity = true;
             Main.dust[dust].velocity *= 0.2f;
             Main.dust[dust].scale = (float)Main.rand.Next(100, 135) * 0.013f;
 
-            int dust2 = Dust.NewDust(Projectile.Center, 1, -1, DustID.PinkTorch, 0f, 0f, 0, default(Color), 1f);
+            int dust2 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.PinkTorch, 0f, 0f, 0, default(Color), 1f);
             Main.dust[dust2].noGravity = true;
             Main.dust[dust2].velocity *= 0.2f;
             Main.dust[dust2].scale = (float)Main.rand.Next(100, 135) * 0.013f;
-
         }
 
     }

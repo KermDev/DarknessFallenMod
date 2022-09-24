@@ -16,57 +16,63 @@ namespace DarknessFallenMod.Items.MagicWeapons
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Blood Wave"); // Name of the projectile. It can be appear in chat
-            Main.projFrames[Projectile.type] = 3; //number of frames in the animation;
+            DisplayName.SetDefault("Blood Wave");
+            Main.projFrames[Projectile.type] = 3;
         }
 
-        // Setting the default parameters of the projectile
-        // You can check most of Fields and Properties here https://github.com/tModLoader/tModLoader/wiki/Projectile-Class-Documentation
         public override void SetDefaults()
         {
-            Projectile.width = 35; // The width of projectile hitbox
-            Projectile.height = 35; // The height of projectile hitbox
-            Projectile.light = 0.75f;
-            Projectile.aiStyle = 0; // The ai style of the projectile (0 means custom AI). For more please reference the source code of Terraria
-            Projectile.DamageType = DamageClass.Magic; // What type of damage does this projectile affect?
-            Projectile.friendly = true; // Can the projectile deal damage to enemies?
-            Projectile.hostile = false; // Can the projectile deal damage to the player?
-            Projectile.ignoreWater = true; // Does the projectile's speed be influenced by water?
-            Projectile.light = 0.4f; // How much light emit around the projectile
-            Projectile.tileCollide = true; // Can the projectile collide with tiles?
-            Projectile.timeLeft = 600; // The live time for the projectile (60 = 1 second, so 600 is 10 seconds)
+            Projectile.width = 2;
+            Projectile.height = 2;
+            Projectile.aiStyle = -1;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 600;
+            Projectile.scale = 0.2f;
         }
         public override Color? GetAlpha(Color lightColor)
         {
             return Color.Red;
         }
 
-        // Custom AI
+        int maxHB = 42;
+        float scaleResize = 0.03f;
         public override void AI()
         {
-            AnimateProjectile();
+            Projectile.BasicAnimation(10);
+            
+            if (Projectile.scale < 1)
+            {
+                Projectile.scale += scaleResize;
+                Projectile.Center -= Vector2.One * (int)(maxHB * scaleResize);
+            }
+            else
+            {
+                Projectile.scale = 1;
+            }
 
-            Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.width = (int)(Projectile.scale * maxHB);
+            Projectile.height = (int)(Projectile.scale * maxHB);
+            
+
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Blood);
+
+            if (!Main.dedServ) Lighting.AddLight(Projectile.Center, 0.6f, 0.2f, 0.2f);
+
+            Projectile.rotation += 0.2f;
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            SoundEngine.PlaySound(SoundID.Dig);
+            SoundEngine.PlaySound(SoundID.Dig, Projectile.Center);
             return true;
         }
 
-        public void AnimateProjectile() // Call this every frame, for example in the AI method.
-        {
-            Projectile.frameCounter++;
-            if (Projectile.frameCounter >= 3) // This will change the sprite every 8 frames (0.13 seconds). Feel free to experiment.
-            {
-                Projectile.frame++;
-                Projectile.frame %= 3; // Will reset to the first frame if you've gone through them all.
-                Projectile.frameCounter = 0;
-            }
-        }
         public override void Kill(int timeLeft)
         {
-            DarknessFallenUtils.NewDustCircular(Projectile.Center, 5, 10, speedFromCenter: 6, amount: 18);
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.Blood, 20, speedFromCenter: 6, amount: 48);
         }
 
         public override bool PreDraw(ref Color lightColor)

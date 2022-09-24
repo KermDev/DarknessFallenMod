@@ -28,7 +28,7 @@ namespace DarknessFallenMod
             spritebatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
 
-        public static void DrawProjectileInHBCenter(this Projectile projectile, Color lightColor, bool animated = false, Vector2? offset = null, Vector2? origin = null, Texture2D altTex = null, bool centerOrigin = false)
+        public static void DrawProjectileInHBCenter(this Projectile projectile, Color lightColor, bool animated = false, Vector2? offset = null, Vector2? origin = null, Texture2D altTex = null, bool centerOrigin = false, float rotOffset = 0)
         {
             Texture2D texture = altTex ?? TextureAssets.Projectile[projectile.type].Value;
 
@@ -55,7 +55,7 @@ namespace DarknessFallenMod
                 drawPos,
                 sourceRectangle,
                 lightColor,
-                projectile.rotation,
+                projectile.rotation + rotOffset,
                 drawOrigin,
                 projectile.scale,
                 projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
@@ -63,27 +63,29 @@ namespace DarknessFallenMod
                 );
         }
 
-        public static void DrawAfterImage(this Projectile projectile, Func<float, Color> color, bool transitioning = true, bool animated = false, bool centerOrigin = true)
+        public static void DrawAfterImage(this Projectile projectile, Func<float, Color> color, bool transitioning = true, bool animated = false, bool centerOrigin = true, Vector2? origin = null, Vector2 posOffset = default, float rotOffset = 0, Vector2 scaleOffset = default, bool oldRot = true, bool oldPos = true)
         {
             Texture2D tex = TextureAssets.Projectile[projectile.type].Value;
 
             int frameHeight = tex.Height / Main.projFrames[projectile.type];
             Rectangle? source = animated ? new Rectangle(0, frameHeight * projectile.frame + 1, tex.Width, frameHeight) : null;
 
-            Vector2 origin = centerOrigin ? new Vector2(tex.Width * 0.5f, frameHeight * 0.5f) : tex.Size() * 0.5f;
+            Vector2 drawOrigin = origin ?? (centerOrigin ? new Vector2(tex.Width * 0.5f, frameHeight * 0.5f) : tex.Size() * 0.5f);
 
             for (int i = 0; i < projectile.oldPos.Length; i++)
             {
-                Vector2 pos = projectile.oldPos[i];
+                Vector2 pos = oldPos ? projectile.oldPos[i] : projectile.position;
+
+                pos += posOffset;
 
                 Main.EntitySpriteDraw(
                     tex,
                     pos + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition,
                     source,
                     transitioning ? color.Invoke((float)i / projectile.oldPos.Length) * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length) : color.Invoke((float)i / projectile.oldPos.Length),
-                    projectile.rotation,
-                    origin,
-                    projectile.scale,
+                    (oldRot ? projectile.oldRot[i] : projectile.rotation) + rotOffset,
+                    drawOrigin,
+                    projectile.scale * Vector2.One + scaleOffset,
                     projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                     0
                     );
@@ -354,5 +356,29 @@ namespace DarknessFallenMod
 
             oldest?.Kill();
         }
+        /*
+        public static void ResizeBy(this Projectile projectile, int amountW, int amountH)
+        {
+            projectile.position = projectile.Center;
+            projectile.width += amountW;
+            projectile.height += amountH;
+            projectile.Center = projectile.position;
+        }
+
+        public static void ResizeBy(this Projectile projectile, float amount, bool hitbox = true, bool scale = true)
+        {
+            if (hitbox)
+            {
+                projectile.position = projectile.Center;
+                projectile.width += (int)(projectile.scale * amount);
+                projectile.height += (int)(projectile.scale * amount);
+                projectile.Center = projectile.position;
+            }
+
+            if (scale)
+            {
+                projectile.scale += amount;
+            }
+        }*/
     }
 }
