@@ -1,15 +1,17 @@
-darkness fallen is a mod that will hopefully become a future content mod, we are actively updating and taking suggestions on our discord :)
-
+Darkness Fallen is a mod that will hopefully become a future content mod, we are actively updating and taking suggestions on our discord :)
 
 
 at the moment we have :
 
-- 1 ore
-- 11 enemies
-- 2 pets
-- 19 weapons
-- 2 potions
-- 60 items
+- 1 Miniboss
+- 2 Ores
+- 15 Enemies
+- 5 Pets
+- 31 Weapons
+- 4 Potions
+- 104 Items
+
+Mod is compatible with boss checklist
 
 planned : 
 bosses
