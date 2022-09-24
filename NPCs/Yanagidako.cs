@@ -95,7 +95,7 @@ namespace DarknessFallenMod.NPCs
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfDestruction>(), 5, minimumDropped: 1, maximumDropped: 3));
+            //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfDestruction>(), 5, minimumDropped: 1, maximumDropped: 3));
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -103,7 +103,7 @@ namespace DarknessFallenMod.NPCs
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheUnderworld,
-                new FlavorTextBestiaryInfoElement("A harmless squid that has been infected by Hell's touch, making it a uncontrollable force of destruction")
+                new FlavorTextBestiaryInfoElement("A harmless squid that has been infected by Hell's touch, making it a uncontrollable force of danger")
             });
         }
     }
