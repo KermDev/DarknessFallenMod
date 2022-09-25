@@ -261,6 +261,23 @@ namespace DarknessFallenMod
             else proj.frame = delayFrame;
         }
 
+        public static void BasicAnimation(this NPC npc, int frameHeight, int speed)
+        {
+            BasicAnimation(npc, frameHeight, speed, 0, 0);
+        }
+
+        public static void BasicAnimation(this NPC npc, int frameHeight, int speed, int delay, int delayFrame)
+        {
+            npc.frameCounter++;
+            if (npc.frameCounter >= Main.npcFrameCount[npc.type] * speed + delay)
+            {
+                npc.frameCounter = 0;
+            }
+
+            if (npc.frameCounter > delay) npc.frame.Y = ((int)(npc.frameCounter - delay) / speed) * frameHeight;
+            else npc.frame.Y = delayFrame * frameHeight;
+        }
+
         public static void NewDustCircular(
             Vector2 center,
             int dustType,

@@ -9,8 +9,6 @@ namespace DarknessFallenMod.Items.Pets
 {
 	public class FruityPetProj : ModProjectile
 	{
-		Vector2 Velocity;
-
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Fruity Light");

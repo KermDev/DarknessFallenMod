@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,6 +13,25 @@ namespace DarknessFallenMod.NPCs
     public class HellSpawn : ModNPC
     {
         Player Target => Main.player[NPC.target];
+
+        public override void SetStaticDefaults()
+        {
+            Main.npcFrameCount[Type] = 6;
+
+            NPCDebuffImmunityData debuffData = new NPCDebuffImmunityData
+            {
+                SpecificallyImmuneTo = new int[] {
+                    BuffID.OnFire, 
+                    BuffID.OnFire3, 
+                    BuffID.Burning,
+                    BuffID.Confused
+				}
+            };
+            NPCID.Sets.DebuffImmunitySets.Add(Type, debuffData);
+
+            DisplayName.SetDefault("Hellwing");
+        }
+
 
         public override void SetDefaults()
         {
@@ -22,6 +43,8 @@ namespace DarknessFallenMod.NPCs
             NPC.value = 22f;
             NPC.aiStyle = -1;
             NPC.noGravity = true;
+
+            NPC.lavaImmune = true;
 
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
@@ -45,7 +68,7 @@ namespace DarknessFallenMod.NPCs
             if (isCharging)
             {
                 chargeTimer++;
-                NPC.velocity *= 0.97f;
+                NPC.velocity += dirToTarget.RotatedBy(-MathHelper.PiOver4 * NPC.spriteDirection) * acceleration * 0.7f;
 
                 Vector2 mouthPos = NPC.Center + new Vector2(10 * NPC.spriteDirection, -7);
 
@@ -64,7 +87,7 @@ namespace DarknessFallenMod.NPCs
             {
                 if (NPC.DistanceSQ(Target.Center) > 100000)
                 {
-                    Vector2 velAcc = NPC.Center.DirectionTo(Target.Center) * acceleration;
+                    Vector2 velAcc = dirToTarget * acceleration;
                     NPC.velocity += velAcc;
                     NPC.velocity.Y *= Math.Abs(NPC.Center.Y - Target.Center.Y) > 300 ? 1 : 0.97f;
                 }
@@ -74,8 +97,16 @@ namespace DarknessFallenMod.NPCs
                 }
             }
 
+            
+            if (NPC.frameCounter == 22) SoundEngine.PlaySound(SoundID.Item32, NPC.Center);
+
             NPC.velocity = Vector2.Clamp(NPC.velocity, Vector2.One * -maxSpeed, Vector2.One * maxSpeed);
             NPC.rotation = NPC.velocity.X * 0.07f;
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            NPC.BasicAnimation(frameHeight, 5);
         }
     }
 }

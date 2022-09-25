@@ -15,6 +15,17 @@ namespace DarknessFallenMod
         public override bool InstancePerEntity => true;
 
 		public Texture2D WorldGlowMask { get; set; } = null;
+
+        public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
+        {
+			//tooltips.Add(new TooltipLine(Mod, "ITEMID", $"Item Type : {item.type}"));
+            switch (item.type)
+            {
+				case 4797:
+					tooltips[2].Text += " the 2nd";
+					break;
+            }
+        }
     }
 
     public class DarknessFallenItemDrawLayer : PlayerDrawLayer
