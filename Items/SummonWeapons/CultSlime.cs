@@ -137,7 +137,7 @@ namespace DarknessFallenMod.Items.SummonWeapons
             else
             {
                 Projectile.velocity = Vector2.Zero;
-                Projectile.Center = Vector2.Lerp(Projectile.Center, Player.Center + Projectile.ai[1].ToRotationVector2() * (80 + (40 * (int)(Projectile.minionPos / 3))), Main.rand.NextFloat(0.1f, 0.15f));
+                Projectile.Center = Vector2.Lerp(Projectile.Center, Player.Center + Projectile.ai[1].ToRotationVector2() * (80 + (40 * MathF.Floor(Projectile.minionPos / 3))), Main.rand.NextFloat(0.1f, 0.15f));
             }
 
             Projectile.ai[1] += 0.1f;
