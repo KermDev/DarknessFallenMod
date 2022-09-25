@@ -22,8 +22,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 2;
 			Item.height = 2;
-			Item.useTime = 15;
-			Item.useAnimation = 15;
+			Item.useTime = 14;
+			Item.useAnimation = 14;
 			Item.useStyle = 1;
 			Item.knockBack = 5;
 			Item.value = 4300;
@@ -80,7 +80,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 		}
 
 		ref float startAngle => ref Projectile.ai[0];
-		const float swingAngle = 1.3f;
+		const float swingAngle = MathHelper.PiOver2 + MathHelper.PiOver4;
 		static int swingDir = 1;
         public override void OnSpawn(IEntitySource source)
         {
@@ -97,7 +97,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 				return;
             }
 
-			Projectile.rotation = startAngle + 4 * swingAngle * swingDir * Player.direction * ((float)(Player.itemAnimationMax - Player.itemAnimation) / Player.itemAnimationMax);
+			Projectile.rotation = startAngle + 2 * swingAngle * swingDir * Player.direction * ((float)(Player.itemAnimationMax - Player.itemAnimation) / Player.itemAnimationMax);
 
 			Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter, true);
 			Player.heldProj = Projectile.whoAmI;
@@ -105,7 +105,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
         }
 
-		const int swordLength = 60;
+		const int swordLength = 68;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
 			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * swordLength);
@@ -128,7 +128,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override bool PreDraw(ref Color lightColor)
         {
-			Projectile.DrawProjectileInHBCenter(lightColor, origin: new Vector2(-5, 48), rotOffset: (Player.direction == -1 ? MathHelper.PiOver2 : 0) + (swingDir == -1 ? MathHelper.PiOver2 * Player.direction : 0));
+			Projectile.DrawProjectileInHBCenter(lightColor, origin: new Vector2(-5, 48), rotOffset: MathHelper.PiOver4);
 
 			return false;
         }
