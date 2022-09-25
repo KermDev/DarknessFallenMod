@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.Tools
 {
-	internal class CrimHook : ModItem
+	internal class FleshyHook : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -22,28 +22,28 @@ namespace DarknessFallenMod.Items.Tools
 			// Copy values from the Amethyst Hook
 			Item.CloneDefaults(ItemID.AmethystHook);
 			Item.shootSpeed = 16f; // This defines how quickly the hook is shot.
-			Item.shoot = ModContent.ProjectileType<Items.Tools.CrimHookProj>(); // Makes the item shoot the hook's projectile when used.
+			Item.shoot = ModContent.ProjectileType<Items.Tools.FleshyHookProj>(); // Makes the item shoot the hook's projectile when used.
 			Item.value = 22000;
 		}
 
 		// Please see Content/ExampleRecipes.cs for a detailed explanation of recipe creation.
 		public override void AddRecipes()
 		{
-			//CreateRecipe()
-			//	.AddIngredient<ExampleItem>()
-			//	.AddTile<Tiles.Furniture.ExampleWorkbench>()
-			//	.Register();
+			CreateRecipe()
+				.AddIngredient<Items.Materials.CrimFlesh>(7)
+				.AddTile(TileID.WorkBenches)
+				.Register();
 		}
 	}
 
-	internal class CrimHookProj : ModProjectile
+	internal class FleshyHookProj : ModProjectile
 	{
 		private static Asset<Texture2D> chainTexture;
 
 		public override void Load()
 		{ // This is called once on mod (re)load when this piece of content is being loaded.
 		  // This is the path to the texture that we'll use for the hook's chain. Make sure to update it.
-			chainTexture = ModContent.Request<Texture2D>("DarknessFallenMod/Items/Tools/CrimHookChain");
+			chainTexture = ModContent.Request<Texture2D>("DarknessFallenMod/Items/Tools/FleshyHookChain");
 		}
 
 		public override void Unload()
