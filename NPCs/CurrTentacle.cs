@@ -15,7 +15,7 @@ namespace DarknessFallenMod.NPCs
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Corruption Tentacle");
+            DisplayName.SetDefault("Corruption Tentacle"); //i spelt corruption // with a u. I cannot spell // text from pototo;
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[4];
         }
 
@@ -51,7 +51,11 @@ namespace DarknessFallenMod.NPCs
             }
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
         }
-        
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.CorrFlesh>(), chanceDenominator: 5 ,minimumDropped: 0, maximumDropped: 1));
+        }
+
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately

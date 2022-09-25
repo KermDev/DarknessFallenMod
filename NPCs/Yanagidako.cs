@@ -20,7 +20,7 @@ namespace DarknessFallenMod.NPCs
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Yanagidako");
+            DisplayName.SetDefault("Yanagidako"); //yakuza squid;
             Main.npcFrameCount[NPC.type] = 4;
         }
 
