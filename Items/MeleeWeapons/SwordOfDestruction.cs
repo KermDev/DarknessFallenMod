@@ -71,7 +71,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Projectile.ignoreWater = true;
 			Projectile.tileCollide = false;
 			Projectile.timeLeft = 9999;
-			Projectile.ownerHitCheck = true;
+			//Projectile.ownerHitCheck = true;
 			Projectile.penetrate = -1;
 			Projectile.extraUpdates = 4;
 
@@ -111,20 +111,18 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * swordLength);
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
-        {
-            if (!target.boss && target.life < 2000 && target.type != NPCID.TargetDummy && Main.rand.NextBool(10))
-            {
-				target.StrikeNPC(5000000, Projectile.knockBack, (int)Projectile.Center.DirectionTo(target.Center).X, noEffect: true, crit: true);
-
-				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Blood, 1, speedFromCenter: 4, amount: 48);
-			}
-        }
-
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
 			hitDirection = Math.Sign(Projectile.Center.DirectionTo(target.Center).X);
-        }
+
+			if (!target.boss && target.life < 2000 && target.type != NPCID.TargetDummy && Main.rand.NextBool(10))
+			{
+				damage = 99999999;
+				crit = true;
+
+				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Blood, 1, speedFromCenter: 4, amount: 48);
+			}
+		}
 
         public override bool PreDraw(ref Color lightColor)
         {

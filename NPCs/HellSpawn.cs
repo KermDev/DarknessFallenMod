@@ -1,0 +1,81 @@
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace DarknessFallenMod.NPCs
+{
+    public class HellSpawn : ModNPC
+    {
+        Player Target => Main.player[NPC.target];
+
+        public override void SetDefaults()
+        {
+            NPC.width = 32;
+            NPC.height = 32;
+            NPC.damage = 12;
+            NPC.defense = 3;
+            NPC.lifeMax = 160;
+            NPC.value = 22f;
+            NPC.aiStyle = -1;
+            NPC.noGravity = true;
+
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+        }
+
+        ref float chargeTimer => ref NPC.ai[0];
+        const float chargeTime = 120;
+        const float acceleration = 0.1f;
+        const float maxSpeed = 4;
+        bool isCharging;
+        public override void AI()
+        {
+            if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
+            {
+                NPC.TargetClosest();
+            }
+
+            Vector2 dirToTarget = NPC.DirectionTo(Target.Center);
+            NPC.spriteDirection = Math.Sign(dirToTarget.X);
+
+            if (isCharging)
+            {
+                chargeTimer++;
+                NPC.velocity *= 0.97f;
+
+                Vector2 mouthPos = NPC.Center + new Vector2(10 * NPC.spriteDirection, -7);
+
+                int width = 12;
+                if (Main.rand.NextBool(6)) Dust.NewDust(mouthPos - Vector2.UnitX * width * 0.5f, width, 2, DustID.InfernoFork);
+
+                if (chargeTimer > 120)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), mouthPos, dirToTarget * 10, ProjectileID.Fireball, 18, 2);
+                    DarknessFallenUtils.NewDustCircular(mouthPos, DustID.InfernoFork, 2, speedFromCenter: 2);
+                    chargeTimer = 0;
+                    isCharging = false;
+                }
+            }
+            else
+            {
+                if (NPC.DistanceSQ(Target.Center) > 100000)
+                {
+                    Vector2 velAcc = NPC.Center.DirectionTo(Target.Center) * acceleration;
+                    NPC.velocity += velAcc;
+                    NPC.velocity.Y *= Math.Abs(NPC.Center.Y - Target.Center.Y) > 300 ? 1 : 0.97f;
+                }
+                else
+                {
+                    isCharging = true;
+                }
+            }
+
+            NPC.velocity = Vector2.Clamp(NPC.velocity, Vector2.One * -maxSpeed, Vector2.One * maxSpeed);
+            NPC.rotation = NPC.velocity.X * 0.07f;
+        }
+    }
+}
