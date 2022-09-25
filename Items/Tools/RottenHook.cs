@@ -8,11 +8,11 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.Tools
 {
-	internal class CrimHook : ModItem
+	internal class RottenHook : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Fleshy Hook"); // The item's name in-game.
+			DisplayName.SetDefault("Rotten Hook"); // The item's name in-game.
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1; // Amount of this item needed to research and become available in Journey mode's duplication menu. Amount based on vanilla hooks' amount needed
 		}
@@ -22,7 +22,7 @@ namespace DarknessFallenMod.Items.Tools
 			// Copy values from the Amethyst Hook
 			Item.CloneDefaults(ItemID.AmethystHook);
 			Item.shootSpeed = 16f; // This defines how quickly the hook is shot.
-			Item.shoot = ModContent.ProjectileType<Items.Tools.CrimHookProj>(); // Makes the item shoot the hook's projectile when used.
+			Item.shoot = ModContent.ProjectileType<Items.Tools.RottenHookProj>(); // Makes the item shoot the hook's projectile when used.
 			Item.value = 22000;
 		}
 
@@ -36,14 +36,14 @@ namespace DarknessFallenMod.Items.Tools
 		}
 	}
 
-	internal class CrimHookProj : ModProjectile
+	internal class RottenHookProj : ModProjectile
 	{
 		private static Asset<Texture2D> chainTexture;
 
 		public override void Load()
 		{ // This is called once on mod (re)load when this piece of content is being loaded.
 		  // This is the path to the texture that we'll use for the hook's chain. Make sure to update it.
-			chainTexture = ModContent.Request<Texture2D>("DarknessFallenMod/Items/Tools/CrimHookChain");
+			chainTexture = ModContent.Request<Texture2D>("DarknessFallenMod/Items/Tools/RottenHookChain");
 		}
 
 		public override void Unload()
