@@ -8,12 +8,12 @@ using System;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
-	public class SwordOfDestruction : ModItem
+	public class SwordOfDarkness : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sword of Destruction");
-			Tooltip.SetDefault("The sword powered by destruction souls".GetColored(Color.DimGray) + "\n" + "10% chance to one shot a non boss enemy".GetColored(Color.DarkGray));
+			DisplayName.SetDefault("Sword of Darkness");
+			Tooltip.SetDefault("The sword powered by Darkness ".GetColored(Color.DimGray) + "\n" + "10% chance to one shot a non boss enemy".GetColored(Color.DarkGray));
 		}
 
 		public override void SetDefaults()
