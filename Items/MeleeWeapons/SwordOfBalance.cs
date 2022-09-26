@@ -34,8 +34,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 		public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
-			recipe.AddIngredient <SoulOfNature> (20);
-            recipe.AddIngredient<SoulOfDestruction>(20);
             recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 		}

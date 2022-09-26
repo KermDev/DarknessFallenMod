@@ -228,16 +228,6 @@ namespace DarknessFallenMod.NPCs.TownNPCs
             shop.item[nextSlot].shopSpecialCurrency = DarknessFallenMod.GelCurrency;
             nextSlot++;
 
-            shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Placeable.Banners.NatureSlimeBanner>(), false);
-            shop.item[nextSlot].shopCustomPrice = 50;
-            shop.item[nextSlot].shopSpecialCurrency = DarknessFallenMod.GelCurrency;
-            nextSlot++;
-
-            shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Placeable.Banners.DestructionSlimeBanner>(), false);
-            shop.item[nextSlot].shopCustomPrice = 50;
-            shop.item[nextSlot].shopSpecialCurrency = DarknessFallenMod.GelCurrency;
-            nextSlot++;
-
             shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Placeable.Banners.SporeSlimeBanner1>(), false);
             shop.item[nextSlot].shopCustomPrice = 50;
             shop.item[nextSlot].shopSpecialCurrency = DarknessFallenMod.GelCurrency;

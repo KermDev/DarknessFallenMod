@@ -43,8 +43,6 @@ namespace DarknessFallenMod.Items.Materials
             recipe.AddIngredient(ItemID.SoulofMight, 1);
             recipe.AddIngredient(ItemID.SoulofSight, 1);
             recipe.AddIngredient(ItemID.SoulofFright, 1);
-            recipe.AddIngredient<SoulOfNature>(1);
-            recipe.AddIngredient<SoulOfDestruction>(1);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.Register();
         }
