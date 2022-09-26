@@ -1,4 +1,5 @@
 using DarknessFallenMod.Items.Materials;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -27,6 +28,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.rare = 0;
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
+
+			Item.GetGlobalItem<DarknessFallenItem>().WorldGlowMask = ModContent.Request<Texture2D>(Texture + "Glowmask").Value;
 		}
 
 		public override void AddRecipes()
