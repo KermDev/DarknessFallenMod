@@ -32,7 +32,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.autoReuse = true;
 			Item.noMelee = true;
 			Item.noUseGraphic = true;
-			Item.shoot = ModContent.ProjectileType<SwordOfDestructionProjectile>();
+			Item.shoot = ModContent.ProjectileType<SwordOfDarknessProjectile>();
 			Item.shootSpeed = 1;
         }
 
@@ -45,11 +45,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 		}
 	}
 
-	public class SwordOfDestructionProjectile : ModProjectile
+	public class SwordOfDarknessProjectile : ModProjectile
     {
 		Player Player => Main.player[Projectile.owner];
 
-		public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/SwordOfDestruction";
+		public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/SwordOfDarkness";
 
 		public override void SetStaticDefaults()
 		{
