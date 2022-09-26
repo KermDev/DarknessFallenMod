@@ -7,6 +7,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace DarknessFallenMod.NPCs
 {
@@ -102,6 +103,16 @@ namespace DarknessFallenMod.NPCs
 
             NPC.velocity = Vector2.Clamp(NPC.velocity, Vector2.One * -maxSpeed, Vector2.One * maxSpeed);
             NPC.rotation = NPC.velocity.X * 0.07f;
+        }
+
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            NPC.SpawnGoreOnDeath("HellSpawnGore1", "HellSpawnGore2", "HellSpawnGore3");
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return SpawnCondition.Underworld.Chance * 0.3f;
         }
 
         public override void FindFrame(int frameHeight)

@@ -8,7 +8,7 @@ using System;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
-	public class SwordOfDarkness : ModItem
+	public class SwordOfDestruction : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
@@ -32,7 +32,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.autoReuse = true;
 			Item.noMelee = true;
 			Item.noUseGraphic = true;
-			Item.shoot = ModContent.ProjectileType<SwordOfDarknessProjectile>();
+			Item.shoot = ModContent.ProjectileType<SwordOfDestructionProjectile>();
 			Item.shootSpeed = 1;
         }
 
@@ -45,11 +45,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 		}
 	}
 
-	public class SwordOfDarknessProjectile : ModProjectile
+	public class SwordOfDestructionProjectile : ModProjectile
     {
 		Player Player => Main.player[Projectile.owner];
 
-		public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/SwordOfDarkness";
+		public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/SwordOfDestruction";
 
 		public override void SetStaticDefaults()
 		{
@@ -105,7 +105,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
         }
 
-		const int swordLength = 68;
+		const int swordLength = 72;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
 			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * swordLength);

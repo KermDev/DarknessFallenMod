@@ -30,7 +30,7 @@ namespace DarknessFallenMod.Items.Pets
 			Item.useTime = 20;
 			Item.rare = ItemRarityID.Yellow;
 			Item.noMelee = true;
-			Item.value = Item.sellPrice(0, 5, 50);
+			Item.value = Item.sellPrice(gold: 1);
 			Item.buffType = ModContent.BuffType<BloodyTentacleBuff>();
 		}
 		
@@ -89,11 +89,6 @@ namespace DarknessFallenMod.Items.Pets
 			if (!player.dead && player.HasBuff(ModContent.BuffType<BloodyTentacleBuff>()))
 			{
 				Projectile.timeLeft = 2;
-			}
-
-			if (!Main.dedServ)
-			{
-				Lighting.AddLight(Projectile.Center, 1f, 175f / 255f, 0f);
 			}
 
 			Vector2 flyToPos = player.Center + new Vector2(player.direction, 1) * -40;

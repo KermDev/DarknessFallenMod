@@ -52,7 +52,7 @@ namespace DarknessFallenMod.NPCs
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.CrimFlesh>(), chanceDenominator: 5, minimumDropped: 0, maximumDropped: 1));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.CrimFlesh>(), chanceDenominator: 5));
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

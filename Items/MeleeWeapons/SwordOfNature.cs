@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
-	public class SwordOfLight : ModItem
+	public class SwordOfNature : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

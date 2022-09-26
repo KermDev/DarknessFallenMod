@@ -21,7 +21,7 @@ namespace DarknessFallenMod.Items.Materials
 
         public override void SetDefaults()
         {
-            Item.value = 2300;
+            Item.value = Item.buyPrice(silver: 7);
             Item.maxStack = 999;
         }
       

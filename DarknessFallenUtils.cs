@@ -318,7 +318,7 @@ namespace DarknessFallenMod
                 foreach (string name in names)
                 {
                     int gore = ModContent.Find<ModGore>(name).Type;
-                    Gore.NewGore(npc.GetSource_Death(), npc.position, Main.rand.NextVector2Unit() * speed, gore);
+                    Gore.NewGore(npc.GetSource_Death(), npc.position, Main.rand.NextVector2Unit() * speed + npc.velocity, gore);
                 }
             }
         }
