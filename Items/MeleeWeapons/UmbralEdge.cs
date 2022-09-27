@@ -8,11 +8,10 @@ using System;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
-	public class SwordOfDarkness : ModItem
+	public class UmbralEdge : ModItem
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sword of Darkness");
 			Tooltip.SetDefault("The sword powered by Darkness ".GetColored(Color.DimGray) + "\n" + "10% chance to one shot a non boss enemy".GetColored(Color.DarkGray));
 		}
 
@@ -32,7 +31,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.autoReuse = true;
 			Item.noMelee = true;
 			Item.noUseGraphic = true;
-			Item.shoot = ModContent.ProjectileType<SwordOfDarknessProjectile>();
+			Item.shoot = ModContent.ProjectileType<UmbralEdgeProjectile>();
 			Item.shootSpeed = 1;
         }
 
@@ -46,11 +45,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 		}*/
 	}
 
-	public class SwordOfDarknessProjectile : ModProjectile
+	public class UmbralEdgeProjectile : ModProjectile
     {
 		Player Player => Main.player[Projectile.owner];
 
-		public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/SwordOfDarkness";
+		public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/UmbralEdge";
 
 		public override void SetStaticDefaults()
 		{
@@ -106,7 +105,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
         }
 
-		const int swordLength = 72;
+		const int swordLength = 84;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
 			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * swordLength);
@@ -127,7 +126,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
         public override bool PreDraw(ref Color lightColor)
         {
-			Projectile.DrawProjectileInHBCenter(lightColor, origin: new Vector2(-5, 48), rotOffset: MathHelper.PiOver4);
+			Projectile.DrawProjectileInHBCenter(Color.White, origin: new Vector2(-5, 64), rotOffset: MathHelper.PiOver4);
 
 			return false;
         }

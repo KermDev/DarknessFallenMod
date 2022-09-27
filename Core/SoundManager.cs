@@ -6,7 +6,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Sounds
+namespace DarknessFallenMod.Core
 {
     public static class SoundManager
     {

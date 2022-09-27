@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI;
+using DarknessFallenMod.Core;
 
 namespace DarknessFallenMod
 {
@@ -22,5 +23,9 @@ namespace DarknessFallenMod
 			// Registers a new custom currency
 			GelCurrency = CustomCurrencyManager.RegisterCurrency(new Systems.Currencies.GelCurrency(ItemID.Gel, 999L, "Gel"));
 		}
+
+		public void LoadLoaders()
+        {
+        }
 	}
 }

@@ -9,6 +9,10 @@ using DarknessFallenMod.Items.Accessories;
 using Terraria.GameContent.Bestiary;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.Graphics.Shaders;
+using Terraria.Graphics;
+
 namespace DarknessFallenMod.NPCs
 {
     public class CorrMaw : ModNPC
@@ -88,6 +92,14 @@ namespace DarknessFallenMod.NPCs
         {
             return SpawnCondition.Corruption.Chance * 0.08f;
         }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            //Effect fx = Terraria.Graphics.Effects.Filters.Scene["ExampleEffectScreen"].GetShader().Shader;
+            //fx.Parameters[""]
+            return true;
+        }
+
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately

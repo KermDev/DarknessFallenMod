@@ -27,8 +27,8 @@ namespace DarknessFallenMod.NPCs
             NPC.damage = 13;
             NPC.defense = 10;
             NPC.lifeMax = 250;
-            NPC.HitSound = Sounds.SoundManager.BeetleHit;
-            NPC.DeathSound = Sounds.SoundManager.BeetleDeath;
+            NPC.HitSound = Core.SoundManager.BeetleHit;
+            NPC.DeathSound = Core.SoundManager.BeetleDeath;
             NPC.value = 90f;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = 3;
