@@ -24,7 +24,7 @@ namespace DarknessFallenMod.Core
                     string path = file.Replace(".xnb", string.Empty);
                     string name = path.Replace("Effects/", string.Empty);
 
-                    Ref<Effect> fx = new Ref<Effect>(ModContent.Request<Effect>(path, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
+                    Ref<Effect> fx = new Ref<Effect>(ModContent.Request<Effect>(mod.Name + "/" + path, ReLogic.Content.AssetRequestMode.ImmediateLoad).Value);
                     Filters.Scene[name] = new Filter(new ScreenShaderData(fx, name), EffectPriority.High);
                     Filters.Scene[name].Load();
                 }

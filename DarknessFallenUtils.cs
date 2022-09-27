@@ -40,7 +40,7 @@ namespace DarknessFallenMod
 
                 drawOrigin = origin ?? (centerOrigin ? new Vector2(texture.Width / 2, frameHeight / 2) : new Vector2(texture.Width, frameHeight / 2));
 
-                sourceRectangle = new Rectangle(0, frameHeight * projectile.frame + 1, texture.Width, frameHeight);
+                sourceRectangle = new Rectangle(0, frameHeight * projectile.frame, texture.Width, frameHeight);
             }
             else
             {
@@ -54,7 +54,7 @@ namespace DarknessFallenMod
                 texture,
                 drawPos,
                 sourceRectangle,
-                lightColor,
+                lightColor * Math.Clamp((255 - projectile.alpha) / 255f, 0f, 1f),
                 projectile.rotation + rotOffset,
                 drawOrigin,
                 projectile.scale,

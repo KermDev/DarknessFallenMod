@@ -32,10 +32,16 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.noMelee = true;
 			Item.noUseGraphic = true;
 			Item.shoot = ModContent.ProjectileType<UmbralEdgeProjectile>();
-			Item.shootSpeed = 1;
+			Item.shootSpeed = 20;
         }
 
-		/*
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+			Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<UmbralEdgeFart>(), 10, 0, player.whoAmI);
+			return true;
+        }
+
+        /*
 		public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
@@ -43,7 +49,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 		}*/
-	}
+    }
 
 	public class UmbralEdgeProjectile : ModProjectile
     {
@@ -128,6 +134,86 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         {
 			Projectile.DrawProjectileInHBCenter(Color.White, origin: new Vector2(-5, 64), rotOffset: MathHelper.PiOver4);
 
+			return false;
+        }
+    }
+
+	public class UmbralEdgeFart : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+			Main.projFrames[Type] = 4;
+			ProjectileID.Sets.TrailCacheLength[Type] = 10;
+			ProjectileID.Sets.TrailingMode[Type] = 3;
+        }
+
+		const int originalSize = 34;
+        public override void SetDefaults()
+		{
+			Projectile.width = originalSize;
+			Projectile.height = originalSize;
+			Projectile.penetrate = -1;
+			Projectile.aiStyle = 0;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 400;
+			Projectile.alpha = 10;
+
+			Projectile.usesLocalNPCImmunity = true;
+			Projectile.localNPCHitCooldown = 20;
+		}
+
+        public override void OnSpawn(IEntitySource source)
+        {
+			Projectile.rotation = Main.rand.NextFloat(MathHelper.TwoPi);
+        }
+
+        const int dissapearTL = 50;
+		const float scaleUp = 0.02f;
+        public override void AI()
+        {
+			Projectile.velocity *= 0.93f;
+
+			Projectile.BasicAnimation(8);
+
+			if (Projectile.timeLeft <= dissapearTL)
+            {
+				Projectile.alpha += (int)(255f / dissapearTL);
+            }
+
+			if (Projectile.scale < 2.5f)
+            {
+				Projectile.scale += scaleUp;
+				int newSize = (int)(Projectile.scale * originalSize);
+				Projectile.Resize(newSize, newSize);
+            }
+
+			if (Main.rand.NextBool(18)) Dust.NewDust(
+				Projectile.position, 
+				Projectile.width, 
+				Projectile.height, 
+				DustID.Smoke, 
+				newColor: Color.Lerp(Color.Black, Color.Purple, Main.rand.NextFloat()), 
+				Scale: Main.rand.NextFloat(0.8f, Projectile.scale + 0.5f), 
+				Alpha: Main.rand.Next(0, 40)
+				);
+
+			DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, 2 * Projectile.width * Projectile.width, npc =>
+            {
+				if (npc.CanBeChasedBy())
+                {
+					npc.velocity += npc.Center.DirectionTo(Projectile.Center) * Math.Clamp(1000 / npc.DistanceSQ(Projectile.Center), 0, 1.5f);
+                }
+            });
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+			Projectile.DrawAfterImage(prog => Color.Lerp(Color.Purple, Color.Black, 0.5f) * 0.3f * Math.Clamp(Projectile.velocity.LengthSquared(), 0.2f, 0.6f), true, true, true);
+			Projectile.DrawProjectileInHBCenter(lightColor, true, centerOrigin: true);
 			return false;
         }
     }
