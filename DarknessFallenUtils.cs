@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -358,44 +358,21 @@ namespace DarknessFallenMod
             return $"[c/{color.Hex3()}:{text}]";
         }
 
-        public static void KillOldestProjectile(this Player player, int projType)
+        public static Projectile GetOldestProjectile(this Player player, int projType)
         {
-            Projectile oldest = null;
-            float minTimeLeft = float.MaxValue;
-            foreach (Projectile proj in Main.projectile)
+            Projectile[] playerProjs = Main.projectile.Where(proj => proj.owner == player.whoAmI && proj.type == projType && proj.active).ToArray();
+            if (playerProjs.Length < 1) return null;
+
+            Projectile oldest = playerProjs[0];
+            foreach (Projectile proj in playerProjs)
             {
-                if (proj.type == projType && proj.owner == player.whoAmI && proj.timeLeft < minTimeLeft)
+                if (proj.timeLeft < oldest.timeLeft)
                 {
                     oldest = proj;
-                    minTimeLeft = proj.timeLeft;
                 }
             }
 
-            oldest?.Kill();
+            return oldest;
         }
-        /*
-        public static void ResizeBy(this Projectile projectile, int amountW, int amountH)
-        {
-            projectile.position = projectile.Center;
-            projectile.width += amountW;
-            projectile.height += amountH;
-            projectile.Center = projectile.position;
-        }
-
-        public static void ResizeBy(this Projectile projectile, float amount, bool hitbox = true, bool scale = true)
-        {
-            if (hitbox)
-            {
-                projectile.position = projectile.Center;
-                projectile.width += (int)(projectile.scale * amount);
-                projectile.height += (int)(projectile.scale * amount);
-                projectile.Center = projectile.position;
-            }
-
-            if (scale)
-            {
-                projectile.scale += amount;
-            }
-        }*/
     }
 }

@@ -72,7 +72,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
             int type = ModContent.ProjectileType<PhaloriteBowAreaProjectile>();
             Player player = Main.player[projectile.owner];
 
-            if (player.ownedProjectileCounts[type] == 3) player.KillOldestProjectile(type);
+            if (player.ownedProjectileCounts[type] == 3) player.GetOldestProjectile(type).Kill();
 
             Projectile.NewProjectile(projectile.GetSource_Death(), projectile.Center, Vector2.Zero, type, 4, 0, projectile.owner);
         }

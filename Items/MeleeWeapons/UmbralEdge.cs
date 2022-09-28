@@ -17,7 +17,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
 		public override void SetDefaults()
 		{
-			Item.damage = 11;
+			Item.damage = 94;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 2;
 			Item.height = 2;
@@ -35,9 +35,24 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.shootSpeed = 20;
         }
 
+        public override bool CanUseItem(Player player)
+        {
+			return true;
+        }
+
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+			float speed = Math.Clamp(Main.MouseWorld.DistanceSQ(player.Center) * 0.0004f, 6f, Item.shootSpeed);
+
+			velocity.Normalize();
+			velocity *= speed;
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-			Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<UmbralEdgeFart>(), 10, 0, player.whoAmI);
+			int fartType = ModContent.ProjectileType<UmbralEdgeFart>();
+
+			Projectile.NewProjectile(source, position, velocity, fartType, 10, 0, player.whoAmI);
 			return true;
         }
 
@@ -159,17 +174,26 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Projectile.hostile = false;
 			Projectile.ignoreWater = true;
 			Projectile.tileCollide = false;
-			Projectile.timeLeft = 400;
+			Projectile.timeLeft = 240;
 			Projectile.alpha = 10;
 
-			Projectile.usesLocalNPCImmunity = true;
-			Projectile.localNPCHitCooldown = 20;
+			Projectile.usesIDStaticNPCImmunity = true;
+			Projectile.idStaticNPCHitCooldown = 5;
+
 		}
 
         public override void OnSpawn(IEntitySource source)
         {
 			Projectile.rotation = Main.rand.NextFloat(MathHelper.TwoPi);
-        }
+			/*
+			Player player = Main.player[Projectile.owner];
+
+			if (player.ownedProjectileCounts[Type] > 0)
+			{
+				Projectile proj = player.GetOldestProjectile(Type);
+				if (proj.timeLeft > 50) proj.timeLeft = 50;
+			}*/
+		}
 
         const int dissapearTL = 50;
 		const float scaleUp = 0.02f;
@@ -203,16 +227,16 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 
 			DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, 2 * Projectile.width * Projectile.width, npc =>
             {
-				if (npc.CanBeChasedBy())
+				if (npc.CanBeChasedBy() && !npc.boss)
                 {
-					npc.velocity += npc.Center.DirectionTo(Projectile.Center) * Math.Clamp(1000 / npc.DistanceSQ(Projectile.Center), 0, 1.5f);
+					npc.velocity += npc.Center.DirectionTo(Projectile.Center) * Math.Clamp(1000 / npc.DistanceSQ(Projectile.Center), 0, 0.2f);
                 }
             });
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-			Projectile.DrawAfterImage(prog => Color.Lerp(Color.Purple, Color.Black, 0.5f) * 0.3f * Math.Clamp(Projectile.velocity.LengthSquared(), 0.2f, 0.6f), true, true, true);
+			Projectile.DrawAfterImage(prog => Color.Lerp(Color.Purple, Color.Black, 0.5f) * 0.3f * Math.Clamp(Projectile.velocity.LengthSquared(), 0.3f, 0.8f), true, true, true);
 			Projectile.DrawProjectileInHBCenter(lightColor, true, centerOrigin: true);
 			return false;
         }

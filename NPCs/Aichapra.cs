@@ -26,8 +26,8 @@ namespace DarknessFallenMod.NPCs
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
 
-            NPC.aiStyle = NPCAIStyleID.DD2Fighter;
-            AIType = NPCID.Zombie;
+            NPC.aiStyle = 3;
+            AIType = NPCID.GoblinScout;
         }
 
         public override void AI()
@@ -38,8 +38,7 @@ namespace DarknessFallenMod.NPCs
             }
             else
             {
-                NPC.direction = Math.Sign(NPC.Center.DirectionTo(Main.player[NPC.target].Center).X);
-                NPC.spriteDirection = NPC.direction;
+                NPC.spriteDirection = -NPC.direction;
             }
         }
 
