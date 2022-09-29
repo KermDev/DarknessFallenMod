@@ -481,5 +481,10 @@ namespace DarknessFallenMod
         {
             Array.ForEach(array, predicate);
         }
+
+        public static float InverseLerp(float raw, float min, float max)
+        {
+            return (raw - min) / (max - min);
+        }
     }
 }
