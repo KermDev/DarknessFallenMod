@@ -133,6 +133,7 @@ namespace DarknessFallenMod.Biomes
                     tile.ClearEverything();
                 }
             }
+
             /*
             float minH = rectY + height * 0.4f;
             float maxVal = minH / rectY;
@@ -153,10 +154,22 @@ namespace DarknessFallenMod.Biomes
                     WorldGen.TileRunner(i, j, MathHelper.Lerp(2, 4, DarknessFallenUtils.InverseLerp(j / Main.maxTilesY, 1, maxVal2)) + Main.rand.Next(5), Main.rand.Next(1, 3), darknessTile, addTile: true);
                 }
             }*/
-            for (int i = rectX; i < rectX + width; i += Main.rand.Next(4, 32))
+
+            for (int i = rectX; i < rectX + width; i += Main.rand.Next(14, 22))
             {
                 bool top = Main.rand.NextBool(2);
-                WorldGen.TileRunner(i, top ? rectY : Main.maxTilesY, Main.rand.Next(13, 40), Main.rand.Next(8, 15), darknessTile, speedY: top ? 100 : -100, addTile: true);
+                
+                int dir = Main.rand.NextBool(2) ? 1 : -1;
+
+                int multiplierX = Main.rand.Next(1, 3);
+                int multiplierY = Main.rand.Next(2, 6);
+
+                int times = Main.rand.Next(10, 21) * (!top ? 2 : 1);
+
+                for (int j = 1; j < times; j++)
+                {
+                    WorldGen.TileRunner(i + j * multiplierX * dir, top ? rectY + j * multiplierY : Main.maxTilesY - j * multiplierY, Main.rand.Next(13, 24), Main.rand.Next(2, 28), darknessTile, addTile: true);
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 using Terraria;
@@ -18,6 +19,8 @@ namespace DarknessFallenMod.Tiles.Terrain
 
             DustType = DustID.Ash;
             HitSound = SoundID.Dig;
+
+            AddMapEntry(new Color(20, 20, 20));
         }
     }
 }
