@@ -137,12 +137,12 @@ namespace DarknessFallenMod.Items.MagicWeapons
         public override bool PreDraw(ref Color lightColor)
         {
             Main.spriteBatch.End();
-            Main.spriteBatch.BeginWithShaderOptions();
+            Main.spriteBatch.BeginShader();
 
             DarknessFallenUtils.DrawProjectileInHBCenter(Projectile, color, true);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.BeginWithDefaultOptions();
+            Main.spriteBatch.BeginDefault();
 
             return false;
         }

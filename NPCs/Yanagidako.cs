@@ -10,6 +10,7 @@ using Terraria.GameContent.Bestiary;
 using System.Collections.Generic;
 using DarknessFallenMod.Tiles.Banners;
 using DarknessFallenMod.Items.Placeable.Banners;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace DarknessFallenMod.NPCs
 {
@@ -21,12 +22,15 @@ namespace DarknessFallenMod.NPCs
         {
             DisplayName.SetDefault("Yanagidako"); //yakuza squid;
             Main.npcFrameCount[NPC.type] = 4;
+
+            NPCID.Sets.TrailCacheLength[Type] = 16;
+            NPCID.Sets.TrailingMode[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            NPC.width = 36;
-            NPC.height = 46;
+            NPC.width = 28;
+            NPC.height = 28;
             NPC.damage = 14;
             NPC.defense = 5;
             NPC.lifeMax = 84;
@@ -63,7 +67,7 @@ namespace DarknessFallenMod.NPCs
             if (Clamped != NPC.ai[1])
             {
                 Velocity = Vector2.Normalize(Target - NPC.Center) * 15;
-                DarknessFallenUtils.NewDustCircular(NPC.Center, DustID.BloodWater, 4, speedFromCenter: 2);
+                DarknessFallenUtils.NewDustCircular(NPC.Center, DustID.AncientLight, 6, speedFromCenter: 5, color: Color.OrangeRed).ForEach(dust => dust.noGravity = true);
                 NPC.rotation = Velocity.ToRotation() + MathHelper.PiOver2;
                 NPC.ai[1] = 0.3f;
             }
@@ -85,6 +89,15 @@ namespace DarknessFallenMod.NPCs
                 NPC.frameCounter = 0;
             }
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            Vector2 origin = new Vector2(19, 11);
+
+            spriteBatch.BeginReset(DarknessFallenUtils.BeginType.Shader, DarknessFallenUtils.BeginType.Default, sb => NPC.DrawAfterImageNPC(prog => Color.Red * 0.35f, oldRot: false, origin: origin));
+            NPC.DrawNPCInHBCenter(drawColor, origin: origin);
+            return false;
         }
 
         public override void HitEffect(int hitDirection, double damage)

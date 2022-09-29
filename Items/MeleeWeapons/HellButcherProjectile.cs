@@ -51,7 +51,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override void Kill(int timeLeft) //this is caled whenever the projectile expires (only once);
         {
             DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.InfernoFork, 10, speedFromCenter: 3, amount: 30);
-            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.RedTorch, 10, speedFromCenter: 6, amount: 10, noGravity: true);
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.RedTorch, 10, speedFromCenter: 6, amount: 10).ForEach(dust => dust.noGravity = true);
         }
 
         VertexStrip vertexStripMM = new VertexStrip();

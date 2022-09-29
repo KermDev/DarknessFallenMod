@@ -72,12 +72,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override bool PreDraw(ref Color lightColor)
         {
             Main.spriteBatch.End();
-            Main.spriteBatch.BeginWithShaderOptions();
+            Main.spriteBatch.BeginShader();
 
             Projectile.DrawAfterImage(prog => Color.White * 0.6f);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.BeginWithDefaultOptions();
+            Main.spriteBatch.BeginDefault();
             return true;
         }
     }

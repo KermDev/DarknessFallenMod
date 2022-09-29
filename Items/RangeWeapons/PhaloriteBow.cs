@@ -7,6 +7,8 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
+using System.Linq;
+
 namespace DarknessFallenMod.Items.RangeWeapons
 {
     public class PhaloriteBow : ModItem
@@ -113,7 +115,10 @@ namespace DarknessFallenMod.Items.RangeWeapons
                 timer = 0;
 
                 DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.ShadowbeamStaff, radius, speedFromCenter: -6, rotation: Main.rand.NextFloat(MathHelper.TwoPi), amount: 16, scale: Main.rand.NextFloat(0.7f, 1.3f));
-                DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.BlueTorch, 1, speedFromCenter: 9, rotation: Main.rand.NextFloat(MathHelper.TwoPi), amount: 8, noGravity: true, scale: Main.rand.NextFloat(0.9f, 1.6f));
+                Array.ForEach(
+                    DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.BlueTorch, 1, speedFromCenter: 9, rotation: Main.rand.NextFloat(MathHelper.TwoPi), amount: 8, scale: Main.rand.NextFloat(0.9f, 1.6f)),
+                    dust => dust.noGravity = true
+                    );
             }
         }
     }

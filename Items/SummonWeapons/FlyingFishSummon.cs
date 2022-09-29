@@ -61,7 +61,7 @@ namespace DarknessFallenMod.Items.SummonWeapons
             int proj = Projectile.NewProjectile(source, position, Vector2.Zero, type, damage, knockback, player.whoAmI);
             Main.projectile[proj].originalDamage = damage;
 
-            DarknessFallenUtils.NewDustCircular(position, DustID.ShadowbeamStaff, 10, speedFromCenter: 5, noGravity: true);
+            Array.ForEach(DarknessFallenUtils.NewDustCircular(position, DustID.ShadowbeamStaff, 10, speedFromCenter: 5), dust => dust.noGravity = true);
 
             return false;
         }

@@ -116,7 +116,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Vector2 posOffset = -Projectile.rotation.ToRotationVector2() * bladeLenght * SwordResize;
 
             Main.spriteBatch.End();
-            Main.spriteBatch.BeginWithShaderOptions();
+            Main.spriteBatch.BeginShader();
 
             //Projectile.DrawAfterImage(prog => Color.Lerp(Color.LightGoldenrodYellow, Color.Black, prog) * 0.1f, origin: origin, posOffset: posOffset, scaleOffset: scale - Vector2.One, rotOffset: MathHelper.PiOver4, oldPos: false);
 
@@ -143,7 +143,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             }
 
             Main.spriteBatch.End();
-            Main.spriteBatch.BeginWithDefaultOptions();
+            Main.spriteBatch.BeginDefault();
             
 
             Main.EntitySpriteDraw(

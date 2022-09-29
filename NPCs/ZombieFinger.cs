@@ -8,12 +8,16 @@ using Terraria.GameContent.ItemDropRules;
 using System.Collections.Generic;
 using DarknessFallenMod.Items.Materials;
 using Terraria.GameContent.Bestiary;
+using Terraria.DataStructures;
+using Terraria.GameContent;
+using Microsoft.Xna.Framework.Graphics;
+using DarknessFallenMod.Core;
 
 namespace DarknessFallenMod.NPCs
 {
     public class ZombieFinger : ModNPC
     {
-        Vector2 Velocity;
+        public string[] AltTextureNames => new string[] { "ZombieFinger2" };
 
         public override void SetStaticDefaults()
         {
@@ -40,6 +44,11 @@ namespace DarknessFallenMod.NPCs
             AIType = NPCID.GoblinScout;
             Banner = NPC.type;
             BannerItem = ModContent.ItemType<Items.Placeable.Banners.ZombieFingerBanner>();
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            //$"DarknessFallen/NPCs/{Main.rand.NextFromList("ZombieFinger", "ZombieFinger2")}";
         }
 
         public override void AI()
@@ -80,6 +89,12 @@ namespace DarknessFallenMod.NPCs
                 NPC.frameCounter = 0;
             }
             NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            //NPC.DrawNPCInHBCenter(drawColor, altTexNames: "ZombieFinger2");
+            return true;
         }
 
         public override void HitEffect(int hitDirection, double damage)

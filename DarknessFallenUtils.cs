@@ -6,6 +6,7 @@ using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -18,14 +19,65 @@ namespace DarknessFallenMod
         public const string OreGenerationMessage = "Darkness Fallen Ore Generation";
         public const string SoundsPath = "DarknessFallenMod/Sounds/";
 
-        public static void BeginWithShaderOptions(this SpriteBatch spritebatch)
+        public enum BeginType
+        {
+            Default,
+            Shader,
+            Experimental
+        }
+
+        /*
+        public struct BeginData
+        {
+            SpriteSortMode sortMode;
+            BlendState blendState;
+            SamplerState samplerState;
+            DepthStencilState depthStencil;
+            RasterizerState rasterizerState;
+            SpriteViewMatrix viewMatrix;
+        }
+        */
+
+        public static void BeginReset(this SpriteBatch spriteBatch, BeginType beginType, BeginType resetBeginType, Action<SpriteBatch> action)
+        {
+            spriteBatch.End();
+            spriteBatch.Begin(beginType);
+
+            action.Invoke(spriteBatch);
+
+            spriteBatch.End();
+            spriteBatch.Begin(resetBeginType);
+        }
+
+        public static void Begin(this SpriteBatch spriteBatch, BeginType beginType)
+        {
+            switch (beginType)
+            {
+                case BeginType.Default:
+                    BeginDefault(spriteBatch);
+                    break;
+                case BeginType.Shader:
+                    BeginShader(spriteBatch);
+                    break;
+                case BeginType.Experimental:
+                    BeginExperimental(spriteBatch);
+                    break;
+            }
+        }
+
+        public static void BeginShader(this SpriteBatch spritebatch)
         {
             spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
 
-        public static void BeginWithDefaultOptions(this SpriteBatch spritebatch)
+        public static void BeginDefault(this SpriteBatch spritebatch)
         {
             spritebatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+        }
+
+        public static void BeginExperimental(this SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
         }
 
         public static void DrawProjectileInHBCenter(this Projectile projectile, Color lightColor, bool animated = false, Vector2? offset = null, Vector2? origin = null, Texture2D altTex = null, bool centerOrigin = false, float rotOffset = 0)
@@ -63,6 +115,26 @@ namespace DarknessFallenMod
                 );
         }
 
+        public static void DrawNPCInHBCenter(this NPC npc, Color color, Vector2? origin = null, string altTex = "")
+        {
+            Texture2D texture = altTex == "" ? TextureAssets.Npc[npc.type].Value : ModContent.Request<Texture2D>(altTex).Value;
+
+            Vector2 drawPos = npc.Center - Main.screenPosition;
+            Vector2 drawOrigin = origin ?? npc.frame.Size() * 0.5f;
+
+            Main.EntitySpriteDraw(
+                texture,
+                drawPos,
+                npc.frame,
+                color * Math.Clamp((255 - npc.alpha) / 255f, 0f, 1f),
+                npc.rotation,
+                drawOrigin,
+                npc.scale,
+                npc.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                0
+                );
+        }
+
         public static void DrawAfterImage(this Projectile projectile, Func<float, Color> color, bool transitioning = true, bool animated = false, bool centerOrigin = true, Vector2? origin = null, Vector2 posOffset = default, float rotOffset = 0, Vector2 scaleOffset = default, bool oldRot = true, bool oldPos = true)
         {
             Texture2D tex = TextureAssets.Projectile[projectile.type].Value;
@@ -87,6 +159,34 @@ namespace DarknessFallenMod
                     drawOrigin,
                     projectile.scale * Vector2.One + scaleOffset,
                     projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                    0
+                    );
+            }
+        }
+
+        public static void DrawAfterImageNPC(this NPC npc, Func<float, Color> color, bool transitioning = true, bool centerOrigin = true, Vector2? origin = null, Vector2 posOffset = default, float rotOffset = 0, Vector2 scaleOffset = default, bool oldRot = true, bool oldPos = true)
+        {
+            Texture2D tex = TextureAssets.Npc[npc.type].Value;
+
+            int frameHeight = tex.Height / Main.npcFrameCount[npc.type];
+
+            Vector2 drawOrigin = origin ?? (centerOrigin ? new Vector2(tex.Width * 0.5f, frameHeight * 0.5f) : tex.Size() * 0.5f);
+
+            for (int i = 0; i < npc.oldPos.Length; i++)
+            {
+                Vector2 pos = oldPos ? npc.oldPos[i] : npc.position;
+
+                pos += posOffset;
+
+                Main.EntitySpriteDraw(
+                    tex,
+                    pos + new Vector2(npc.width, npc.height) * 0.5f - Main.screenPosition,
+                    npc.frame,
+                    transitioning ? color.Invoke((float)i / npc.oldPos.Length) * ((float)(npc.oldPos.Length - i) / npc.oldPos.Length) : color.Invoke((float)i / npc.oldPos.Length),
+                    (oldRot ? npc.oldRot[i] : npc.rotation) + rotOffset,
+                    drawOrigin,
+                    npc.scale * Vector2.One + scaleOffset,
+                    npc.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                     0
                     );
             }
@@ -278,7 +378,7 @@ namespace DarknessFallenMod
             else npc.frame.Y = delayFrame * frameHeight;
         }
 
-        public static void NewDustCircular(
+        public static Dust[] NewDustCircular(
             Vector2 center,
             int dustType,
             float radius,
@@ -287,18 +387,20 @@ namespace DarknessFallenMod
             Color color = default,
             float scale = 1, int amount = 8,
             float rotation = 0,
-            float speedFromCenter = 0,
-            bool? noGravity = null
+            float speedFromCenter = 0
             )
         {
             Dust[] dusts = new Dust[amount];
+            int i = 0;
             foreach(Vector2 pos in GetCircularPositions(center, radius, amount, rotation))
             {
                 Vector2 velocity = dustVelocity;
                 velocity += center.DirectionTo(pos) * speedFromCenter;
-                int dust = Dust.NewDust(pos, 0, 0, dustType, velocity.X, velocity.Y, alpha, color, scale);
-                Main.dust[dust].noGravity = noGravity ?? Main.dust[dust].noGravity;
+                dusts[i] = Dust.NewDustDirect(pos, 0, 0, dustType, velocity.X, velocity.Y, alpha, color, scale);
+                i++;
             }
+
+            return dusts;
         }
 
         public static void NewGoreCircular(Vector2 center, int goreType, float radius, Vector2 goreVelocity = default, float scale = 1, int amount = 4, float rotation = 0, float speedFromCenter = 0, IEntitySource source = null)
@@ -371,8 +473,13 @@ namespace DarknessFallenMod
                     oldest = proj;
                 }
             }
-
+            
             return oldest;
+        }
+
+        public static void ForEach<T>(this T[] array, Action<T> predicate)
+        {
+            Array.ForEach(array, predicate);
         }
     }
 }

@@ -222,7 +222,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 				DustID.Smoke, 
 				newColor: Color.Lerp(Color.Black, Color.Purple, Main.rand.NextFloat()), 
 				Scale: Main.rand.NextFloat(0.8f, Projectile.scale + 0.5f), 
-				Alpha: Main.rand.Next(0, 40)
+				Alpha: Projectile.alpha
 				);
 
 			DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, 2 * Projectile.width * Projectile.width, npc =>
