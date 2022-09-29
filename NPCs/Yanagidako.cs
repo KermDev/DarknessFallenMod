@@ -63,6 +63,8 @@ namespace DarknessFallenMod.NPCs
             if (Clamped != NPC.ai[1])
             {
                 Velocity = Vector2.Normalize(Target - NPC.Center) * 15;
+                DarknessFallenUtils.NewDustCircular(NPC.Center, DustID.BloodWater, 4, speedFromCenter: 2);
+                NPC.rotation = Velocity.ToRotation() + MathHelper.PiOver2;
                 NPC.ai[1] = 0.3f;
             }
 

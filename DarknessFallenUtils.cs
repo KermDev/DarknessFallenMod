@@ -291,7 +291,7 @@ namespace DarknessFallenMod
             bool? noGravity = null
             )
         {
-            
+            Dust[] dusts = new Dust[amount];
             foreach(Vector2 pos in GetCircularPositions(center, radius, amount, rotation))
             {
                 Vector2 velocity = dustVelocity;

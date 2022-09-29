@@ -78,7 +78,7 @@ namespace DarknessFallenMod.NPCs
 
                 if (chargeTimer > 120)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), mouthPos, dirToTarget * 10, ProjectileID.Fireball, 18, 2);
+                    Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), mouthPos, dirToTarget * 10, ProjectileID.Fireball, 18, 2).tileCollide = false;
                     DarknessFallenUtils.NewDustCircular(mouthPos, DustID.InfernoFork, 2, speedFromCenter: 2);
                     chargeTimer = 0;
                     isCharging = false;
