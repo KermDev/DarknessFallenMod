@@ -502,7 +502,7 @@ namespace DarknessFallenMod
 
         public static void ResetTilesFrame(int i, int j)
         {
-            WorldGen.TileFrame(i, j, true);
+            WorldGen.TileFrame(i, j, true, true);
             for (int ii = i - 1; ii < i + 2; ii++)
             {
                 for (int jj = j - 1; jj < j + 2; jj++)

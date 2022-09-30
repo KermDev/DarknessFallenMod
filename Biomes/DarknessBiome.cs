@@ -30,7 +30,7 @@ namespace DarknessFallenMod.Biomes
 
         public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
         {
-            darknessTileCount = tileCounts[ModContent.TileType<Tiles.Terrain.DarknessAshTile>()];
+            darknessTileCount = tileCounts[ModContent.TileType<Tiles.Terrain.DarknessRockTile>()];
         }
 
         public override void OnWorldLoad()
@@ -85,138 +85,82 @@ namespace DarknessFallenMod.Biomes
             }
         }
 
+        public static ushort darknessTile => (ushort)ModContent.TileType<Tiles.Terrain.DarknessRockTile>();
         public static void GenDarknessBiome(int x, int width, int height)
         {
+            int i;
             int diff = 100;
-            int rectI;
-
             if (Main.rand.NextBool(2))
             {
-                rectI = Main.rand.Next(x / 16 + diff, Main.maxTilesX - width);
+                i = Main.rand.Next(x / 16 + diff, Main.maxTilesX - width);
             }
             else
             {
-                rectI = Main.rand.Next(0, x / 16 - diff - width);
+                i = Main.rand.Next(0, x / 16 - diff - width);
             }
 
-            //int rectY = Main.maxTilesY - height;
-            int rectY = Main.UnderworldLayer;
+            int j = Main.UnderworldLayer;
 
-            int maxI = rectI + width;
+            Rectangle biomeRect = new Rectangle(i, j, width, height);
 
-            ushort darknessTile = (ushort)ModContent.TileType<Tiles.Terrain.DarknessAshTile>();
+            GenLayer1(biomeRect);
+        }
 
-            int topHeight = (int)(height * 0.12f);
-            int bottomHeight = (int)(height * 0.40f);
+        public static void GenLayer1(Rectangle rect)
+        {
+            int maxI = rect.Y + rect.Width;
+
+            int topHeight = (int)(rect.Height * 0.12f);
+            int bottomHeight = (int)(rect.Height * 0.36f);
 
             int bottomJ = Main.maxTilesY - bottomHeight;
 
-            Rectangle biomeRect = new Rectangle(rectI, rectY, width, height).Foreach((i, j) =>
+            int thresh = 5;
+
+            rect.Foreach((i, j) =>
             {
                 Tile tile = Framing.GetTileSafely(i, j);
 
                 tile.Clear(Terraria.DataStructures.TileDataType.Wall);
-                tile.Get<LiquidData>().Amount = 0;
 
-                if (j < rectY + topHeight || j > bottomJ)
+                tile.LiquidAmount = 0;
+                tile.SkipLiquid = true;
+
+                if (j < rect.Y + topHeight || j > bottomJ)
                 {
-                    if ((j < Main.maxTilesY - 5) && (i == rectI || i == rectI + width - 1 || j == rectY || j == rectY + topHeight - 1 || j == bottomJ + 1))
+                    if ((j < rect.Y + rect.Height - 5) && (i == rect.X || i == rect.X + rect.Width - 1 || j == rect.Y || j == rect.Y + topHeight - 1 || j == bottomJ + 1))
                     {
                         if (Main.rand.NextBool(3)) return;
 
-                        tile.TileType = darknessTile;
-                        WorldGen.TileRunner(i, j, Main.rand.Next(2, 7), Main.rand.Next(10, 32), darknessTile, addTile: true, ignoreTileType: darknessTile);
+                        //tile.Get<TileWallWireStateData>().HasTile = true;
+                        //tile.TileType = darknessTile;
+                        if (!tile.HasTile) WorldGen.PlaceTile(i, j, darknessTile);
+
+                        WorldGen.TileRunner(i, j, Main.rand.Next(5, 7), Main.rand.Next(10, 32), darknessTile, addTile: true, ignoreTileType: darknessTile);
                     }
                     else if (tile.TileType != darknessTile)
                     {
                         tile.Get<TileWallWireStateData>().HasTile = true;
                         tile.TileType = darknessTile;
-                        
-                        //DarknessFallenUtils.ResetTilesFrame(i, j);
-                        //WorldGen.Place1x1(i, j, darknessTile);
+                        tile.BlockType = BlockType.Solid;
                     }
                 }
                 else
                 {
-                    tile.ClearEverything();
+                    if (!(i < rect.X + thresh || i > rect.X + rect.Width - thresh)) tile.ClearEverything();
                 }
             });
-
-            /*
-            for (int i = rectX; i < maxX; i++)
-            {
-                for (int j = rectY; j < Main.maxTilesY; j++)
-                {
-                    
-                    Tile tile = Framing.GetTileSafely(i, j);
-
-                    if (tile.TileType == TileID.Ash || tile.TileType == TileID.Hellstone || tile.TileType == TileID.Lavafall)
-                    {
-                        WorldGen.ReplaceTile(i, j, (ushort)darknessTile, 0);
-                    }
-                    else if (tile.LiquidType == LiquidID.Lava)
-                    {
-                        WorldGen.PlaceTile(i, j, darknessTile, true);
-                    }
-                    else if (tile.HasTile && tile.TileType != darknessTile)
-                    {
-                        WorldGen.TileRunner(i, j, 7, 3, darknessTile, addTile: true);
-                    }
-
-                    if (tile.WallType > 0) WorldGen.KillWall(i, j);
-                    if (tile.LiquidType > 0) WorldGen.EmptyLiquid(i, j);
-                    
-
-                    
-                }
-            }*/
-
-            /*
-            float minH = rectY + height * 0.4f;
-            float maxVal = minH / rectY;
-            for (int i = rectX; i < rectX + width; i += 4)
-            {
-                for (int j = rectY; j < minH; j++)
-                {
-                    WorldGen.TileRunner(i, j, MathHelper.Lerp(2, 4, DarknessFallenUtils.InverseLerp(minH / j, 1, maxVal)) + Main.rand.Next(5), Main.rand.Next(1, 3), darknessTile, addTile: true);
-                }
-            }
-
-            int maxH = (int)(rectY + height * 0.6f);
-            int maxVal2 = maxH / Main.maxTilesY;
-            for (int i = rectX; i < rectX + width; i += 4)
-            {
-                for (int j = maxH; j < Main.maxTilesY; j++)
-                {
-                    WorldGen.TileRunner(i, j, MathHelper.Lerp(2, 4, DarknessFallenUtils.InverseLerp(j / Main.maxTilesY, 1, maxVal2)) + Main.rand.Next(5), Main.rand.Next(1, 3), darknessTile, addTile: true);
-                }
-            }*/
-            /*
-            new Rectangle(rectX, rectY, width, topHeight).Foreach((i, j) => 
-            {
-                GenTerrain(i, j, rectX, rectY, topHeight, width, darknessTile);
-            });
-
-            int minY = Main.maxTilesY - topHeight * 2;
-            new Rectangle(rectX, minY, width, topHeight * 2).Foreach((i, j) =>
-            {
-                GenTerrain(i, j, rectX, minY, topHeight, width, darknessTile);
-            });
-            */
-            //GenBigSpikes(rectX, rectY, maxX, darknessTile);
         }
 
-        public static void GenTerrain(int i, int j, int rectX, int rectY, int topHeight, int width, int darknessTile)
+        public static void GenLayer2(Rectangle rect)
         {
-            Tile tile = Framing.GetTileSafely(i, j);
-            if (tile.HasTile && tile.TileType != darknessTile) tile.ClearEverything();
-            WorldGen.PlaceTile(i, j, darknessTile);
-            if ((j < Main.maxTilesY - 2) && (i <= rectX || j == rectY || j >= rectY + topHeight - 1 || i >= rectX + width - 1))
+            rect.Foreach((i, j) =>
             {
-                WorldGen.TileRunner(i, j, Main.rand.Next(2, 7), Main.rand.Next(5, 32), darknessTile, addTile: true, ignoreTileType: darknessTile);
-            }
+
+            });
         }
 
+        /*
         public static void GenBigSpikes(int rectX, int rectY, int maxX, int darknessTile)
         {
             for (int i = rectX; i < maxX; i += Main.rand.Next(14, 22))
@@ -242,5 +186,6 @@ namespace DarknessFallenMod.Biomes
                 }
             }
         }
+        */
     }
 }

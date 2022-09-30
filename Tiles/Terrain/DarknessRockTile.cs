@@ -8,20 +8,20 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Tiles.Terrain
 {
-    public class DarknessAshTile : ModTile
+    public class DarknessRockTile : ModTile
     {
         public override void SetStaticDefaults()
         {
-            Main.tileMerge[Type][Type] = true;
-            Main.tileMerge[Type][TileID.Ash] = true;
+            Main.tileMerge[Type][ModContent.TileType<DarknessBrickTile>()] = true;
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLavaDeath[Type] = false;
 
+            ItemDrop = ModContent.ItemType<Items.Placeable.Terrain.DarknessRock>();
             DustType = DustID.Ash;
             HitSound = SoundID.Dig;
 
-            AddMapEntry(new Color(20, 20, 20));
+            AddMapEntry(new Color(34, 34, 34));
         }
     }
 }
