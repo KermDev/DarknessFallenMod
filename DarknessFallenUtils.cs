@@ -486,5 +486,31 @@ namespace DarknessFallenMod
         {
             return (raw - min) / (max - min);
         }
+
+        public static Rectangle Foreach(this Rectangle rect, Action<int, int> predicate, int xDiff = 1, int yDiff = 1)
+        {
+            for (int i = rect.X; i < rect.X + rect.Width; i += xDiff)
+            {
+                for (int j = rect.Y; j < rect.Y + rect.Height; j += yDiff)
+                {
+                    predicate.Invoke(i, j);
+                }
+            }
+
+            return rect;
+        }
+
+        public static void ResetTilesFrame(int i, int j)
+        {
+            WorldGen.TileFrame(i, j, true);
+            for (int ii = i - 1; ii < i + 2; ii++)
+            {
+                for (int jj = j - 1; jj < j + 2; jj++)
+                {
+                    if ((ii == i && jj == j) || ii > Main.maxTilesX || ii < 0 || jj > Main.maxTilesY || jj < 0) continue;
+                    WorldGen.TileFrame(ii, jj);
+                }
+            }
+        }
     }
 }

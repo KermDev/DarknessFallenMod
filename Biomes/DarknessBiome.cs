@@ -80,35 +80,74 @@ namespace DarknessFallenMod.Biomes
                 if (!system.spawnedDarknessBiome)
                 {
                     system.spawnedDarknessBiome = true;
-                    SpawnDarknessBiome((int)npc.Center.X, 400, 170);
+                    GenDarknessBiome((int)npc.Center.X, 600, 320);
                 }
             }
         }
 
-        public static void SpawnDarknessBiome(int x, int width, int height)
+        public static void GenDarknessBiome(int x, int width, int height)
         {
             int diff = 100;
-            int rectX;
+            int rectI;
 
             if (Main.rand.NextBool(2))
             {
-                rectX = Main.rand.Next(x / 16 + diff, Main.maxTilesX - width);
+                rectI = Main.rand.Next(x / 16 + diff, Main.maxTilesX - width);
             }
             else
             {
-                rectX = Main.rand.Next(0, x / 16 - diff - width);
+                rectI = Main.rand.Next(0, x / 16 - diff - width);
             }
 
             //int rectY = Main.maxTilesY - height;
             int rectY = Main.UnderworldLayer;
 
-            int darknessTile = ModContent.TileType<Tiles.Terrain.DarknessAshTile>();
+            int maxI = rectI + width;
 
-            for (int i = rectX; i < rectX + width; i++)
+            ushort darknessTile = (ushort)ModContent.TileType<Tiles.Terrain.DarknessAshTile>();
+
+            int topHeight = (int)(height * 0.12f);
+            int bottomHeight = (int)(height * 0.40f);
+
+            int bottomJ = Main.maxTilesY - bottomHeight;
+
+            Rectangle biomeRect = new Rectangle(rectI, rectY, width, height).Foreach((i, j) =>
+            {
+                Tile tile = Framing.GetTileSafely(i, j);
+
+                tile.Clear(Terraria.DataStructures.TileDataType.Wall);
+                tile.Get<LiquidData>().Amount = 0;
+
+                if (j < rectY + topHeight || j > bottomJ)
+                {
+                    if ((j < Main.maxTilesY - 5) && (i == rectI || i == rectI + width - 1 || j == rectY || j == rectY + topHeight - 1 || j == bottomJ + 1))
+                    {
+                        if (Main.rand.NextBool(3)) return;
+
+                        tile.TileType = darknessTile;
+                        WorldGen.TileRunner(i, j, Main.rand.Next(2, 7), Main.rand.Next(10, 32), darknessTile, addTile: true, ignoreTileType: darknessTile);
+                    }
+                    else if (tile.TileType != darknessTile)
+                    {
+                        tile.Get<TileWallWireStateData>().HasTile = true;
+                        tile.TileType = darknessTile;
+                        
+                        //DarknessFallenUtils.ResetTilesFrame(i, j);
+                        //WorldGen.Place1x1(i, j, darknessTile);
+                    }
+                }
+                else
+                {
+                    tile.ClearEverything();
+                }
+            });
+
+            /*
+            for (int i = rectX; i < maxX; i++)
             {
                 for (int j = rectY; j < Main.maxTilesY; j++)
                 {
-                    /*
+                    
                     Tile tile = Framing.GetTileSafely(i, j);
 
                     if (tile.TileType == TileID.Ash || tile.TileType == TileID.Hellstone || tile.TileType == TileID.Lavafall)
@@ -126,13 +165,11 @@ namespace DarknessFallenMod.Biomes
 
                     if (tile.WallType > 0) WorldGen.KillWall(i, j);
                     if (tile.LiquidType > 0) WorldGen.EmptyLiquid(i, j);
-                    */
+                    
 
-                    Tile tile = Framing.GetTileSafely(i, j);
-
-                    tile.ClearEverything();
+                    
                 }
-            }
+            }*/
 
             /*
             float minH = rectY + height * 0.4f;
@@ -154,21 +191,54 @@ namespace DarknessFallenMod.Biomes
                     WorldGen.TileRunner(i, j, MathHelper.Lerp(2, 4, DarknessFallenUtils.InverseLerp(j / Main.maxTilesY, 1, maxVal2)) + Main.rand.Next(5), Main.rand.Next(1, 3), darknessTile, addTile: true);
                 }
             }*/
+            /*
+            new Rectangle(rectX, rectY, width, topHeight).Foreach((i, j) => 
+            {
+                GenTerrain(i, j, rectX, rectY, topHeight, width, darknessTile);
+            });
 
-            for (int i = rectX; i < rectX + width; i += Main.rand.Next(14, 22))
+            int minY = Main.maxTilesY - topHeight * 2;
+            new Rectangle(rectX, minY, width, topHeight * 2).Foreach((i, j) =>
+            {
+                GenTerrain(i, j, rectX, minY, topHeight, width, darknessTile);
+            });
+            */
+            //GenBigSpikes(rectX, rectY, maxX, darknessTile);
+        }
+
+        public static void GenTerrain(int i, int j, int rectX, int rectY, int topHeight, int width, int darknessTile)
+        {
+            Tile tile = Framing.GetTileSafely(i, j);
+            if (tile.HasTile && tile.TileType != darknessTile) tile.ClearEverything();
+            WorldGen.PlaceTile(i, j, darknessTile);
+            if ((j < Main.maxTilesY - 2) && (i <= rectX || j == rectY || j >= rectY + topHeight - 1 || i >= rectX + width - 1))
+            {
+                WorldGen.TileRunner(i, j, Main.rand.Next(2, 7), Main.rand.Next(5, 32), darknessTile, addTile: true, ignoreTileType: darknessTile);
+            }
+        }
+
+        public static void GenBigSpikes(int rectX, int rectY, int maxX, int darknessTile)
+        {
+            for (int i = rectX; i < maxX; i += Main.rand.Next(14, 22))
             {
                 bool top = Main.rand.NextBool(2);
-                
+                int startPosition = top ? rectY : Main.maxTilesY - 40;
+
                 int dir = Main.rand.NextBool(2) ? 1 : -1;
 
-                int multiplierX = Main.rand.Next(1, 3);
-                int multiplierY = Main.rand.Next(2, 6);
+                float multiplierX = Main.rand.NextFloat(0f, 3f);
+                int multiplierY = Main.rand.Next(4, 6);
 
-                int times = Main.rand.Next(10, 21) * (!top ? 2 : 1);
+                int times = Main.rand.Next(7, 34);
 
+                int currPos = startPosition;
                 for (int j = 1; j < times; j++)
                 {
-                    WorldGen.TileRunner(i + j * multiplierX * dir, top ? rectY + j * multiplierY : Main.maxTilesY - j * multiplierY, Main.rand.Next(13, 24), Main.rand.Next(2, 28), darknessTile, addTile: true);
+                    float diffusion = DarknessFallenUtils.InverseLerp((float)times / j, (float)times / (times - 1) , times);
+
+                    WorldGen.TileRunner((int)(i + j * multiplierX * dir), currPos, Main.rand.Next(7, 17), (int)MathHelper.Lerp(6, 32, diffusion) + Main.rand.Next(3), darknessTile, addTile: true, ignoreTileType: darknessTile);
+
+                    currPos += (int)MathHelper.Lerp(1, multiplierY, diffusion) * (top ? 1 : -1);
                 }
             }
         }

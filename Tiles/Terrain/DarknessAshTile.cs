@@ -12,6 +12,7 @@ namespace DarknessFallenMod.Tiles.Terrain
     {
         public override void SetStaticDefaults()
         {
+            Main.tileMerge[Type][Type] = true;
             Main.tileMerge[Type][TileID.Ash] = true;
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = true;
