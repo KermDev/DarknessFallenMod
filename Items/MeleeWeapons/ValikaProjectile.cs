@@ -63,74 +63,25 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             return false;
         }
 
+        ref float circDustTimer => ref Projectile.ai[0];
         public override void AI()
         {
-            /*
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            Projectile.spriteDirection -= Projectile.direction;
-
-            if (++Projectile.frameCounter >= 5)
-            {
-                Projectile.frameCounter = 0;
-                if (++Projectile.frame >= Main.projFrames[Projectile.type])
-                {
-                    Projectile.frame = 0;
-                }
-
-            }
-
-            float maxDetectRadius = 800f; // The maximum radius at which a projectile can detect a target
-            float projSpeed = 15f; // The speed at which the projectile moves towards the target
-
-            // Trying to find NPC closest to the projectile 
-            NPC closestNPC = FindClosestNPC(maxDetectRadius);
-            if (closestNPC == null)
-            {
-                Projectile.rotation = Projectile.velocity.ToRotation();
-                return;
-            }
-            // If found, change the velocity of the projectile and turn it in the direction of the target
-            // Use the SafeNormalize extension method to avoid NaNs returned by Vector2.Normalize when the vector is zero 
-            Projectile.velocity = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero) * projSpeed;
-            */
-
             Projectile.ManualFriendlyLocalCollision();
             Projectile.rotation = Projectile.velocity.ToRotation();
             Projectile.BasicAnimation(10);
 
             if (!Main.dedServ) Lighting.AddLight(Projectile.Center, 0.4f, 1.8f, 0);
 
-            //Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.MinecartSpark);
-        }
-
-        // Finding the closest NPC to attack within maxDetectDistance range
-        // If not found then returns null
-        public NPC FindClosestNPC(float maxDetectDistance)
-        {
-            NPC closestNPC = null;
-
-            // Using squared values in distance checks will let us skip square root calculations, drastically improving this method's speed.
-            float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
-
-            // Loop through all NPCs(max always 200)
-            for (int k = 0; k < Main.maxNPCs; k++)
+            Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.BubbleBurst_Green).noGravity = true;
+            /*
+            circDustTimer++;
+            if (circDustTimer > 20)
             {
-                NPC target = Main.npc[k];
-                if (target.CanBeChasedBy() && !HitNPCs.Contains(target))
-                {
-                    // The DistanceSquared function returns a squared distance between 2 points, skipping relatively expensive square root calculations
-                    float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
 
-                    // Check if it is within the radius
-                    if (sqrDistanceToTarget < sqrMaxDetectDistance)
-                    {
-                        sqrMaxDetectDistance = sqrDistanceToTarget;
-                        closestNPC = target;
-                    }
-                }
-            }
+                DarknessFallenUtils.NewDustCircular(Projectile.Center + Projectile.rotation.ToRotationVector2() * 70, ModContent.DustType<Dusts.TintableTrailingDust>(), 1, speedFromCenter: 13, amount: 48, scale: 4).ForEach(dust => dust.noGravity = true);
 
-            return closestNPC;
+                circDustTimer = 0;
+            }*/
         }
 
         public override bool PreDraw(ref Color lightColor)

@@ -15,7 +15,9 @@ namespace DarknessFallenMod
             switch (type)
             {
                 case NPCID.Merchant:
-                    shop.item[nextSlot] = new Item(ModContent.ItemType<Items.Throwables.Spearpark>());
+                    shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Throwables.Spearpark>());
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Placeable.Utility.AutoPlatform>());
                     break;
             }
         }

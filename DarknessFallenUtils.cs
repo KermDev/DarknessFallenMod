@@ -394,6 +394,7 @@ namespace DarknessFallenMod
             int i = 0;
             foreach(Vector2 pos in GetCircularPositions(center, radius, amount, rotation))
             {
+
                 Vector2 velocity = dustVelocity;
                 velocity += center.DirectionTo(pos) * speedFromCenter;
                 dusts[i] = Dust.NewDustDirect(pos, 0, 0, dustType, velocity.X, velocity.Y, alpha, color, scale);
@@ -502,13 +503,41 @@ namespace DarknessFallenMod
 
         public static void ResetTilesFrame(int i, int j)
         {
-            WorldGen.TileFrame(i, j, true, true);
             for (int ii = i - 1; ii < i + 2; ii++)
             {
                 for (int jj = j - 1; jj < j + 2; jj++)
                 {
                     if ((ii == i && jj == j) || ii > Main.maxTilesX || ii < 0 || jj > Main.maxTilesY || jj < 0) continue;
                     WorldGen.TileFrame(ii, jj);
+                }
+            }
+            WorldGen.TileFrame(i, j, true);
+        }
+
+        // unfinished
+        public static void FramingTileRunner(int i, int j, ushort type, int strenght, int steps, params int[] ignoreTiles)
+        {
+            int curI = i;
+            int curJ = j;
+            for (int k = 0; k < steps; k++)
+            {
+                for (int l = curI - strenght; l < curI + strenght; l++)
+                {
+                    for (int z = curJ - strenght; z < curJ + strenght; z++)
+                    {
+                        Tile tileLZ = Framing.GetTileSafely(l, z);
+                        float dist = new Vector2(l, z).DistanceSQ(new Vector2(curI, curJ));
+                        float chance = Math.Clamp(10 * InverseLerp(dist, 0, strenght * strenght), 1, 10); 
+                        if (Main.rand.NextBool((int)chance) && !ignoreTiles.Contains(tileLZ.TileType))
+                        {
+                            tileLZ.Get<TileWallWireStateData>().HasTile = true;
+                            tileLZ.TileType = type;
+                            ResetTilesFrame(l, z);
+                        }
+                    }
+
+                    curI += (int)Main.rand.NextFloatDirection();
+                    curJ += (int)Main.rand.NextFloatDirection();
                 }
             }
         }

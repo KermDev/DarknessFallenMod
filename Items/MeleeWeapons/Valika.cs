@@ -3,6 +3,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using DarknessFallenMod.Items.Materials;
 using System.Collections.ObjectModel;
+using Microsoft.Xna.Framework;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
@@ -44,6 +45,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 		}
+
+        public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
+        {
+			Dust.NewDustDirect(hitbox.TopLeft(), hitbox.Width, hitbox.Height, DustID.BubbleBurst_Green).noGravity = true;
+        }
 
         public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
         {

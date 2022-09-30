@@ -19,7 +19,7 @@ namespace DarknessFallenMod.Biomes
 
         public override bool IsBiomeActive(Player player)
         {
-            return player.ZoneUnderworldHeight && ModContent.GetInstance<DarknessBiomeSystem>().darknessTileCount >= 40;
+            return player.Center.Y < Main.UnderworldLayer && ModContent.GetInstance<DarknessBiomeSystem>().darknessTileCount >= 40;
         }
     }
 
@@ -132,11 +132,14 @@ namespace DarknessFallenMod.Biomes
                     {
                         if (Main.rand.NextBool(3)) return;
 
-                        //tile.Get<TileWallWireStateData>().HasTile = true;
-                        //tile.TileType = darknessTile;
-                        if (!tile.HasTile) WorldGen.PlaceTile(i, j, darknessTile);
+                        // thought this helped with tiling idk if it does
+                        //if (!tile.HasTile) WorldGen.PlaceTile(i, j, darknessTile);
 
+                        // this doesnt frame the blocks sometimes
                         WorldGen.TileRunner(i, j, Main.rand.Next(5, 7), Main.rand.Next(10, 32), darknessTile, addTile: true, ignoreTileType: darknessTile);
+
+                        // uh yeah this doesnt work, left for later ungrades (maybe)
+                        //DarknessFallenUtils.FramingTileRunner(i, j, darknessTile, Main.rand.Next(5, 7), Main.rand.Next(3, 5));
                     }
                     else if (tile.TileType != darknessTile)
                     {
@@ -147,8 +150,11 @@ namespace DarknessFallenMod.Biomes
                 }
                 else
                 {
-                    if (!(i < rect.X + thresh || i > rect.X + rect.Width - thresh)) tile.ClearEverything();
+                    if (!(i < rect.X + thresh || i > rect.X + rect.Width - thresh) || Main.rand.NextBool(4)) tile.ClearEverything();
                 }
+
+                // I have no idea if this works now or not
+                DarknessFallenUtils.ResetTilesFrame(i, j);
             });
         }
 
