@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -25,9 +26,9 @@ namespace DarknessFallenMod.NPCs
         {
             NPC.width = 40;
             NPC.height = 40;
-            NPC.damage = 9;
-            NPC.defense = 4;
-            NPC.lifeMax = 999;
+            NPC.damage = 17;
+            NPC.defense = 3;
+            NPC.lifeMax = 240;
             NPC.value = 67f;
             NPC.netAlways = true;
             NPC.noTileCollide = true;
@@ -62,6 +63,8 @@ namespace DarknessFallenMod.NPCs
                         break;
                 }
             }
+
+            if (Main.rand.NextBool(7)) Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Shadowflame).noGravity = true;
         }
 
         ref float curRot => ref NPC.ai[0];
@@ -71,7 +74,7 @@ namespace DarknessFallenMod.NPCs
         void Circle()
         {
             Vector2 lerpPos = (curRot + additionalRot).ToRotationVector2() * distFromPlayer + Target.Center;
-            NPC.Center = Vector2.Lerp(NPC.Center,  lerpPos, 0.3f);
+            NPC.Center = Vector2.Lerp(NPC.Center,  lerpPos, 0.15f);
 
             Vector2 dirToTarget = NPC.Center.DirectionTo(Target.Center);
             NPC.rotation = dirToTarget.ToRotation();
@@ -82,7 +85,8 @@ namespace DarknessFallenMod.NPCs
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + dirToTarget * 25, dirToTarget * 13, ModContent.ProjectileType<DargonProjectile>(), 9, 1);
+                    SoundEngine.PlaySound(SoundID.DD2_FlameburstTowerShot, NPC.Center);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + dirToTarget * 5, dirToTarget * 12, ModContent.ProjectileType<DargonProjectile>(), 14, 1);
                 }
             }
 
@@ -101,7 +105,7 @@ namespace DarknessFallenMod.NPCs
 
         const int circleCd = 250;
         const float distSQToCircle = 100000f;
-        const int dashCd = 60;
+        const int dashCd = 40;
         ref float additionalRot => ref NPC.ai[1];
         ref float circleTimer => ref NPC.ai[2];
         int dashTimer;
@@ -117,15 +121,16 @@ namespace DarknessFallenMod.NPCs
 
             NPC.rotation = NPC.spriteDirection == 1 ? NPC.velocity.ToRotation() : NPC.velocity.ToRotation() - MathHelper.Pi;
 
-            if (distSQtoTarg < 20000f)
+            if (distSQtoTarg < 35000f)
             {
                 openMouth = true;
 
-                if (distSQtoTarg < 5000f && dashTimer >= dashCd)
+                if (distSQtoTarg < 15000f && dashTimer >= dashCd)
                 {
                     dashTimer = 0;
 
                     NPC.velocity += dirToTarg * 26;
+                    SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing, NPC.Center);
                 }
 
                 dashTimer++;
@@ -181,14 +186,16 @@ namespace DarknessFallenMod.NPCs
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 28;
+            Main.projFrames[Type] = 3;
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 12;
             ProjectileID.Sets.TrailingMode[Type] = 2;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 17;
-            Projectile.height = 17;
+            Projectile.width = 5;
+            Projectile.height = 5;
             Projectile.aiStyle = -1;
             Projectile.friendly = false;
             Projectile.hostile = true;
@@ -197,18 +204,20 @@ namespace DarknessFallenMod.NPCs
             Projectile.ignoreWater = false;
             Projectile.tileCollide = false;
             Projectile.alpha = 34;
-            Projectile.extraUpdates = 3;
         }
 
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
+
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.InfernoFork);
+
+            Projectile.BasicAnimation(5);
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawAfterImage(prog => Color.White);
-            Projectile.DrawProjectileInHBCenter(Color.White);
+            Projectile.DrawProjectileInHBCenter(Color.White, true, origin: new Vector2(15, 3));
 
             return false;
         }
