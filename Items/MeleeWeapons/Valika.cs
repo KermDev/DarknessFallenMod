@@ -24,7 +24,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.useTime = 13;
 			Item.useAnimation = 13;
 			Item.useStyle = 1;
-			Item.knockBack = 8;
+			Item.knockBack = 6;
 			Item.value = 195300;
 			Item.rare = 8;
 			Item.UseSound = SoundID.Item1;

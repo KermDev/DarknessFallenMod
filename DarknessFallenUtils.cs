@@ -448,7 +448,7 @@ namespace DarknessFallenMod
                 {
                     if (!npc.friendly && npc.active && npc.life > 0 && projectile.localNPCImmunity[npc.whoAmI] <= 0)
                     {
-                        npc.StrikeNPC(projectile.damage, projectile.knockBack, (int)(npc.Center.X - projectile.Center.X));
+                        npc.StrikeNPC(projectile.damage, projectile.knockBack * 0.03f, (int)(npc.Center.X - projectile.Center.X));
                         projectile.localNPCImmunity[npc.whoAmI] = projectile.localNPCHitCooldown;
                         projectile.penetrate--;
                     }

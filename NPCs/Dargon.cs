@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -15,18 +16,22 @@ namespace DarknessFallenMod.NPCs
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 3;
+
+            NPCID.Sets.TrailCacheLength[Type] = 10;
+            NPCID.Sets.TrailingMode[Type] = 3;
         }
 
         public override void SetDefaults()
         {
-            NPC.width = 43;
-            NPC.height = 50;
-            NPC.damage = 20;
+            NPC.width = 40;
+            NPC.height = 40;
+            NPC.damage = 9;
             NPC.defense = 4;
-            NPC.lifeMax = 94;
+            NPC.lifeMax = 999;
             NPC.value = 67f;
             NPC.netAlways = true;
             NPC.noTileCollide = true;
+            NPC.aiStyle = -1;
 
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
@@ -39,7 +44,6 @@ namespace DarknessFallenMod.NPCs
         }
 
         AIPhase aiPhase;
-        const float distSQToCircle = 20000;
         public override void AI()
         {
             if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
@@ -61,17 +65,30 @@ namespace DarknessFallenMod.NPCs
         }
 
         ref float curRot => ref NPC.ai[0];
-        const float distFromPlayer = 400;
+        int projectileTimer;
+        const float distFromPlayer = 350;
+        const int projectileCd = 15;
         void Circle()
         {
             Vector2 lerpPos = (curRot + additionalRot).ToRotationVector2() * distFromPlayer + Target.Center;
-            NPC.Center = Vector2.Lerp(NPC.Center,  lerpPos, 0.2f);
+            NPC.Center = Vector2.Lerp(NPC.Center,  lerpPos, 0.3f);
 
-            NPC.rotation = MathHelper.Lerp(NPC.rotation, NPC.Center.DirectionTo(Target.Center).ToRotation(), 0.2f);
+            Vector2 dirToTarget = NPC.Center.DirectionTo(Target.Center);
+            NPC.rotation = dirToTarget.ToRotation();
 
-            //NPC.velocity *= 0.98f;
+            if (projectileTimer > projectileCd)
+            {
+                projectileTimer = 0;
 
-            curRot += 0.02f;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + dirToTarget * 25, dirToTarget * 13, ModContent.ProjectileType<DargonProjectile>(), 9, 1);
+                }
+            }
+
+            projectileTimer++;
+
+            curRot += 0.04f;
             if (curRot > MathHelper.TwoPi + additionalRot)
             {
                 curRot = 0;
@@ -79,25 +96,121 @@ namespace DarknessFallenMod.NPCs
             }
         }
 
-        const float inertia = 12;
-        const int circleCd = 600;
+        const float moveSpeed = 7;
+        const float inertia = 8.5f;
+
+        const int circleCd = 250;
+        const float distSQToCircle = 100000f;
+        const int dashCd = 60;
         ref float additionalRot => ref NPC.ai[1];
         ref float circleTimer => ref NPC.ai[2];
+        int dashTimer;
+        bool openMouth;
         void CloseIn()
         {
-            Vector2 velToTarg = NPC.DirectionTo(Target.Center) * 13;
+            float distSQtoTarg = NPC.Center.DistanceSQ(Target.Center);
+            Vector2 dirToTarg = NPC.DirectionTo(Target.Center);
+
+            Vector2 velToTarg = dirToTarg * moveSpeed;
             NPC.velocity = (NPC.velocity * (inertia - 1) + velToTarg) / inertia;
-            NPC.rotation = NPC.velocity.Y;
             NPC.spriteDirection = Math.Sign(NPC.velocity.X);
 
-            if (circleTimer >= circleCd && NPC.Center.DistanceSQ(Target.Center) < distSQToCircle)
+            NPC.rotation = NPC.spriteDirection == 1 ? NPC.velocity.ToRotation() : NPC.velocity.ToRotation() - MathHelper.Pi;
+
+            if (distSQtoTarg < 20000f)
             {
-                additionalRot = Target.Center.DirectionTo(NPC.Center).ToRotation();
+                openMouth = true;
+
+                if (distSQtoTarg < 5000f && dashTimer >= dashCd)
+                {
+                    dashTimer = 0;
+
+                    NPC.velocity += dirToTarg * 26;
+                }
+
+                dashTimer++;
+            }
+            else openMouth = false;
+
+            if (distSQtoTarg < distSQToCircle && circleTimer >= circleCd)
+            {
+                openMouth = true;
+
+                circleTimer = 0;
+
+                NPC.spriteDirection = 1;
                 NPC.velocity *= 0;
+
+                additionalRot = Target.Center.DirectionTo(NPC.Center).ToRotation();
                 aiPhase = AIPhase.Circle;
+                
             }
 
             circleTimer++;
+        }
+
+        const int animSpeed = 6;
+        public override void FindFrame(int frameHeight)
+        {
+            if (openMouth)
+            {
+                NPC.frameCounter = 2 * animSpeed;
+            }
+            else
+            {
+                NPC.frameCounter++;
+                if (NPC.frameCounter >= 2 * animSpeed) NPC.frameCounter = 0;
+            }
+
+            NPC.frame.Y = (int)NPC.frameCounter / animSpeed * frameHeight;
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            Vector2 origin = new Vector2(32, 26);
+
+            if (openMouth) NPC.DrawAfterImageNPC(prog => (prog * NPC.oldPos.Length % 2 == 0 ? Color.WhiteSmoke : Color.BlueViolet) * 0.5f, origin: origin);
+
+            DarknessFallenUtils.DrawNPCInHBCenter(NPC, drawColor, origin: origin);
+
+            return false;
+        }
+    }
+
+    public class DargonProjectile : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 28;
+            ProjectileID.Sets.TrailingMode[Type] = 2;
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 17;
+            Projectile.height = 17;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 600;
+            Projectile.ignoreWater = false;
+            Projectile.tileCollide = false;
+            Projectile.alpha = 34;
+            Projectile.extraUpdates = 3;
+        }
+
+        public override void AI()
+        {
+            Projectile.rotation = Projectile.velocity.ToRotation();
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Projectile.DrawAfterImage(prog => Color.White);
+            Projectile.DrawProjectileInHBCenter(Color.White);
+
+            return false;
         }
     }
 }

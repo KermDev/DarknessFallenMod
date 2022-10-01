@@ -61,7 +61,7 @@ namespace DarknessFallenMod.Biomes
 
             writer.Write(flags);
         }
-
+        
         public override void NetReceive(BinaryReader reader)
         {
             BitsByte flags = reader.ReadByte();

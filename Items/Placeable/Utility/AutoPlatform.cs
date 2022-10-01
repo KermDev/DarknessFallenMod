@@ -10,8 +10,6 @@ namespace DarknessFallenMod.Items.Placeable.Utility
 {
     public class AutoPlatform : ModItem
     {
-        public override string Texture => "Terraria/Images/Item_1";
-
         public override void SetDefaults()
         {
 			Item.useStyle = ItemUseStyleID.Swing;
@@ -33,8 +31,6 @@ namespace DarknessFallenMod.Items.Placeable.Utility
 			if (Main.netMode == NetmodeID.Server) return;
 
 			Vector2 mousePos = Main.MouseWorld;
-
-			
 
 			int tileX = (int)(mousePos.X / 16);
 			int tileY = (int)(mousePos.Y / 16);
