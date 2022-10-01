@@ -64,7 +64,11 @@ namespace DarknessFallenMod.Systems
             {
                 object current = Enumerator.Current;
 
-                if (current is null)
+                if (current is bool cBool && !cBool)
+                { 
+                    Active = false;
+                }
+                else if (current is null)
                 {
                     MoveNext();
                 }
@@ -72,11 +76,9 @@ namespace DarknessFallenMod.Systems
                 {
                     if (currentWaitFor is not null) currentWaitFor.WaitFrames--;
                     else currentWaitFor = WaitFor.Frames(waitForO.WaitFrames - 1);
+
+                    if (currentWaitFor.WaitFrames <= 0) MoveNext();
                 }
-
-                if (currentWaitFor.WaitFrames <= 0) MoveNext();
-
-                if (current is bool cBool && !cBool) Active = false;
             }
 
             public void MoveNext()
