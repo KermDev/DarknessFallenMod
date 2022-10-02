@@ -14,7 +14,7 @@ using DarknessFallenMod.Core;
 
 namespace DarknessFallenMod.NPCs
 {
-    public class ZombieFinger : ModNPC//, IAltTexture
+    public class ZombieFinger : ModNPC, IAltTexture
     {
         public string[] AltTextureNames => new string[] { "ZombieFinger2" };
 

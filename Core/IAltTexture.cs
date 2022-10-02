@@ -49,7 +49,6 @@ namespace DarknessFallenMod.Core
                     path = npc.ModNPC.Texture[0..(npc.ModNPC.Texture.LastIndexOf("/") + 1)] + altTexNPC.AltTextureNames[index];
                 }
 
-                Main.NewText(path);
                 texture = ModContent.Request<Texture2D>(path, AssetRequestMode.ImmediateLoad).Value;
             }
         } 
