@@ -6,7 +6,6 @@ using Terraria.ModLoader.Utilities;
 using DarknessFallenMod.Items.Materials;
 using Terraria.GameContent.ItemDropRules;
 using System.Collections.Generic;
-using DarknessFallenMod.Items.Materials;
 using Terraria.GameContent.Bestiary;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -15,7 +14,7 @@ using DarknessFallenMod.Core;
 
 namespace DarknessFallenMod.NPCs
 {
-    public class ZombieFinger : ModNPC
+    public class ZombieFinger : ModNPC//, IAltTexture
     {
         public string[] AltTextureNames => new string[] { "ZombieFinger2" };
 
@@ -39,7 +38,6 @@ namespace DarknessFallenMod.NPCs
             NPC.HitSound = SoundID.NPCHit10;
             NPC.DeathSound = SoundID.NPCDeath1;
             AnimationType = NPCID.GreenSlime;
-            NPC.scale = 2f;
             NPC.knockBackResist = 0.5f;
             AIType = NPCID.GoblinScout;
             Banner = NPC.type;
@@ -71,6 +69,8 @@ namespace DarknessFallenMod.NPCs
             {
                 NPC.velocity.Y += 6f;
             }
+
+            NPC.spriteDirection = NPC.direction;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -80,15 +80,7 @@ namespace DarknessFallenMod.NPCs
 
         public override void FindFrame(int frameHeight)
         {
-
-            NPC.spriteDirection = -NPC.direction;
-            NPC.frameCounter++;
-
-            if (NPC.frameCounter >= 40)
-            {
-                NPC.frameCounter = 0;
-            }
-            NPC.frame.Y = (int)NPC.frameCounter / 10 * frameHeight;
+            NPC.BasicAnimation(frameHeight, 5);
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

@@ -115,9 +115,9 @@ namespace DarknessFallenMod
                 );
         }
 
-        public static void DrawNPCInHBCenter(this NPC npc, Color color, Vector2? origin = null, string altTex = "")
+        public static void DrawNPCInHBCenter(this NPC npc, Color color, Vector2? origin = null, Texture2D altTex = null)
         {
-            Texture2D texture = altTex == "" ? TextureAssets.Npc[npc.type].Value : ModContent.Request<Texture2D>(altTex).Value;
+            Texture2D texture = altTex is null ? TextureAssets.Npc[npc.type].Value : altTex;
 
             Vector2 drawPos = npc.Center - Main.screenPosition;
             Vector2 drawOrigin = origin ?? npc.frame.Size() * 0.5f;

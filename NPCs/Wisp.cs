@@ -14,7 +14,6 @@ namespace DarknessFallenMod.NPCs
 {
     public class Wisp : ModNPC
     {
-        float shootTimer = 0;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Wisp");
@@ -37,38 +36,36 @@ namespace DarknessFallenMod.NPCs
             NPC.noGravity = true;
         }
 
+        float shootTimer;
         public override void AI()
         {
             NPC.TargetClosest(true);
             Player player = Main.player[NPC.target];
 
-            // Fire a Chaos Ball every 5 seconds
-            if (shootTimer++ % 300 == 0)
+            if (shootTimer++ > 300)
             {
                 NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, NPCID.ChaosBall);
-                // Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Normalize(player.Center - NPC.Center) * 16, ProjectileID., 5, 0, Main.myPlayer);
-                // shootTimer = 0;
+                //Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Normalize(player.Center - NPC.Center) * 16, ProjectileID., 5, 0, Main.myPlayer);
+                shootTimer = 0;
             }
+
+            NPC.spriteDirection = -NPC.direction;
+            NPC.rotation = NPC.velocity.X * -0.08f;
         }
 
         public override void FindFrame(int frameHeight)
         {
-            NPC.spriteDirection = -NPC.direction;
-            NPC.frameCounter++;
-
-            if (NPC.frameCounter % 6 == 5f) // Ticks per frame
-            {
-                NPC.frame.Y += frameHeight;
-            }
-            if (NPC.frame.Y >= frameHeight * 4) // 6 is max # of frames
-            {
-                NPC.frame.Y = 0; // Reset back to default
-            }
+            NPC.BasicAnimation(frameHeight, 7);
         }
 
         public override void HitEffect(int hitDirection, double damage)
         {
             if (Main.netMode == NetmodeID.Server) return;
+
+            if (NPC.life <= 0)
+            {
+                DarknessFallenUtils.NewDustCircular(NPC.Center, DustID.ShadowbeamStaff, 20, speedFromCenter: 8, amount: 32).ForEach(dust => dust.noGravity = true);
+            }
 
             //NPC.SpawnGoreOnDeath("CrimsonMawGore1", "CrimsonMawGore2", "CrimsonMawGore3");
         }

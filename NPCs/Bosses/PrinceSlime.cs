@@ -71,6 +71,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 			NPC.npcSlots = 20;
 			NPC.aiStyle = -1;
 			NPC.netAlways = true;
+			NPC.stairFall = true;
 
 			BannerItem = ModContent.ItemType<Items.Placeable.Banners.PrinceSlimeBanner>();
 			Banner = Type;
@@ -132,9 +133,21 @@ namespace DarknessFallenMod.NPCs.Bosses
 
 				if (NPC.velocity.Y == 0 && aiTimer >= 90 && laserTimer > 60)
 				{
+					aiTimer = 0;
+
 					NPC.velocity.Y += Main.rand.Next(-10, -5);
 					NPC.velocity.X += Math.Clamp(NPC.DistanceSQ(target.Center) * 0.0003f, 0.1f, 4f) * xdir;
-					aiTimer = 0;
+					
+					if (NPC.Center.Y - target.Center.Y < 100)
+                    {
+						NPC.stairFall = true;
+                    }
+                    else
+                    {
+						NPC.velocity.Y += Main.rand.Next(-10, -5);
+						NPC.velocity.X += Math.Clamp(NPC.DistanceSQ(target.Center) * 0.0003f, 0.1f, 4f) * xdir;
+					}
+					
 				}
 
 				if (NPC.collideY) NPC.velocity.X *= 0.92f;

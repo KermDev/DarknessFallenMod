@@ -15,6 +15,11 @@ namespace DarknessFallenMod.Systems
             PostUpdate
         }
 
+        public override void OnWorldUnload()
+        {
+            routinesPostUpdate.Clear();
+        }
+
         static readonly List<Coroutine> routinesPostUpdate = new(); 
 
         public override void PostUpdateEverything()
@@ -35,7 +40,7 @@ namespace DarknessFallenMod.Systems
         public static Coroutine StartCoroutine(IEnumerator enumerator, CoroutineType coroutineType = CoroutineType.PostUpdate)
         {
             Coroutine routine = new Coroutine(enumerator);
-            routine.Enumerator.MoveNext();
+            routine.MoveNext();
 
             switch (coroutineType)
             {

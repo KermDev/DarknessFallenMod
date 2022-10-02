@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,21 @@ namespace DarknessFallenMod.Core
 
     public class AltTexGlobalNPC : GlobalNPC
     {
+        public override bool InstancePerEntity => true;
+
+        Texture2D texture;
+        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            if (texture is not null)
+            {
+                npc.DrawNPCInHBCenter(drawColor, altTex: texture);
+
+                return false;
+            }
+
+            return true;
+        }
+
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
             if (npc.ModNPC is not null && npc.ModNPC is IAltTexture altTexNPC)
@@ -30,11 +46,12 @@ namespace DarknessFallenMod.Core
                 }
                 else
                 {
-                    path = npc.ModNPC.Texture[0.. (npc.ModNPC.Texture.IndexOf("/") + 1)] + altTexNPC.AltTextureNames[index];
+                    path = npc.ModNPC.Texture[0..(npc.ModNPC.Texture.LastIndexOf("/") + 1)] + altTexNPC.AltTextureNames[index];
                 }
 
-                Asset<Texture2D> texAsset = ModContent.Request<Texture2D>(path, AssetRequestMode.ImmediateLoad);
+                Main.NewText(path);
+                texture = ModContent.Request<Texture2D>(path, AssetRequestMode.ImmediateLoad).Value;
             }
-        }
+        } 
     }
 }
