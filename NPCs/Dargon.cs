@@ -33,6 +33,7 @@ namespace DarknessFallenMod.NPCs
             NPC.netAlways = true;
             NPC.noTileCollide = true;
             NPC.aiStyle = -1;
+            NPC.noTileCollide = true;
 
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;

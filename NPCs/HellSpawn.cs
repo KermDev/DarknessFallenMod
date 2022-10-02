@@ -30,7 +30,7 @@ namespace DarknessFallenMod.NPCs
 				}
             };
             NPCID.Sets.DebuffImmunitySets.Add(Type, debuffData);
-
+            
             DisplayName.SetDefault("Hellwing");
         }
 
@@ -45,7 +45,6 @@ namespace DarknessFallenMod.NPCs
             NPC.value = 22f;
             NPC.aiStyle = -1;
             NPC.noGravity = true;
-
             NPC.lavaImmune = true;
 
             NPC.HitSound = SoundID.NPCHit1;
@@ -98,12 +97,16 @@ namespace DarknessFallenMod.NPCs
                     isCharging = true;
                 }
             }
-
             
             if (NPC.frameCounter == 22) SoundEngine.PlaySound(SoundID.Item32, NPC.Center);
 
             NPC.velocity = Vector2.Clamp(NPC.velocity, Vector2.One * -maxSpeed, Vector2.One * maxSpeed);
             NPC.rotation = NPC.velocity.X * 0.07f;
+
+            if (NPC.collideX)
+            {
+                NPC.velocity.X -= Math.Sign(NPC.velocity.X) * 3;
+            }
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)

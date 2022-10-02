@@ -42,7 +42,7 @@ namespace DarknessFallenMod.NPCs
             NPC.TargetClosest(true);
             Player player = Main.player[NPC.target];
 
-            if (shootTimer++ > 300)
+            if (shootTimer++ > 150)
             {
                 NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, NPCID.ChaosBall);
                 //Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Normalize(player.Center - NPC.Center) * 16, ProjectileID., 5, 0, Main.myPlayer);
