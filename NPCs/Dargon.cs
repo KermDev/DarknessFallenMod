@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -169,6 +170,11 @@ namespace DarknessFallenMod.NPCs
             }
 
             NPC.frame.Y = (int)NPC.frameCounter / animSpeed * frameHeight;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.UmbralEdge>(), 100));
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

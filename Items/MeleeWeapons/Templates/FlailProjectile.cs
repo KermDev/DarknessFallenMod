@@ -35,12 +35,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons.Templates
 			return false;
         }
 
-        public override bool PreDrawExtras()
+        public sealed override bool PreDrawExtras()
         {
             return false;
         }
 
-        public override bool PreDraw(ref Color lightColor)
+        public sealed override bool PreDraw(ref Color lightColor)
         {
 			Vector2 pos = Main.GetPlayerArmPosition(Projectile);
 

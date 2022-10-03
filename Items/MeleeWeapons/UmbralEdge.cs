@@ -136,9 +136,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         {
 			hitDirection = Math.Sign(Projectile.Center.DirectionTo(target.Center).X);
 
-			if (!target.boss && target.life < 2000 && target.type != NPCID.TargetDummy && Main.rand.NextBool(10))
+			if (!target.boss && target.life < 2000 && Main.rand.NextBool(10))
 			{
-				damage = 99999999;
+				damage = target.life;
 				crit = true;
 
 				DarknessFallenUtils.NewDustCircular(target.Center, DustID.Blood, 1, speedFromCenter: 4, amount: 48);

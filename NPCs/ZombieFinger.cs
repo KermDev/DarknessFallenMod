@@ -27,8 +27,8 @@ namespace DarknessFallenMod.NPCs
         public override void SetDefaults()
         {
             NPC.velocity = NPC.velocity * (0.01f);
-            NPC.width = 20;
-            NPC.height = 11;
+            NPC.width = 28;
+            NPC.height = 20;
             NPC.damage = 9;
             NPC.defense = 2;
             NPC.lifeMax = 47;
