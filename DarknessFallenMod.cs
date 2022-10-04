@@ -17,9 +17,11 @@ namespace DarknessFallenMod
 	public class DarknessFallenMod : Mod
 	{
 		public static int GelCurrency;
+		public static DarknessFallenMod Instance { get; private set; }
 
 		public override void Load()
 		{
+			Instance = this;
 			// Registers a new custom currency
 			GelCurrency = CustomCurrencyManager.RegisterCurrency(new Systems.Currencies.GelCurrency(ItemID.Gel, 999L, "Gel"));
 		}

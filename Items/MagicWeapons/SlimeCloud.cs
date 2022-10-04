@@ -74,22 +74,27 @@ namespace DarknessFallenMod.Items.MagicWeapons
 
 				float boris = 5;
 				Vector2 pos = new Vector2(Projectile.position.X + boris + Main.rand.NextFloat(Projectile.width - boris * 2), Projectile.Center.Y + 10 + Main.rand.NextFloat(20));
+				if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+					int proj = Projectile.NewProjectile(
+						Projectile.GetSource_FromAI(),
+						pos,
+						Vector2.UnitY * 7,
+						ModContent.ProjectileType<SlimeCloudProjectileRain>(),
+						Projectile.damage,
+						9,
+						Projectile.owner
+						);
 
-				int proj = Projectile.NewProjectile(
-					Projectile.GetSource_FromAI(),
-					pos,
-					Vector2.UnitY * 7,
-					ModContent.ProjectileType<SlimeCloudProjectileRain>(),
-					Projectile.damage,
-					9,
-					Projectile.owner
-					);
+					Main.projectile[proj].friendly = true;
+					Main.projectile[proj].hostile = false;
+					Main.projectile[proj].alpha = 120;
+				}
+				
 
 				Dust.NewDust(pos + Vector2.UnitY * -20, 1, 1, DustID.BlueFairy, SpeedY: 2, SpeedX: Main.rand.Next(-1, 1), Scale: Main.rand.NextFloat(0.4f, 1.5f), newColor: new Color(255, 0, 80), Alpha: 200);
 
-				Main.projectile[proj].friendly = true;
-				Main.projectile[proj].hostile = false;
-				Main.projectile[proj].alpha = 120;
+				
 			}
 
 			Projectile.BasicAnimation(10);

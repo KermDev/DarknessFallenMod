@@ -541,5 +541,10 @@ namespace DarknessFallenMod
                 }
             }
         }
+
+        public static int HitDirection(this Projectile projectile, Vector2 other)
+        {
+            return Math.Sign(projectile.Center.DirectionTo(other).X);
+        }
     }
 }

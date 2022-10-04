@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -15,6 +16,9 @@ namespace DarknessFallenMod.NPCs
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 4;
+
+            NPCID.Sets.TrailCacheLength[Type] = 58;
+            NPCID.Sets.TrailingMode[Type] = 3;
         }
 
         public override void SetDefaults()
@@ -50,12 +54,21 @@ namespace DarknessFallenMod.NPCs
                 NPC.velocity = (NPC.velocity * (inertia - 1) + velToTarg) / inertia;
 
                 NPC.rotation += NPC.velocity.X * 0.04f;
+                
+                
             }
         }
 
         public override void FindFrame(int frameHeight)
         {
             NPC.BasicAnimation(frameHeight, 7);
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            NPC.DrawAfterImageNPC(proh => Color.Black * 0.2f);
+            NPC.DrawNPCInHBCenter(drawColor);
+            return false;
         }
     }
 }

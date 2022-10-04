@@ -166,8 +166,15 @@ namespace DarknessFallenMod.Items.Throwables
             });
 
             DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.Torch, 1, speedFromCenter: 13, amount: 8);
-            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.Smoke, 1, speedFromCenter: 13, amount: 8);
-            DarknessFallenUtils.NewGoreCircular(Projectile.Center, GoreID.Smoke1 + Main.rand.Next(3), 50, speedFromCenter: 4, rotation: Main.rand.NextFloat(MathHelper.TwoPi), scale: Main.rand.NextFloat(0.6f, 1.2f));
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.Smoke, 1, speedFromCenter: 13, amount: 8, alpha: Main.rand.Next(0, 150));
+            DarknessFallenUtils.NewGoreCircular(Projectile.Center, 
+                GoreID.Smoke1 + Main.rand.Next(3), 
+                10,
+                speedFromCenter: Main.rand.Next(3, 7),
+                rotation: Main.rand.NextFloat(MathHelper.TwoPi),
+                scale: Main.rand.NextFloat(0.5f, 1.6f),
+                amount: Main.rand.Next(3, 5)
+                );
         }
 
         float drawAlpha = 1;

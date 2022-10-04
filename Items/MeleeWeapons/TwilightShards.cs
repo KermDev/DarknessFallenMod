@@ -83,13 +83,13 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         {
             Projectile.width = 30;
             Projectile.height = 30;
-            Projectile.penetrate = 7;
+            Projectile.penetrate = 4;
             Projectile.DamageType = DamageClass.MeleeNoSpeed;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = true;
-            Projectile.timeLeft = 190;
+            Projectile.timeLeft = 150;
 
             Projectile.aiStyle = -1;
 
@@ -97,24 +97,15 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             Projectile.usesLocalNPCImmunity = true;
         }
 
-        public override void OnSpawn(IEntitySource source)
-        {
-            rotMult = Math.Sign(Projectile.velocity.X);
-        }
-
-        ref float rotMult => ref Projectile.ai[0];
         public override void AI()
         {
             Projectile.velocity.Y += 0.2f;
-            Projectile.rotation += 0.2f * rotMult;
+            Projectile.rotation += Projectile.velocity.X * 0.04f;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Projectile.penetrate--;
-            if (Projectile.penetrate <= 0) return true;
-
-            rotMult *= 0.7f;
+            if (Projectile.velocity.LengthSquared() < 1) return false;
 
             if (Projectile.velocity.X != oldVelocity.X)
             {
@@ -130,11 +121,26 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             return false;
         }
 
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            Projectile.velocity *= 0.3f;
+            Projectile.timeLeft = (int)(Projectile.timeLeft * 0.3f);
+        }
+
         public override void Kill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Shatter with { Volume = 0.4f }, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Shatter with { Volume = 0.5f }, Projectile.Center);
 
-            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.Glass, 10, speedFromCenter: 6, amount: Main.rand.Next(10, 24)).ForEach(dust => dust.alpha = Main.rand.Next(0, 220));
+            DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, 5000, npc =>
+            {
+                if (!npc.friendly && npc.active && npc.life > 0)
+                {
+                    int dmg = (int)npc.StrikeNPC(340, 0.4f, Projectile.HitDirection(npc.Center), Main.rand.NextBool(4));
+                    Main.player[Projectile.owner].addDPS(dmg);
+                }
+            });
+
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.Glass, 10, speedFromCenter: 6, amount: Main.rand.Next(18, 26)).ForEach(dust => dust.alpha = Main.rand.Next(0, 220));
         }
 
         public override bool PreDraw(ref Color lightColor)
