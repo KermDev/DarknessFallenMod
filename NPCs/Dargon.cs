@@ -27,9 +27,9 @@ namespace DarknessFallenMod.NPCs
         {
             NPC.width = 40;
             NPC.height = 40;
-            NPC.damage = 17;
-            NPC.defense = 3;
-            NPC.lifeMax = 240;
+            NPC.damage = 25;
+            NPC.defense = 20;
+            NPC.lifeMax = 450;
             NPC.value = 67f;
             NPC.netAlways = true;
             NPC.noTileCollide = true;

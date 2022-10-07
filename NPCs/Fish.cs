@@ -25,7 +25,7 @@ namespace DarknessFallenMod.NPCs
         {
             NPC.width = 66;
             NPC.height = 20;
-            NPC.damage = 45;
+            NPC.damage = 40;
             NPC.defense = 22;
             NPC.lifeMax = 280;
             NPC.HitSound = SoundID.NPCHit1;
