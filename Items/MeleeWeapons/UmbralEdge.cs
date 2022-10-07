@@ -12,7 +12,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("The sword powered by Darkness ".GetColored(Color.DimGray) + "\n" + "10% chance to one shot a non boss enemy".GetColored(Color.DarkGray));
+			Tooltip.SetDefault("The sword powered by Darkness ");
 		}
 
 		public override void SetDefaults()

@@ -38,7 +38,7 @@ namespace DarknessFallenMod.NPCs
             NPC.DeathSound = SoundID.NPCDeath1;
         }
 
-        const float moveSpeed = 5f;
+        const float moveSpeed = 4f;
         const float inertia = 7f;
         public override void AI()
         {
