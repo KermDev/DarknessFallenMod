@@ -1,5 +1,7 @@
 displayName = Darkness Fallen
 author = Kermit
+version = 0.46
 hideCode = true
 hideResources = true
-version = 0.46
+includeSource = false
+buildIgnore = .editorconfig, .gitattributes, .gitignore, .git/, .vs/, .idea/, bin/, obj/
