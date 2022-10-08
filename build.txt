@@ -4,4 +4,5 @@ version = 0.46
 hideCode = true
 hideResources = true
 includeSource = false
+modReferences = SubworldLibrary
 buildIgnore = .editorconfig, .gitattributes, .gitignore, .git/, .vs/, .idea/, bin/, obj/
