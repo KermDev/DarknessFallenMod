@@ -25,8 +25,8 @@ namespace DarknessFallenMod.NPCs
         {
             NPC.width = 40;
             NPC.height = 40;
-            NPC.damage = 17;
-            NPC.defense = 3;
+            NPC.damage = 20;
+            NPC.defense = 10;
             NPC.lifeMax = 240;
             NPC.value = 67f;
             NPC.netAlways = true;
@@ -38,7 +38,7 @@ namespace DarknessFallenMod.NPCs
             NPC.DeathSound = SoundID.NPCDeath1;
         }
 
-        const float moveSpeed = 5f;
+        const float moveSpeed = 4f;
         const float inertia = 7f;
         public override void AI()
         {

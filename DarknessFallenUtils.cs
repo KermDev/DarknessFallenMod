@@ -17,6 +17,7 @@ namespace DarknessFallenMod
     public static class DarknessFallenUtils
     {
         public const string OreGenerationMessage = "Darkness Fallen Ore Generation";
+        public const string FlyingCastleGenMessage = "Building things in the sky";
         public const string SoundsPath = "DarknessFallenMod/Sounds/";
 
         public enum BeginType
