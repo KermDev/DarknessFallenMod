@@ -9,7 +9,7 @@ namespace DarknessFallenMod.Items.Pets
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bloody Squid");
-            Description.SetDefault("squid");
+            Description.SetDefault("A little squid will follow you around");
 
             Main.buffNoTimeDisplay[Type] = true;
             Main.vanityPet[Type] = true;

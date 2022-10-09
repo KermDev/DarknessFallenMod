@@ -9,7 +9,7 @@ namespace DarknessFallenMod.Items.Pets
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Lichling");
-            Description.SetDefault("placeholder");
+            Description.SetDefault("Lichling will follow you around");
 
             Main.buffNoTimeDisplay[Type] = true;
             Main.vanityPet[Type] = true;

@@ -11,9 +11,10 @@ namespace DarknessFallenMod.Items.Pets
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Icy Crown");
-			Tooltip.SetDefault("placeholder");
+			Tooltip.SetDefault("Summons a lichling pet to follow you around" +
+                $"\n this item is from a collab with exalt mod");
 
-			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
