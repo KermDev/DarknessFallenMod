@@ -46,8 +46,6 @@ namespace DarknessFallenMod.NPCs.Bosses
 		}
         #endregion
 
-		public int Phase => NPC.life < NPC.lifeMax * 0.5f ? 2 : 1;
-
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 8;
@@ -79,12 +77,24 @@ namespace DarknessFallenMod.NPCs.Bosses
 			NPC.BossBar = ModContent.GetInstance<PrinceSlimeBossBar>();
 		}
 
-        float laserTimer = 61;
+		// !!! DISCLAIMER !!!
+		// I know this AI is very messy, if you wanna rewrite this feel free ;)
+
+		public int Phase = 1;
+
+		float laserTimer = 61;
 		ref float aiTimer => ref NPC.ai[0];
-		Vector2 laserPos => NPC.Center - Vector2.UnitY * NPC.scale * 12;
+		Vector2 laserPos => NPC.Center + new Vector2(NPC.direction * -3, -11);
 		bool fell;
+
+		int secondPhaseAnimTimer;
+		const int timeMaxAnim2 = 180;
 		public override void AI()
 		{
+			NPC.netUpdate = true;
+
+			if (NPC.collideY) NPC.velocity.X *= 0.92f;
+
 			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
 			{
 				NPC.TargetClosest();
@@ -110,6 +120,30 @@ namespace DarknessFallenMod.NPCs.Bosses
 					SoundEngine.PlaySound(SoundID.Item167, NPC.Center);
 
 					fell = true;
+				}
+
+				return;
+			}
+
+			if (secondPhaseAnimTimer < timeMaxAnim2 && NPC.life <= 0.5f * NPC.lifeMax)
+			{
+				secondPhaseAnimTimer++;
+
+				foreach (Vector2 pos in laserPos.GetCircularPositions(MathF.Pow((timeMaxAnim2 - secondPhaseAnimTimer) * 0.7f, 1.6f) * 0.7f, 8, secondPhaseAnimTimer * 0.03f))
+				{
+					// 21, 75, 304, 301
+					Dust.NewDust(pos, 0, 0, DustID.TreasureSparkle, newColor: Color.Red, Scale: 0.6f);
+					Dust.NewDust(pos, 0, 0, DustID.PortalBolt, newColor: Color.Red, Scale: 0.7f);
+				}
+
+				if (secondPhaseAnimTimer >= timeMaxAnim2) 
+				{
+					SoundEngine.PlaySound(SoundID.Tink, NPC.Center);
+
+					DarknessFallenUtils.NewDustCircular(laserPos, DustID.TreasureSparkle, 1, speedFromCenter: 12);
+					DarknessFallenUtils.NewDustCircular(laserPos, DustID.Smoke, 1, speedFromCenter: 7, amount: 9);
+
+					Phase = 2;
 				}
 
 				return;
@@ -150,7 +184,6 @@ namespace DarknessFallenMod.NPCs.Bosses
 					
 				}
 
-				if (NPC.collideY) NPC.velocity.X *= 0.92f;
 				if (NPC.collideX && NPC.velocity.Y != 0) NPC.velocity.X += xdir * 2;
 
 				if (Main.rand.NextBool(360)) NPC.NewNPCDirect(NPC.GetSource_FromAI(), (int)target.Center.X + Main.rand.Next(-300, 300), (int)target.Center.Y - 1200, ModContent.NPCType<PrinceSlimeMinion>()).netUpdate = true;
@@ -192,8 +225,6 @@ namespace DarknessFallenMod.NPCs.Bosses
 
 					laserTimer--;
 				}
-
-				NPC.netUpdate = true;
 			}
 		}
 		

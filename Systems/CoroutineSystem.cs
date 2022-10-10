@@ -8,6 +8,9 @@ using System.Collections.Generic;
 
 namespace DarknessFallenMod.Systems
 {
+    /// <summary>
+    /// Unity-like coroutine system by sucss :3
+    /// </summary>
     public class CoroutineSystem : ModSystem
     {
         public enum CoroutineType
@@ -37,11 +40,22 @@ namespace DarknessFallenMod.Systems
             }
         }
 
+        /// <summary>
+        /// What you can return and what it does: <br />
+        /// 1. false => Ends the coroutine. <br />
+        /// 2. WaitFor.Frames(amount) => Waits for however many frames specified. <br />
+        /// 3. Any other object? => Waits one frame (null, true, MyClassBruhXD etc). <br />
+        /// <br />
+        /// Also when creating a method for this make sure to check for correct Netmode. (ex. Main.netMode == NetmodeID.Server => return false). <br />
+        /// </summary>
+        /// <param name="enumerator">Method call with IEnumerator type.</param>
+        /// <param name="coroutineType">In what type of update should the coroutine tick.</param>
+        /// <returns></returns>
         public static Coroutine StartCoroutine(IEnumerator enumerator, CoroutineType coroutineType = CoroutineType.PostUpdate)
         {
             Coroutine routine = new Coroutine(enumerator);
             routine.MoveNext();
-
+            
             switch (coroutineType)
             {
                 case CoroutineType.PostUpdate:

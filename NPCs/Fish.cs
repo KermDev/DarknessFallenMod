@@ -55,11 +55,13 @@ namespace DarknessFallenMod.NPCs
         public override void HitEffect(int hitDirection, double damage)
         {
             if (Main.netMode == NetmodeID.Server) return;
-
+            
+            /*
             if (NPC.life <= 0)
             {
                 DarknessFallenUtils.NewDustCircular(NPC.Center, DustID.ShadowbeamStaff, 20, speedFromCenter: 8, amount: 32).ForEach(dust => dust.noGravity = true);
             }
+            */
 
             // Do gores or whatever
             //NPC.SpawnGoreOnDeath("CrimsonMawGore1", "CrimsonMawGore2", "CrimsonMawGore3");
