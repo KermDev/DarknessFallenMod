@@ -25,11 +25,13 @@ namespace DarknessFallenMod.StructureHelper
                 {
                     Point bottomRight = Main.MouseWorld.ToTileCoordinates();
 
-                    Rectangle rect = new Rectangle(topLeft.X, topLeft.Y, bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y);
+                    Rectangle rect = new Rectangle(topLeft.X, topLeft.Y, bottomRight.X - topLeft.X + 1, bottomRight.Y - topLeft.Y + 1);
+
+                    Main.NewText($"Rectangle: {rect.X}, {rect.Y}, {rect.Width}, {rect.Height}");
 
                     SaveStructure(rect);
 
-                    Main.NewText("Structure saved.");
+                    Main.NewText($"Structure saved.");
                 }
                 else
                 {
@@ -46,13 +48,13 @@ namespace DarknessFallenMod.StructureHelper
             structureCompound["width"] = tileRect.Width;
             structureCompound["height"] = tileRect.Height;
 
-            TileSaveData[,] tileSaveDataList = new TileSaveData[tileRect.Width, tileRect.Height];
+            List<TileSaveData> tileSaveDataList = new();
             tileRect.Foreach((i, j) =>
             {
-                tileSaveDataList[i, j] = new TileSaveData(Main.tile[i, j]);
+                tileSaveDataList.Add(new TileSaveData(Main.tile[i, j]));
             });
 
-            structureCompound.Add("TileSaveData", tileSaveDataList);
+            structureCompound.Add("tileSaveData", tileSaveDataList);
 
             string path = ModLoader.ModPath.Replace("Mods", "ModSources\\DarknessFallenMod\\Structures\\Saves\\NewStructure");
 
