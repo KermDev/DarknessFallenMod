@@ -41,7 +41,7 @@ namespace DarknessFallenMod.Items.Pets
                 return;
             }
 
-            if (!player.dead && player.HasBuff(ModContent.BuffType<LichlingBuff>()))
+            if (!player.dead && player.HasBuff(ModContent.BuffType<BloodySquidBuff>()))
             {
                 Projectile.timeLeft = 2;
             }
