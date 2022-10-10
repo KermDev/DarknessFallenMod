@@ -16,7 +16,7 @@ namespace DarknessFallenMod.Items.Pets
         {
             DisplayName.SetDefault("Bloody Squid");
 
-            Main.projFrames[Projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 7;
             Main.projPet[Projectile.type] = true;
         }
 
@@ -41,7 +41,7 @@ namespace DarknessFallenMod.Items.Pets
                 return;
             }
 
-            if (!player.dead && player.HasBuff(ModContent.BuffType<LichlingBuff>()))
+            if (!player.dead && player.HasBuff(ModContent.BuffType<BloodySquidBuff>()))
             {
                 Projectile.timeLeft = 2;
             }

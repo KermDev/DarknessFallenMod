@@ -11,7 +11,7 @@ namespace DarknessFallenMod.Items.Pets
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Bloody Tentacle");
-			Tooltip.SetDefault("squid");
+			Tooltip.SetDefault("Summons a lil squid to follow you");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
@@ -20,7 +20,7 @@ namespace DarknessFallenMod.Items.Pets
 		{
 			Item.damage = 0;
 			Item.useStyle = ItemUseStyleID.Swing;
-			Item.shoot = ModContent.ProjectileType<LichlingPet>();
+			Item.shoot = ModContent.ProjectileType<BloodySquid>();
 			Item.width = 16;
 			Item.height = 30;
 			Item.UseSound = SoundID.Item2;
@@ -29,7 +29,7 @@ namespace DarknessFallenMod.Items.Pets
 			Item.rare = ItemRarityID.Yellow;
 			Item.noMelee = true;
 			Item.value = Item.sellPrice(0, 5, 50);
-			Item.buffType = ModContent.BuffType<LichlingBuff>();
+			Item.buffType = ModContent.BuffType<BloodySquidBuff>();
 		}
 
 		public override void UseStyle(Player player, Rectangle heldItemFrame)
