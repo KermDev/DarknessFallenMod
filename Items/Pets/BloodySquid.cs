@@ -16,7 +16,7 @@ namespace DarknessFallenMod.Items.Pets
         {
             DisplayName.SetDefault("Bloody Squid");
 
-            Main.projFrames[Projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 7;
             Main.projPet[Projectile.type] = true;
         }
 
