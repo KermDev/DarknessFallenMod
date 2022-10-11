@@ -15,29 +15,42 @@ namespace DarknessFallenMod.Systems
     {
         public enum CoroutineType
         {
-            PostUpdate
+            PostUpdate,
+            PostDrawTiles
         }
 
         public override void OnWorldUnload()
         {
             routinesPostUpdate.Clear();
+            routinesPostDrawTiles.Clear();
         }
 
-        static readonly List<Coroutine> routinesPostUpdate = new(); 
+        static List<Coroutine> routinesPostUpdate = new();
+        static List<Coroutine> routinesPostDrawTiles = new();
 
-        public override void PostUpdateEverything()
+        void UpdateCoroutineList(ref List<Coroutine> coroutines)
         {
-            for (int i = 0; i < routinesPostUpdate.Count; i++)
+            for (int i = 0; i < coroutines.Count; i++)
             {
-                Coroutine routine = routinesPostUpdate[i];
+                Coroutine routine = coroutines[i];
 
                 routine.Update();
 
                 if (!routine.Active)
                 {
-                    routinesPostUpdate.Remove(routine);
+                    coroutines.Remove(routine);
                 }
             }
+        }
+
+        public override void PostUpdateEverything()
+        {
+            UpdateCoroutineList(ref routinesPostUpdate);
+        }
+
+        public override void PostDrawTiles()
+        {
+            UpdateCoroutineList(ref routinesPostDrawTiles);
         }
 
         /// <summary>
@@ -60,6 +73,9 @@ namespace DarknessFallenMod.Systems
             {
                 case CoroutineType.PostUpdate:
                     routinesPostUpdate.Add(routine);
+                    break;
+                case CoroutineType.PostDrawTiles:
+                    routinesPostDrawTiles.Add(routine);
                     break;
             }
 

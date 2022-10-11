@@ -2,11 +2,10 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using DarknessFallenMod.Items.Materials;
-using DarknessFallenMod.Items.MeleeWeapons;
 using System;
 using Microsoft.Xna.Framework;
 
-namespace DarknessFallenMod.Items.MeleeWeapons
+namespace DarknessFallenMod.Items.MeleeWeapons.PhaloriteSword
 {
     public class PhaloriteSword : ModItem
     {

@@ -4,7 +4,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.MagicWeapons
+namespace DarknessFallenMod.Items.MagicWeapons.InfernoRod
 {
 	public class InfernoRod : ModItem
 	{

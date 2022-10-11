@@ -2,7 +2,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.MeleeWeapons
+namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 {
 	public class HolyGreatsword : ModItem
 	{

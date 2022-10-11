@@ -12,13 +12,13 @@ using Terraria.ModLoader;
 using Terraria.Graphics.Shaders;
 using System.IO;
 
-namespace DarknessFallenMod.Items.MeleeWeapons
+namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 {
     public class HolyGreatswordProjectile : ModProjectile
     {
         Player Player => Main.player[Projectile.owner];
 
-        public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/HolyGreatsword";
+        public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/HolyGreatsword/HolyGreatsword";
 
         public override void SetStaticDefaults()
         {
@@ -158,7 +158,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
                 0
                 );
 
-            Texture2D glowMaskTex = ModContent.Request<Texture2D>("DarknessFallenMod/Items/MeleeWeapons/HolyGreatSwordGlowmask").Value;
+            Texture2D glowMaskTex = ModContent.Request<Texture2D>("DarknessFallenMod/Items/MeleeWeapons/HolyGreatsword/HolyGreatswordGlowmask").Value;
 
             Main.EntitySpriteDraw(
                 glowMaskTex,

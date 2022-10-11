@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -11,6 +12,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.UI.Chat;
+
+using static DarknessFallenMod.Systems.CoroutineSystem;
 
 namespace DarknessFallenMod
 {
@@ -261,12 +264,22 @@ namespace DarknessFallenMod
             });
         }
 
-        public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, float rangeSQ = float.MaxValue)
+        public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, float rangeSQ = float.MaxValue, bool checkChase = true)
         {
-            return TryGetClosestEnemyNPC(center, out closest, npc => false, rangeSQ);
+            return TryGetClosestEnemyNPC(center, out closest, npc => false, out _, rangeSQ, checkChase);
         }
 
-        public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, Func<NPC, bool> condition, float rangeSQ = float.MaxValue)
+        public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, Func<NPC, bool> condition, float rangeSQ = float.MaxValue, bool checkChase = true)
+        {
+            return TryGetClosestEnemyNPC(center, out closest, condition, out _, rangeSQ, checkChase);
+        }
+
+        public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, out float distSQ, float rangeSQ = float.MaxValue, bool checkChase = true)
+        {
+            return TryGetClosestEnemyNPC(center, out closest, npc => false, out distSQ, rangeSQ, checkChase);
+        }
+
+        public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, Func<NPC, bool> condition, out float distSQ, float rangeSQ = float.MaxValue, bool checkChase = true)
         {
             closest = null;
             NPC closestCondition = null;
@@ -274,7 +287,12 @@ namespace DarknessFallenMod
             float minDist = rangeSQ;
             foreach (NPC npc in Main.npc)
             {
-                if (!npc.CanBeChasedBy()) continue;
+                if (checkChase)
+                {
+                    if (!npc.CanBeChasedBy()) continue;
+                }
+                else if (npc.life <= 0 || !npc.active || npc.friendly) continue;
+
                 float dist = npc.DistanceSQ(center);
 
                 if (condition(npc) && dist < minDistCondition)
@@ -288,8 +306,15 @@ namespace DarknessFallenMod
                     minDist = dist;
                 }
             }
-
-            closest = closestCondition ?? closest;
+            if (closestCondition is not null)
+            {
+                closest = closestCondition;
+                distSQ = minDistCondition;
+            }
+            else
+            {
+                distSQ = minDist;
+            }
 
             if (closest is null) return false;
             return true;
@@ -546,6 +571,49 @@ namespace DarknessFallenMod
         public static int HitDirection(this Projectile projectile, Vector2 other)
         {
             return Math.Sign(projectile.Center.DirectionTo(other).X);
+        }
+
+        public static IEnumerator DrawCustomAnimation(
+            Texture2D texture,
+            Func<int, Vector2> positionOnScreen,
+            int frames,
+            int frequency,
+            Func<int, Color> color = null,
+            Vector2? origin = null,
+            Func<int, float> rotation = null,
+            float scale = 1f,
+            SpriteEffects spriteEffects = SpriteEffects.None,
+            Action<int> onFrame = null
+            )
+        {
+            Vector2 texSize = texture.Size();
+            int sourceHeight = (int)texSize.Y / frames;
+            Vector2 drawOrigin = origin ?? texSize * 0.5f;
+
+            int currFrame = 0;
+            while (currFrame < frames)
+            {
+                for (int i = 0; i < frequency; i++)
+                {
+                    Main.spriteBatch.Begin(BeginType.Default);
+                    Main.EntitySpriteDraw(
+                        texture,
+                        positionOnScreen.Invoke(currFrame),
+                        new Rectangle(0, currFrame * sourceHeight, (int)texSize.X, sourceHeight),
+                        color?.Invoke(currFrame) ?? Color.White,
+                        rotation?.Invoke(currFrame) ?? 0,
+                        drawOrigin,
+                        scale,
+                        spriteEffects,
+                        0
+                        );
+                    Main.spriteBatch.End();
+                    yield return null;
+                }
+
+                onFrame?.Invoke(currFrame);
+                currFrame++;
+            }
         }
     }
 }

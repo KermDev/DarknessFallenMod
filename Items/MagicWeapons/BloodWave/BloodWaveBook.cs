@@ -1,4 +1,3 @@
-using DarknessFallenMod.Items.MagicWeapons;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -6,7 +5,7 @@ using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.MagicWeapons
+namespace DarknessFallenMod.Items.MagicWeapons.BloodWave
 {
     public class BloodWaveBook : ModItem
     {
@@ -24,7 +23,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
             Item.DamageType = DamageClass.Magic;
             Item.width = 64;
             Item.height = 48;
-            Item.useTime = 20; 
+            Item.useTime = 20;
             Item.useAnimation = 20;
             Item.useStyle = 5;
             Item.knockBack = 20;

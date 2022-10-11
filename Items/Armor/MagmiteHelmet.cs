@@ -94,7 +94,7 @@ namespace DarknessFallenMod.Items.Armor
             DarknessFallenUtils.ForeachNPCInRectangle(rect, npc => {
                 if (!npc.friendly)
                 {
-                    npc.StrikeNPC(15, 0.2f, (int)(npc.Center.X - Player.Center.X));
+                    Player.ApplyDamageToNPC(npc, 15, 0.2f, (int)(npc.Center.X - Player.Center.X), false);
                     npc.AddBuff(BuffID.OnFire, 240);
                 }
             });

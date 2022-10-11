@@ -13,8 +13,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons
     {
         public override void SetDefaults()
         {
-			Item.width = 45;
-			Item.height = 45;
+			Item.width = 48;
+			Item.height = 48;
 
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useTime = 20;
@@ -54,6 +54,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons
                     }
                 }
             }
+        }
+
+        public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
+        {
+            if (Main.rand.NextBool(3)) Dust.NewDust(hitbox.TopLeft(), hitbox.Width, hitbox.Height, DustID.InfernoFork);
         }
 
         public override void AddRecipes()

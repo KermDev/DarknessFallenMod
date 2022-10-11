@@ -6,7 +6,7 @@ using System;
 using Terraria.Audio;
 using System.Runtime.CompilerServices;
 
-namespace DarknessFallenMod.Items.MagicWeapons
+namespace DarknessFallenMod.Items.MagicWeapons.InfernoRod
 {
     // This Example show how to implement simple homing projectile
     // Can be tested with ExampleCustomAmmoGun

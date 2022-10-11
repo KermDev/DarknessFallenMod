@@ -1,23 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.Pets
+namespace DarknessFallenMod.Items.Pets.BoneCandle
 {
-    public class LichlingPet : ModProjectile
+    public class SkelPetProj : ModProjectile
     {
+        Vector2 Velocity;
+
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lichling");
+            DisplayName.SetDefault("Skeleton Candle");
 
             Main.projFrames[Projectile.type] = 4;
             Main.projPet[Projectile.type] = true;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+            ProjectileID.Sets.LightPet[Projectile.type] = true;
         }
 
         public override void SetDefaults()
@@ -28,6 +29,7 @@ namespace DarknessFallenMod.Items.Pets
             Projectile.netImportant = true;
             Projectile.friendly = true;
             Projectile.ignoreWater = true;
+            Projectile.scale = 0.8f;
             Projectile.tileCollide = false;
         }
 
@@ -41,17 +43,22 @@ namespace DarknessFallenMod.Items.Pets
                 return;
             }
 
-            if (!player.dead && player.HasBuff(ModContent.BuffType<LichlingBuff>()))
+            if (!player.dead && player.HasBuff(ModContent.BuffType<SkelPetBuff>()))
             {
                 Projectile.timeLeft = 2;
             }
 
-            Vector2 flyToPos = player.Center + new Vector2(player.direction * -40, -22);
+            if (!Main.dedServ)
+            {
+                Lighting.AddLight(Projectile.Center, 1f, 175f / 255f, 0f);
+            }
+
+            Vector2 flyToPos = player.Center + new Vector2(player.direction, 1) * -34;
             Projectile.Center = Vector2.Lerp(Projectile.Center, flyToPos, 0.2f);
 
             Projectile.spriteDirection = player.direction;
 
-            Projectile.BasicAnimation(8);
+            Projectile.BasicAnimation(10);
         }
     }
 }

@@ -17,8 +17,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MysticSoulSword
         {
             Projectile.hostile = false;
             Projectile.DamageType = DamageClass.Magic;
-            Projectile.width = 50;
-            Projectile.height = 50;
+            Projectile.width = 30;
+            Projectile.height = 30;
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
             Projectile.penetrate = -1;

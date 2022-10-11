@@ -7,7 +7,7 @@ using Terraria.GameContent;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
 
-namespace DarknessFallenMod.Items.MeleeWeapons
+namespace DarknessFallenMod.Items.MeleeWeapons.PhaloriteSword
 {
     public class PhaloriteSwordProjectile : ModProjectile
     {
@@ -20,7 +20,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
             ProjectileID.Sets.TrailingMode[Type] = 0;
         }
 
-        
+
         public override void SetDefaults()
         {
             Projectile.width = 15;

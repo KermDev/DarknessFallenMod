@@ -5,13 +5,13 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Terraria.Audio;
 
-namespace DarknessFallenMod.Items.MeleeWeapons
+namespace DarknessFallenMod.Items.MeleeWeapons.AmethystSaber
 {
     internal class AmethystSaberProjectile : ModProjectile
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("amethyst saber projectile");
+            DisplayName.SetDefault("Amethyst saber projectile");
         }
 
         public override void SetDefaults()
@@ -42,15 +42,15 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         {
             Projectile.ManualFriendlyLocalCollision();
 
-            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemAmethyst, 0f, 0f, 0, default(Color), 1f);
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.GemAmethyst, 0f, 0f, 0, default, 1f);
             Main.dust[dust].noGravity = true;
             Main.dust[dust].velocity *= 0.2f;
-            Main.dust[dust].scale = (float)Main.rand.Next(100, 135) * 0.013f;
+            Main.dust[dust].scale = Main.rand.Next(100, 135) * 0.013f;
 
-            int dust2 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.PinkTorch, 0f, 0f, 0, default(Color), 1f);
+            int dust2 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.PinkTorch, 0f, 0f, 0, default, 1f);
             Main.dust[dust2].noGravity = true;
             Main.dust[dust2].velocity *= 0.2f;
-            Main.dust[dust2].scale = (float)Main.rand.Next(100, 135) * 0.013f;
+            Main.dust[dust2].scale = Main.rand.Next(100, 135) * 0.013f;
         }
 
     }

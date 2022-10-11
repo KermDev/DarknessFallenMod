@@ -83,8 +83,8 @@ namespace DarknessFallenMod.NPCs.Bosses
 		public int Phase = 1;
 
 		float laserTimer = 61;
-		ref float aiTimer => ref NPC.ai[0];
-		Vector2 laserPos => NPC.Center + new Vector2(NPC.direction * -3, -11);
+		ref float AiTimer => ref NPC.ai[0];
+		Vector2 LaserPos => NPC.Center + new Vector2(NPC.direction * -3, -11);
 		bool fell;
 
 		int secondPhaseAnimTimer;
@@ -129,7 +129,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 			{
 				secondPhaseAnimTimer++;
 
-				foreach (Vector2 pos in laserPos.GetCircularPositions(MathF.Pow((timeMaxAnim2 - secondPhaseAnimTimer) * 0.7f, 1.6f) * 0.7f, 8, secondPhaseAnimTimer * 0.03f))
+				foreach (Vector2 pos in LaserPos.GetCircularPositions(MathF.Pow((timeMaxAnim2 - secondPhaseAnimTimer) * 0.7f, 1.6f) * 0.7f, 8, secondPhaseAnimTimer * 0.03f))
 				{
 					// 21, 75, 304, 301
 					Dust.NewDust(pos, 0, 0, DustID.TreasureSparkle, newColor: Color.Red, Scale: 0.6f);
@@ -140,8 +140,8 @@ namespace DarknessFallenMod.NPCs.Bosses
 				{
 					SoundEngine.PlaySound(SoundID.Tink, NPC.Center);
 
-					DarknessFallenUtils.NewDustCircular(laserPos, DustID.TreasureSparkle, 1, speedFromCenter: 12);
-					DarknessFallenUtils.NewDustCircular(laserPos, DustID.Smoke, 1, speedFromCenter: 7, amount: 9);
+					DarknessFallenUtils.NewDustCircular(LaserPos, DustID.TreasureSparkle, 1, speedFromCenter: 12);
+					DarknessFallenUtils.NewDustCircular(LaserPos, DustID.Smoke, 1, speedFromCenter: 7, amount: 9);
 
 					Phase = 2;
 				}
@@ -165,9 +165,9 @@ namespace DarknessFallenMod.NPCs.Bosses
 					return;
 				}
 
-				if (NPC.velocity.Y == 0 && aiTimer >= 90 && laserTimer > 60)
+				if (NPC.velocity.Y == 0 && AiTimer >= 90 && laserTimer > 60)
 				{
-					aiTimer = 0;
+					AiTimer = 0;
 
 					NPC.velocity.Y += Main.rand.Next(-10, -5);
 					NPC.velocity.X += Math.Clamp(NPC.DistanceSQ(target.Center) * 0.0003f, 0.1f, 4f) * xdir;
@@ -188,7 +188,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 
 				if (Main.rand.NextBool(360)) NPC.NewNPCDirect(NPC.GetSource_FromAI(), (int)target.Center.X + Main.rand.Next(-300, 300), (int)target.Center.Y - 1200, ModContent.NPCType<PrinceSlimeMinion>()).netUpdate = true;
 
-				if (NPC.velocity.Y == 0) aiTimer++;
+				if (NPC.velocity.Y == 0) AiTimer++;
 
 				if (Phase == 2)
 				{
@@ -196,15 +196,15 @@ namespace DarknessFallenMod.NPCs.Bosses
 					{
 						laserTimer = Main.rand.Next(90, 200);
 
-						Vector2 dir = laserPos.DirectionTo(target.Center);
+						Vector2 dir = LaserPos.DirectionTo(target.Center);
 
 						float speed = 7;
 
-						Lighting.AddLight(laserPos, TorchID.Red);
+						Lighting.AddLight(LaserPos, TorchID.Red);
 
 						int proj = Projectile.NewProjectile(
 							NPC.GetSource_FromAI(),
-							laserPos + dir * 45,
+							LaserPos + dir * 45,
 							dir.RotatedByRandom(MathHelper.PiOver4 * 0.1f) * speed,
 							ProjectileID.Fireball,
 							20,
@@ -215,7 +215,7 @@ namespace DarknessFallenMod.NPCs.Bosses
 					}
 					else if (laserTimer < 60)
 					{
-						foreach (Vector2 pos in laserPos.GetCircularPositions(laserTimer * laserTimer, 8, laserTimer * 0.01f))
+						foreach (Vector2 pos in LaserPos.GetCircularPositions(laserTimer * laserTimer, 8, laserTimer * 0.01f))
 						{
 							// 21, 75, 304, 301
 							Dust.NewDust(pos, 0, 0, DustID.TreasureSparkle, newColor: Color.Red, Scale: 0.5f);

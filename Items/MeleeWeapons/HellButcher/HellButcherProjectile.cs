@@ -9,7 +9,7 @@ using Terraria.Graphics.Shaders;
 using System.Linq;
 using Terraria.DataStructures;
 
-namespace DarknessFallenMod.Items.MeleeWeapons
+namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
 {
     public class HellButcherProjectile : ModProjectile
     {

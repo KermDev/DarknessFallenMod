@@ -8,19 +8,21 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.Audio;
 
-namespace DarknessFallenMod.Items.RangeWeapons
+namespace DarknessFallenMod.Items.RangeWeapons.RadiantRanger
 {
     public class RadiantRanger : ModItem
     {
         public override void SetStaticDefaults()
         {
-
+            Tooltip.SetDefault("Arrows strike enemies in proximity with lightning".GetColored(Color.LightGoldenrodYellow));
         }
 
         public override void SetDefaults()
         {
-            Item.damage = 10;
+            Item.damage = 46;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 40;
             Item.height = 40;
@@ -69,7 +71,9 @@ namespace DarknessFallenMod.Items.RangeWeapons
             }
         }
 
-        int timer = 10;
+        const int lightningCD = 4;
+        const int range = 96;
+        int timer = lightningCD;
         public override void AI(Projectile projectile)
         {
             if (!shotFromRadiantRanger) return;
@@ -80,16 +84,71 @@ namespace DarknessFallenMod.Items.RangeWeapons
             }*/
 
             timer++;
-            if (timer > 10)
+            if (timer > lightningCD)
             {
-                if (DarknessFallenUtils.TryGetClosestEnemyNPC(projectile.Center, out NPC closest, 20000f))
+                float minDistSQ = range * range;
+                if (DarknessFallenUtils.TryGetClosestEnemyNPC(projectile.Center, out NPC closest, minDistSQ, false))
                 {
                     timer = 0;
-                    StartCoroutine(DelayedHitTarget(projectile.Center, closest));
+
+                    Vector2 animPos = projectile.Center;
+                    Vector2 dirToTarget = projectile.Center.DirectionTo(closest.Center);
+                    float animRot = dirToTarget.ToRotation() - MathHelper.PiOver2;
+
+                    float scale = 1;
+
+                    IEnumerator drawE = DarknessFallenUtils.DrawCustomAnimation(
+                        ModContent.Request<Texture2D>("DarknessFallenMod/Items/RangeWeapons/RadiantRanger/LightningFXProjectile", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                        frame => animPos - Main.screenPosition + Vector2.One * Main.rand.Next(-2, 2),
+                        12,
+                        3,
+                        origin: new Vector2(26, 7) * scale,
+                        rotation: frame => animRot + Main.rand.NextFloat(-0.2f, 0.2f),
+                        color: frame => Color.White * Main.rand.NextFloat(0.7f, 1f),
+                        onFrame: frame => LightningStrikeUpdate(frame, closest, dirToTarget, animPos, scale, projectile),
+                        scale: scale
+                        );
+
+                    StartCoroutine(drawE, CoroutineType.PostDrawTiles);
+
+                    //StartCoroutine(DelayedHitTarget(projectile.Center, closest));
                 }
             }
         }
 
+        void LightningStrikeUpdate(int frame, NPC npc, Vector2 dir, Vector2 center, float scale, Projectile proj)
+        {
+            float size = scale * 96;
+
+            Vector2 endPos = center + dir * size;
+
+            int dustType = DustID.AmberBolt;
+            int width = 8;
+            for (int i = 0; i < 12; i++)
+            {
+                Dust dust = Dust.NewDustDirect(center + dir * size * (frame / 12f), Main.rand.Next(-width, width), Main.rand.Next(-width, width), dustType, Alpha: 70);
+                dust.noGravity = true;
+                dust.velocity = dir.RotatedByRandom(0.3f) * 7;
+            }
+
+            if (frame == 3)
+            {
+                Player player = Main.player[proj.owner];
+                player.GetModPlayer<DarknessFallenPlayer>().ShakeScreen(2f, 0.4f);
+
+                player.ApplyDamageToNPC(npc, 46, 0, 0, false);
+
+                SoundEngine.PlaySound(SoundID.DD2_LightningAuraZap, endPos);
+
+                DarknessFallenUtils.NewDustCircular(endPos, dustType, 13, dir * 13, amount: 4, alpha: 70).ForEach(dust => 
+                {
+                    dust.velocity = dust.velocity.RotatedByRandom(0.1f);
+                    dust.noGravity = true;
+                });
+            }
+        }
+
+        // old ver
         // Non-Projectile Projectile 0_0
         const int delayHT = 1;
         const int speedHT = 24;
