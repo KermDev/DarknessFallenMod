@@ -1,15 +1,19 @@
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
+namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 {
-	public class HolyGreatsword : ModItem
-	{
+    public class MoltenUchigatana : ModItem
+    {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Holy Greatsword");
-			Tooltip.SetDefault("A great sword powered by the souls of light");
+			//DisplayName.SetDefault("");
+			Tooltip.SetDefault("Uchigatana  is a type of katana basically , just wanted a cooler name then katana".GetColored(Color.Gray));
 		}
 
 		public override void SetDefaults()
@@ -28,18 +32,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 			Item.autoReuse = true;
 			Item.noUseGraphic = true;
 			Item.noMelee = true;
-			Item.shoot = ModContent.ProjectileType<HolyGreatswordProjectile>();
+			Item.shoot = ModContent.ProjectileType<MoltenUchigatanaProjectile>();
 			Item.shootSpeed = 9f;
 			Item.reuseDelay = 0;
-		}
-
-		public override void AddRecipes()
-		{
-			Recipe recipe = CreateRecipe();
-			recipe.AddIngredient(ItemID.HallowedBar, 35);
-            recipe.AddIngredient(ItemID.SoulofLight, 35);
-            recipe.AddTile(TileID.Anvils);
-			recipe.Register();
 		}
 	}
 }

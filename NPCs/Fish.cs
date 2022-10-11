@@ -69,7 +69,7 @@ namespace DarknessFallenMod.NPCs
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.TwilightShards>(), 50));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Tools.LightRod.LightRod>(), 50));
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
