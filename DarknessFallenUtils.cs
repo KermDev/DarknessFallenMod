@@ -139,9 +139,9 @@ namespace DarknessFallenMod
                 );
         }
 
-        public static void DrawAfterImage(this Projectile projectile, Func<float, Color> color, bool transitioning = true, bool animated = false, bool centerOrigin = true, Vector2? origin = null, Vector2 posOffset = default, float rotOffset = 0, Vector2 scaleOffset = default, bool oldRot = true, bool oldPos = true)
+        public static void DrawAfterImage(this Projectile projectile, Func<float, Color> color, bool transitioning = true, bool animated = false, bool centerOrigin = true, Vector2? origin = null, Func<int ,Vector2> posOffset = null, Func<int, float> rotOffset = null, Vector2 scaleOffset = default, bool oldRot = true, bool oldPos = true, Texture2D altTex = null)
         {
-            Texture2D tex = TextureAssets.Projectile[projectile.type].Value;
+            Texture2D tex = altTex ?? TextureAssets.Projectile[projectile.type].Value;
 
             int frameHeight = tex.Height / Main.projFrames[projectile.type];
             Rectangle? source = animated ? new Rectangle(0, frameHeight * projectile.frame + 1, tex.Width, frameHeight) : null;
@@ -152,14 +152,14 @@ namespace DarknessFallenMod
             {
                 Vector2 pos = oldPos ? projectile.oldPos[i] : projectile.position;
 
-                pos += posOffset;
+                pos += posOffset?.Invoke(i) ?? Vector2.Zero;
 
                 Main.EntitySpriteDraw(
                     tex,
                     pos + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition,
                     source,
                     transitioning ? color.Invoke((float)i / projectile.oldPos.Length) * ((float)(projectile.oldPos.Length - i) / projectile.oldPos.Length) : color.Invoke((float)i / projectile.oldPos.Length),
-                    (oldRot ? projectile.oldRot[i] : projectile.rotation) + rotOffset,
+                    (oldRot ? projectile.oldRot[i] : projectile.rotation) + (rotOffset?.Invoke(i) ?? 0),
                     drawOrigin,
                     projectile.scale * Vector2.One + scaleOffset,
                     projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
@@ -168,9 +168,9 @@ namespace DarknessFallenMod
             }
         }
 
-        public static void DrawAfterImageNPC(this NPC npc, Func<float, Color> color, bool transitioning = true, bool centerOrigin = true, Vector2? origin = null, Vector2 posOffset = default, float rotOffset = 0, Vector2 scaleOffset = default, bool oldRot = true, bool oldPos = true)
+        public static void DrawAfterImageNPC(this NPC npc, Func<float, Color> color, bool transitioning = true, bool centerOrigin = true, Vector2? origin = null, Vector2 posOffset = default, float rotOffset = 0, Vector2 scaleOffset = default, bool oldRot = true, bool oldPos = true, Texture2D altTex = null)
         {
-            Texture2D tex = TextureAssets.Npc[npc.type].Value;
+            Texture2D tex = altTex ?? TextureAssets.Npc[npc.type].Value;
 
             int frameHeight = tex.Height / Main.npcFrameCount[npc.type];
 
