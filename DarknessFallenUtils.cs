@@ -615,5 +615,35 @@ namespace DarknessFallenMod
                 currFrame++;
             }
         }
+        
+        public static void DrawPoint(this Point point, int timeInFrames)
+        {
+            StartCoroutine(EDrawPoint(point, timeInFrames), CoroutineType.PostDrawTiles);
+        }
+
+        public static IEnumerator EDrawPoint(Point point, int timeInFrames)
+        {
+            Texture2D lineTex = new Texture2D(Main.graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+
+            lineTex.SetData(new Color[] { Color.White });
+
+            int width = 1;
+
+            point -= Main.screenPosition.ToPoint();
+            int pointX = point.X - (int)(Main.screenWidth * 0.5f);
+            int pointY = point.Y - (int)(Main.screenWidth * 0.5f);
+
+            for (int i = 0; i < timeInFrames; i++)
+            {
+                Main.spriteBatch.BeginDefault();
+
+                Main.spriteBatch.Draw(lineTex, new Rectangle(pointX, point.Y, Main.screenWidth, width), Color.Red);
+                Main.spriteBatch.Draw(lineTex, new Rectangle(point.X, pointY, width, Main.screenWidth), Color.Red);
+
+                Main.spriteBatch.End();
+
+                yield return null;
+            }
+        }
     }
 }

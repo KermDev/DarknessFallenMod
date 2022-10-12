@@ -58,9 +58,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             // PLAYER AI
             if (Player.ItemAnimationEndingOrEnded)
             {
-
-                Main.NewText(MoltenUchigatana.speedMultiplier);
-                Main.NewText(Player.itemAnimationMax);
+                //Main.NewText(MoltenUchigatana.speedMultiplier);
+                //Main.NewText(Player.itemAnimationMax);
                 if (MoltenUchigatana.speedMultiplier < MoltenUchigatana.maxSpeedMult) MoltenUchigatana.speedMultiplier += Player.itemAnimationMax / 240f;
                 else MoltenUchigatana.speedMultiplier = MoltenUchigatana.maxSpeedMult;
 
