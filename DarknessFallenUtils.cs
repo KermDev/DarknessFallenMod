@@ -506,7 +506,21 @@ namespace DarknessFallenMod
 
         public static void ForEach<T>(this T[] array, Action<T> predicate)
         {
-            Array.ForEach(array, predicate);
+            T[] other = new T[array.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                predicate.Invoke(array[i]);
+            }
+        }
+
+        public static T[] ForEach<T>(this T[] array, Func<T, T> predicate)
+        {
+            T[] other = new T[array.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                other[i] = predicate.Invoke(array[i]);
+            }
+            return other;
         }
 
         public static float InverseLerp(float raw, float min, float max)

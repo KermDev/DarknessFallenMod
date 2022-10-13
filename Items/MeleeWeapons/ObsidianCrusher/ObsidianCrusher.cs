@@ -11,12 +11,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
     {
         public override void SetDefaults()
         {
-			Item.damage = 38;
+			Item.damage = 58;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;
-			Item.useTime = 35;
-			Item.useAnimation = 35;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
 			Item.useStyle = -1;
 			Item.knockBack = 8;
 			Item.value = 17500;
@@ -36,7 +36,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
         {
 			if (player.altFunctionUse == 2)
             {
-				speedMult = 0.7f;
+				speedMult = 0.55f;
             }
             else
             {

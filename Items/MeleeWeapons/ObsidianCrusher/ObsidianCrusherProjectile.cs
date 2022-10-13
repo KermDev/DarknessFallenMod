@@ -8,6 +8,8 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Graphics;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static DarknessFallenMod.Systems.CoroutineSystem;
@@ -20,10 +22,16 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 
         public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/ObsidianCrusher/ObsidianCrusher";
 
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailingMode[Type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Type] = 120;
+        }
+
         public override void SetDefaults()
         {
-            Projectile.width = 200;
-            Projectile.height = 200;
+            Projectile.width = 0;
+            Projectile.height = 0;
 
             Projectile.knockBack = 8;
 
@@ -65,12 +73,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 
             Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter);
 
-            if (!shouldSlowDown) rotVel = (MathF.Cos(MathHelper.PiOver2 * ((float)Player.itemAnimation / Player.itemAnimationMax) + MathHelper.PiOver2) + 1) * 0.23f * (ObsidianCrusher.speedMult != 1 ? 0.55f : 1f);
+            if (!shouldSlowDown) rotVel = (MathF.Cos(MathHelper.PiOver2 * ((float)Player.itemAnimation / Player.itemAnimationMax) + MathHelper.PiOver2) + 1) * 0.3f * (ObsidianCrusher.speedMult != 1 ? 0.42f : 1f);
             if (Player.itemAnimation < Player.itemAnimationMax * 0.4f)
             {
                 if (ObsidianCrusher.speedMult != 1f)
                 {
-
                     Vector2 hitPoint = Player.MountedCenter + rotatedDirection * bladeLenght + new Vector2(-8, 10 * Player.direction).RotatedBy(Projectile.rotation);
                     Vector2 hitPoint2 = Player.MountedCenter + rotatedDirection * bladeLenght + new Vector2(-23, 10 * Player.direction).RotatedBy(Projectile.rotation);
                     Vector2 hitPoint3 = Player.MountedCenter + rotatedDirection * bladeLenght + new Vector2(-38, 10 * Player.direction).RotatedBy(Projectile.rotation);
@@ -106,7 +113,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            if (ObsidianCrusher.speedMult != 1) damage *= 2;
+            if (ObsidianCrusher.speedMult != 1) damage = (int)(damage * 1.4f);
         }
 
         float bladeLenght => TextureAssets.Projectile[Type].Value.Width * 1.7f;
@@ -116,14 +123,46 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.MountedCenter, Player.MountedCenter + rotatedDirection * bladeLenght);
         }
 
+        VertexStrip vrtx = new();
+
+        Vector2[] drawPos = new Vector2[120]; 
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = TextureAssets.Projectile[Type].Value;
             Vector2 texSize = tex.Size();
 
+            Vector2 drawPosition = Player.MountedCenter - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY) + rotatedDirection * bladeLenght * 0.5f;
+            for (int i = 0; i < drawPos.Length - 1; i++)
+            {
+                drawPos[i + 1] = drawPos[i];
+            }
+            drawPos[0] = drawPosition;
+
+            /*
+            Main.spriteBatch.BeginReset(DarknessFallenUtils.BeginType.Shader, DarknessFallenUtils.BeginType.Default, s =>
+            {
+                GameShaders.Misc["EmpressBlade"]
+                .UseShaderSpecificData(new Vector4(1f, 0.0f, 0.0f, 0.6f))
+                .Apply();
+
+                vrtx.PrepareStrip(
+                    drawPos,
+                    new float[drawPos.Length],
+                    prog => Color.Purple * 0.7f,
+                    prog => 36f, rotatedDirection * bladeLenght * 0.25f,
+                    drawPos.Length,
+                    true
+                    );
+                vrtx.DrawTrail();
+
+                Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+
+            });
+            */
+
             Main.EntitySpriteDraw(
                 tex,
-                Player.MountedCenter - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY) + rotatedDirection * bladeLenght * 0.5f,
+                drawPosition,
                 null,
                 lightColor,
                 Projectile.rotation + (Player.direction == -1 ? -MathHelper.Pi - MathHelper.PiOver4 : MathHelper.PiOver4),

@@ -21,16 +21,16 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
             Projectile.width = 14;
             Projectile.height = 14;
             Projectile.aiStyle = 0;
-            Projectile.friendly = false;
+            Projectile.friendly = true;
             Projectile.hostile = false;
-            Projectile.penetrate = 1;
-            Projectile.timeLeft = 600;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 240;
             Projectile.light = 2.50f;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = false;
 
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 20;
+            Projectile.localNPCHitCooldown = 600;
         }
 
         Vector2 goToPos;
@@ -54,22 +54,22 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
                 case 2:
                     width = 34;
                     height = 24;
-                    Projectile.originalDamage = 38;
+                    Projectile.damage = 38;
                     break;
                 case 3:
                     width = 42;
                     height = 38;
-                    Projectile.originalDamage = 48;
+                    Projectile.damage = 48;
                     break;
                 case 4:
                     width = 52;
                     height = 56;
-                    Projectile.originalDamage = 58;
+                    Projectile.damage = 58;
                     break;
                 default:
                     width = 26;
                     height = 16;
-                    Projectile.originalDamage = 68;
+                    Projectile.damage = 68;
                     break;
             }
 
@@ -110,27 +110,31 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
                 goToScale = 0;
             }*/
 
-            Projectile.position = Vector2.Lerp(Projectile.position, goToPos, 0.4f);
-            Projectile.scale = MathHelper.Lerp(Projectile.scale, goToScale, 0.4f);
+            Projectile.position = Vector2.Lerp(Projectile.position, goToPos, 0.25f);
+            Projectile.scale = MathHelper.Lerp(Projectile.scale, goToScale, 0.25f);
 
-            if (Projectile.scale > 0.999f) Projectile.friendly = true;
+            if (Projectile.scale > 0.9999f) Projectile.friendly = false;
+            
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.velocity.Y -= 13;
+            if (Projectile.scale < 0.99f) 
+            {
+                target.velocity.Y -= 18 * target.knockBackResist; 
+            }
         }
 
         public override void Kill(int timeLeft)
         {
-            int dustAmount = 40;
+            int dustAmount = 50;
             float diff = 2f;
             for (int i = 0; i < dustAmount; i++)
             {
                 Dust.NewDustDirect(
-                    goToPos + new Vector2(Projectile.width * i / dustAmount, Projectile.height),
-                    0,
-                    0,
+                    Projectile.position,
+                    Projectile.width,
+                    Projectile.height,
                     DustID.Stone,
                     Main.rand.NextFloat(-1, 1) * diff,
                     Main.rand.NextFloat(-1, 1) * diff * 3.5f,
