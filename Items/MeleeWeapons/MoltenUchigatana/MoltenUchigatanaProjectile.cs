@@ -20,7 +20,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.TrailingMode[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 14;
+            ProjectileID.Sets.TrailCacheLength[Type] = 24;
         }
 
         public override void SetDefaults()
@@ -46,15 +46,22 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 
         public override void OnSpawn(IEntitySource source)
         {
+            if (Main.netMode == NetmodeID.Server) return;
+
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
+
+            float swingAmount = MoltenUchigatana.alt ? MathHelper.Pi : MathHelper.Pi; 
             Projectile.rotation = Projectile.velocity.ToRotation() - (MathHelper.Pi * Player.direction * swingDirection);
             swingDirection = -swingDirection;
         }
 
         static int swingDirection = 1;
         Vector2 rotatedDirection;
+
         public override void AI()
         {
+            if (Main.netMode == NetmodeID.Server) return;
+
             // PLAYER AI
             if (Player.ItemAnimationEndingOrEnded)
             {
@@ -74,16 +81,35 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             // PROJECTILE AI
             Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter);
 
-            float swingBy = MathF.Pow((float)Player.itemAnimation * MoltenUchigatana.speedMultiplier / (Player.itemAnimationMax * MoltenUchigatana.speedMultiplier), 4) * 0.2f * MoltenUchigatana.speedMultiplier;
-            Projectile.rotation += swingBy * Player.direction * swingDirection;
+            if (MoltenUchigatana.alt)
+            {
+                float lower = 0.15f;
+                if (Player.itemAnimation < Player.itemAnimationMax * lower)
+                {
+                    float swingBy = MathF.Pow(Player.itemAnimation / (Player.itemAnimationMax * lower), 4) * 0.6f;
+                    Projectile.rotation += swingBy * Player.direction;
+
+                    // FX
+                    if (swingBy > 0.01f) SpawnSpinDust(6, -26);
+                }
+                else
+                {
+                    Projectile.rotation = Player.MountedCenter.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.Pi * Projectile.direction;
+                }
+            }
+            else 
+            {             
+                float swingBy = MathF.Pow(Player.itemAnimation / Player.itemAnimationMax, 4) * 0.2f * MoltenUchigatana.speedMultiplier;
+                Projectile.rotation += swingBy * Player.direction * swingDirection;
+
+                // FX
+                if (swingBy > 0.01f) SpawnSpinDust(1, -13);
+            }
 
             rotatedDirection = Projectile.rotation.ToRotationVector2();
 
             Projectile.direction = Player.direction;
             Projectile.spriteDirection = Projectile.direction;
-
-            // FX
-            if (swingBy > 0.01f) SpawnSpinDust(1, -13);
         }
 
         float bladeLenght => TextureAssets.Projectile[Type].Value.Width * 1.414213562373095f;
@@ -139,10 +165,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             Main.spriteBatch.BeginReset(DarknessFallenUtils.BeginType.Shader, DarknessFallenUtils.BeginType.Default, s =>
             {
                 Projectile.DrawAfterImage(
-                    prog => Color.Lerp(Color.Yellow, Color.Black, prog) * 0.15f,
-                    rotOffset: i => drawRotOffset,
+                    prog => Color.Lerp(Color.Black, Color.DarkOrange, prog) * 0.15f,
+                    rotOffset: i => drawRotOffset + Main.rand.NextFloatDirection() * 0.25f,
                     posOffset: i => -Projectile.Center + Player.MountedCenter + Projectile.oldRot[i].ToRotationVector2() * bladeLenght * 0.5f,
-                    altTex: ModContent.Request<Texture2D>(Texture + "AfterImage").Value
+                    altTex: ModContent.Request<Texture2D>(Texture + "AfterImage").Value,
+                    scaleOffset: Vector2.One * (Main.rand.NextBool(7) ? 0.2f : 0)
                     );
             });
 

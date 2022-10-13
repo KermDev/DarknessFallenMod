@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -49,7 +50,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
         Vector2 rotatedDirection;
         float rotVel;
 
-        bool shotBoulders;
+        bool shouldSlowDown;
         public override void AI()
         {
             if (Player.ItemAnimationEndingOrEnded)
@@ -64,24 +65,35 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 
             Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter);
 
-            if (Player.itemAnimation > 10)
+            if (!shouldSlowDown) rotVel = (MathF.Cos(MathHelper.PiOver2 * ((float)Player.itemAnimation / Player.itemAnimationMax) + MathHelper.PiOver2) + 1) * 0.23f * (ObsidianCrusher.speedMult != 1 ? 0.55f : 1f);
+            if (Player.itemAnimation < Player.itemAnimationMax * 0.4f)
             {
-                rotVel = (MathF.Cos(MathHelper.PiOver2 * ((float)Player.itemAnimation / Player.itemAnimationMax) + MathHelper.PiOver2) + 1) * 0.23f;
-            }
-            else
-            {
-                rotVel *= 0.75f;
-
-                Vector2 hitPoint = Player.MountedCenter + rotatedDirection * bladeLenght + new Vector2(-22, 10 * Player.direction).RotatedBy(Projectile.rotation);
-
-                hitPoint.ToPoint().DrawPoint(10);
-
-                bool hitTile = Collision.SolidTiles(hitPoint, 1, 1);
-                if (hitTile && !shotBoulders)
+                if (ObsidianCrusher.speedMult != 1f)
                 {
-                    shotBoulders = true;
-                    StartCoroutine(ShootBoulders(hitPoint, Player.direction, Projectile.GetSource_FromAI()));
+
+                    Vector2 hitPoint = Player.MountedCenter + rotatedDirection * bladeLenght + new Vector2(-8, 10 * Player.direction).RotatedBy(Projectile.rotation);
+                    Vector2 hitPoint2 = Player.MountedCenter + rotatedDirection * bladeLenght + new Vector2(-23, 10 * Player.direction).RotatedBy(Projectile.rotation);
+                    Vector2 hitPoint3 = Player.MountedCenter + rotatedDirection * bladeLenght + new Vector2(-38, 10 * Player.direction).RotatedBy(Projectile.rotation);
+
+                    //hitPoint.ToPoint().DrawPoint(2);
+                    //hitPoint2.ToPoint().DrawPoint(2);
+                    //hitPoint3.ToPoint().DrawPoint(2);
+
+                    bool hitTile = Collision.SolidTiles(hitPoint, 1, 1) || Collision.SolidTiles(hitPoint2, 1, 1) || Collision.SolidTiles(hitPoint3, 1, 1);
+                    if (hitTile && !shouldSlowDown)
+                    {
+                        rotVel *= -0.3f;
+
+                        shouldSlowDown = true;
+                        StartCoroutine(EShootBoulders(hitPoint, Player.direction));
+                    }
                 }
+                else if (Player.itemAnimation < 10) 
+                {
+                    shouldSlowDown = true;
+                    rotVel *= 0.8f;
+                }
+
             }
 
             Projectile.rotation += rotVel * Player.direction;
@@ -90,6 +102,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 
             Projectile.direction = Player.direction;
             Projectile.spriteDirection = Projectile.direction;
+        }
+
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (ObsidianCrusher.speedMult != 1) damage *= 2;
         }
 
         float bladeLenght => TextureAssets.Projectile[Type].Value.Width * 1.7f;
@@ -119,11 +136,47 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
             return false;
         }
 
-        IEnumerator ShootBoulders(Vector2 startPos, int direction, IEntitySource source)
+        IEnumerator EShootBoulders(Vector2 startPos, int direction)
         {
-            for (int i = 0; i < 4; i++)
+            Vector2 curPoint = startPos;
+            for (int i = 1; i < 5; i++)
             {
-                Projectile.NewProjectile(source, startPos + Vector2.UnitX * direction * i * 30, Vector2.UnitY * -10, ProjectileID.Boulder, 20, 1);
+                if (Collision.SolidTiles(curPoint, 1, 1))
+                {
+                    while (Collision.SolidTiles(curPoint, 1, 1))
+                    {
+                        curPoint.Y--;
+                    }
+                    curPoint.Y += 3;
+                }
+                else
+                {
+                    while (!Collision.SolidTiles(curPoint, 1, 1))
+                    {
+                        curPoint.Y++;
+                    }
+                    curPoint.Y += 2;
+                }
+
+                IEntitySource src = new EntitySource_ItemUse(Player, Player.HeldItem, i.ToString());
+                int type = ModContent.ProjectileType<ObsidianCrusherBoulder>();
+
+                if (Player.ownedProjectileCounts[type] > 3)
+                {
+                    Player.GetOldestProjectile(type).timeLeft = 1;
+                }
+
+                Projectile.NewProjectileDirect(src, curPoint, Vector2.UnitY * -10, type, 20, 1, Player.whoAmI);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    DarknessFallenUtils.ShakeScreenInRange(1.25f * i, curPoint, 2560000f, 0.7f);
+                }
+
+                SoundEngine.PlaySound(SoundID.Item62, curPoint);
+
+                curPoint.X += 50 * direction;
+
                 yield return WaitFor.Frames(15);
             }
         }

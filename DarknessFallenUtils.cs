@@ -645,5 +645,24 @@ namespace DarknessFallenMod
                 yield return null;
             }
         }
+
+        /// <summary>
+        /// Creates an array of different type from another array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public static T2[] CreateFrom<T, T2>(this T[] array, Func<T, T2> predicate)
+        {
+            T2[] other = new T2[array.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                other[i] = predicate(array[i]);
+            }
+
+            return other;
+        }
     }
 }

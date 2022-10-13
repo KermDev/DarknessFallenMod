@@ -42,6 +42,18 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 		public static float speedMultiplier = 1;
 		public static readonly float maxSpeedMult = 2f;
 
+		public static bool alt;
+        public override bool CanUseItem(Player player)
+        {
+			alt = false;
+			if (player.whoAmI == Main.myPlayer && player.altFunctionUse == 2)
+			{
+				alt = true;
+				speedMultiplier = 0.2f;
+			}
+			return base.CanUseItem(player);
+        }
+
         public override void UpdateInventory(Player player)
         {
 			if (!player.controlUseItem) speedMultiplier = 1f;
@@ -51,5 +63,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
         {
             return speedMultiplier;
         }
+
+		public override bool AltFunctionUse(Player player) => true;
     }
 }
