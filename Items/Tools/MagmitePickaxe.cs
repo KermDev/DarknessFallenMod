@@ -17,8 +17,8 @@ namespace DarknessFallenMod.Items.Tools
 
         public override void SetDefaults()
         {
-            Item.width = 40;
-            Item.height = 40;
+            Item.width = 32;
+            Item.height = 32;
             Item.scale = 1f;
 
             Item.useStyle = ItemUseStyleID.Swing;

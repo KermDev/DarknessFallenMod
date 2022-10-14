@@ -25,8 +25,11 @@ namespace DarknessFallenMod
 
         public enum BeginType
         {
+            /// <inheritdoc cref="BeginDefault(SpriteBatch)"/>
             Default,
+            /// <inheritdoc cref="BeginShader(SpriteBatch)"/>
             Shader,
+            /// <inheritdoc cref="BeginExperimental(SpriteBatch)"/>
             Experimental
         }
 
@@ -42,6 +45,13 @@ namespace DarknessFallenMod
         }
         */
 
+        /// <summary>
+        /// Ends the current spritebatch, begins it with <paramref name="beginType"/>, invokes <paramref name="action"/>, ends the spritebatch and begins it with <paramref name="resetBeginType"/>
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="beginType"></param>
+        /// <param name="resetBeginType"></param>
+        /// <param name="action"></param>
         public static void BeginReset(this SpriteBatch spriteBatch, BeginType beginType, BeginType resetBeginType, Action<SpriteBatch> action)
         {
             spriteBatch.End();
@@ -53,6 +63,11 @@ namespace DarknessFallenMod
             spriteBatch.Begin(resetBeginType);
         }
 
+        /// <summary>
+        /// Begins spritebatch with the specified <paramref name="beginType"/>
+        /// </summary>
+        /// <param name="spriteBatch">The spritebatch to begin</param>
+        /// <param name="beginType"></param>
         public static void Begin(this SpriteBatch spriteBatch, BeginType beginType)
         {
             switch (beginType)
@@ -69,16 +84,28 @@ namespace DarknessFallenMod
             }
         }
 
+        /// <summary>
+        /// Begins the spritebatch with <see cref="SpriteSortMode.Immediate"/>, <see cref="BlendState.AlphaBlend"/>, <see cref="Main.DefaultSamplerState"/>, <see cref="Main.Rasterizer"/>, no effect and <see cref="Main.GameViewMatrix"/><c>.TransformationMatrix</c>
+        /// </summary>
+        /// <param name="spritebatch">The spritebatch to begin</param>
         public static void BeginShader(this SpriteBatch spritebatch)
         {
             spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
 
+        /// <summary>
+        /// Begins the spritebatch with <see cref="SpriteSortMode.Deferred"/>, <see cref="BlendState.AlphaBlend"/>, <see cref="Main.DefaultSamplerState"/>, <see cref="Main.Rasterizer"/>, no effect and <c>Main.GameViewMatrix.TransformationMatrix</c>
+        /// </summary>
+        /// <param name="spritebatch">The spritebatch to begin</param>
         public static void BeginDefault(this SpriteBatch spritebatch)
         {
             spritebatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
 
+        /// <summary>
+        /// Begins the spritebatch with <see cref="SpriteSortMode.BackToFront"/> and <see cref="BlendState.AlphaBlend"/>
+        /// </summary>
+        /// <param name="spriteBatch">The spritebatch to begin</param>
         public static void BeginExperimental(this SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
@@ -253,6 +280,11 @@ namespace DarknessFallenMod
             });
         }
 
+        /// <summary>
+        /// Invokes <paramref name="predicate"/> on the npcs inside <paramref name="rectangle"/>
+        /// </summary>
+        /// <param name="rectangle">The rectangle area to find NPCs on</param>
+        /// <param name="predicate">The action to invoke on each npc</param>
         public static void ForeachNPCInRectangle(Rectangle rectangle, Action<NPC> predicate)
         {
             Array.ForEach(Main.npc, npc =>
@@ -289,9 +321,11 @@ namespace DarknessFallenMod
             {
                 if (checkChase)
                 {
-                    if (!npc.CanBeChasedBy()) continue;
+                    if (!npc.CanBeChasedBy()) 
+                        continue;
                 }
-                else if (npc.life <= 0 || !npc.active || npc.friendly) continue;
+                else if (npc.life <= 0 || !npc.active || npc.friendly) 
+                    continue;
 
                 float dist = npc.DistanceSQ(center);
 
@@ -316,8 +350,7 @@ namespace DarknessFallenMod
                 distSQ = minDist;
             }
 
-            if (closest is null) return false;
-            return true;
+            return closest is not null;
         }
 
         public static Vector2[] GetCircularPositions(this Vector2 center, float radius, int amount = 8, float rotation = 0)
@@ -356,7 +389,8 @@ namespace DarknessFallenMod
 
         public static void DropCustomBannerKillCount(this NPC npc, int killCount, int bannerItem)
         {
-            if (NPC.killCount[npc.type] % killCount == 0 && !(NPC.killCount[npc.type] % 50 == 0)) Item.NewItem(npc.GetSource_Death(), npc.Hitbox, bannerItem);
+            if (NPC.killCount[npc.type] % killCount == 0 && !(NPC.killCount[npc.type] % 50 == 0)) 
+                Item.NewItem(npc.GetSource_Death(), npc.Hitbox, bannerItem);
         }
 
         public static void ShakeScreenInRange(float strenght, Vector2 center, float rangeSQ, float desolve = 0.95f)
@@ -387,11 +421,20 @@ namespace DarknessFallenMod
             else proj.frame = delayFrame;
         }
 
+        /// <inheritdoc cref="BasicAnimation(NPC, int, int, int, int)"/>
         public static void BasicAnimation(this NPC npc, int frameHeight, int speed)
         {
             BasicAnimation(npc, frameHeight, speed, 0, 0);
         }
 
+        /// <summary>
+        /// Does a basic vertical animation through a spritesheet on the npc
+        /// </summary>
+        /// <param name="npc">The NPC to animate</param>
+        /// <param name="frameHeight">Height of each frame on the spritesheet</param>
+        /// <param name="speed">Time per frame</param>
+        /// <param name="delay">Delay until the npc animation starts</param>
+        /// <param name="delayFrame">The frame to use while the animation is starting</param>
         public static void BasicAnimation(this NPC npc, int frameHeight, int speed, int delay, int delayFrame)
         {
             npc.frameCounter++;
@@ -400,8 +443,10 @@ namespace DarknessFallenMod
                 npc.frameCounter = 0;
             }
 
-            if (npc.frameCounter > delay) npc.frame.Y = ((int)(npc.frameCounter - delay) / speed) * frameHeight;
-            else npc.frame.Y = delayFrame * frameHeight;
+            if (npc.frameCounter > delay) 
+                npc.frame.Y = ((int)(npc.frameCounter - delay) / speed) * frameHeight;
+            else
+                npc.frame.Y = delayFrame * frameHeight;
         }
 
         public static Dust[] NewDustCircular(
@@ -440,11 +485,11 @@ namespace DarknessFallenMod
             }
         }
 
-        public static void SpawnGoreOnDeath(this NPC npc, float speed = 2.5f, params string[] names)
+        public static void SpawnGoreOnDeath(this NPC npc, float speed = 2.5f, params string[] goreNames)
         {
             if (npc.life <= 0)
             {
-                foreach (string name in names)
+                foreach (string name in goreNames)
                 {
                     int gore = ModContent.Find<ModGore>(name).Type;
                     Gore.NewGore(npc.GetSource_Death(), npc.position, Main.rand.NextVector2Unit() * speed + npc.velocity, gore);
@@ -482,11 +527,23 @@ namespace DarknessFallenMod
             }
         }
 
+        /// <summary>
+        /// Formats the specified string with the color chat tag as "[c/<paramref name="color"/>.Hex3():<paramref name="text"/>]"
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public static string GetColored(this string text, Color color)
         {
             return $"[c/{color.Hex3()}:{text}]";
         }
 
+        /// <summary>
+        /// Gets the oldest projectile owned by <paramref name="player"/>
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="projType"></param>
+        /// <returns></returns>
         public static Projectile GetOldestProjectile(this Player player, int projType)
         {
             Projectile[] playerProjs = Main.projectile.Where(proj => proj.owner == player.whoAmI && proj.type == projType && proj.active).ToArray();
@@ -504,6 +561,12 @@ namespace DarknessFallenMod
             return oldest;
         }
 
+        /// <summary>
+        /// Extension for <see cref="Array.ForEach{T}(T[], Action{T})"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="predicate"></param>
         public static void ForEach<T>(this T[] array, Action<T> predicate)
         {
             T[] other = new T[array.Length];
@@ -528,11 +591,27 @@ namespace DarknessFallenMod
             return (raw - min) / (max - min);
         }
 
-        public static Rectangle Foreach(this Rectangle rect, Action<int, int> predicate, int xDiff = 1, int yDiff = 1)
+        public static float Map(float value, float min, float max, float newMin, float newMax)
         {
-            for (int i = rect.X; i < rect.X + rect.Width; i += xDiff)
+            return (value - min) / (max - min) * (newMax - newMin) + newMin;
+        }
+
+        /// <summary>
+        /// Invokes <paramref name="predicate"/> on each point inside <paramref name="rect"/> with the specified <paramref name="xStep"/>, <paramref name="yStep"/>
+        /// </summary>
+        /// <param name="rect">The rectangle</param>
+        /// <param name="predicate">The action to invoke on each point inside <paramref name="rect"/></param>
+        /// <param name="xStep"></param>
+        /// <param name="yStep"></param>
+        /// <returns>The input rectangle</returns>
+        public static Rectangle Foreach(this Rectangle rect, Action<int, int> predicate, int xStep = 1, int yStep = 1)
+        {
+            int iEnd = rect.X + rect.Width;
+            int jEnd = rect.Y + rect.Height;
+
+            for (int i = rect.X; i < iEnd; i += xStep)
             {
-                for (int j = rect.Y; j < rect.Y + rect.Height; j += yDiff)
+                for (int j = rect.Y; j < jEnd; j += yStep)
                 {
                     predicate.Invoke(i, j);
                 }
@@ -584,7 +663,7 @@ namespace DarknessFallenMod
 
         public static int HitDirection(this Projectile projectile, Vector2 other)
         {
-            return Math.Sign(projectile.Center.DirectionTo(other).X);
+            return MathF.Sign(other.X - projectile.Center.X); //Math.Sign(projectile.Center.DirectionTo(other).X);
         }
 
         public static IEnumerator DrawCustomAnimation(
