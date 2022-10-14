@@ -5,10 +5,11 @@ using DarknessFallenMod.Items.Materials;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using System;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {
-	public class UmbralEdge : ModItem
+    public class UmbralEdge : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

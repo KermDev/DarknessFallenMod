@@ -10,6 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.RangeWeapons.RadiantRanger
 {

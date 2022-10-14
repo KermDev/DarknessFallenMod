@@ -9,6 +9,7 @@ using DarknessFallenMod.Items.Accessories;
 using Terraria.GameContent.Bestiary;
 using System;
 using System.Collections.Generic;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.NPCs
 {

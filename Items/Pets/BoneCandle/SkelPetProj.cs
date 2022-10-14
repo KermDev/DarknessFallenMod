@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DarknessFallenMod.Utils;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.Audio;

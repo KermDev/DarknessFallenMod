@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System;
 using Terraria.GameContent.Bestiary;
 using MonoMod.Cil;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.NPCs
 {

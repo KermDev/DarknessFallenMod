@@ -6,6 +6,7 @@ using System;
 using Terraria.GameContent;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MeleeWeapons.PhaloriteSword
 {

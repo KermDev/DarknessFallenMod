@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DarknessFallenMod.Utils;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.Audio;
@@ -7,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.Pets
 {
-	public class FruityPetProj : ModProjectile
+    public class FruityPetProj : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

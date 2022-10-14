@@ -8,6 +8,7 @@ using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using System.Linq;
 using Terraria.DataStructures;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
 {

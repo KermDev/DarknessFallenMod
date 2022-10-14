@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 using Terraria.Audio;
 
 using ReLogic.Content;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.Throwables
 {

@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using System;
 using Terraria.Audio;
 using System.Runtime.CompilerServices;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MagicWeapons.BloodWave
 {

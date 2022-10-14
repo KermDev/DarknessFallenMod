@@ -11,6 +11,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Graphics.Shaders;
 using System.IO;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 {

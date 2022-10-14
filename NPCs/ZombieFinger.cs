@@ -11,6 +11,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Microsoft.Xna.Framework.Graphics;
 using DarknessFallenMod.Core;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.NPCs
 {

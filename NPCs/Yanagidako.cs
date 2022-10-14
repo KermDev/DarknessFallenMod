@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using DarknessFallenMod.Tiles.Banners;
 using DarknessFallenMod.Items.Placeable.Banners;
 using Microsoft.Xna.Framework.Graphics;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.NPCs
 {

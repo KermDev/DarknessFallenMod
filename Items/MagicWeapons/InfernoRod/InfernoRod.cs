@@ -1,3 +1,4 @@
+using DarknessFallenMod.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -6,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.MagicWeapons.InfernoRod
 {
-	public class InfernoRod : ModItem
+    public class InfernoRod : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

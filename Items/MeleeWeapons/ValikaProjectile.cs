@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Terraria.Audio;
 using System.Collections.Generic;
 using System;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {

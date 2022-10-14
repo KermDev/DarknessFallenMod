@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.Graphics;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.NPCs
 {

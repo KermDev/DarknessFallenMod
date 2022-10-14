@@ -4,6 +4,7 @@ using Terraria.ID;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Terraria.Audio;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MeleeWeapons.AmethystSaber
 {

@@ -8,6 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 using System.Linq;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.RangeWeapons
 {

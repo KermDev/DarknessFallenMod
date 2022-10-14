@@ -12,6 +12,7 @@ using Terraria.ModLoader;
 using Terraria.Graphics.Shaders;
 using System.IO;
 using Terraria.Audio;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MeleeWeapons
 {

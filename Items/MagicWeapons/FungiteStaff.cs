@@ -4,10 +4,11 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using DarknessFallenMod.Items.Materials;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MagicWeapons
 {
-	public class FungiteStaff : ModItem
+    public class FungiteStaff : ModItem
 	{
 		public override void SetStaticDefaults()
 		{

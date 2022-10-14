@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DarknessFallenMod.Utils;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ using Terraria.WorldBuilding;
 
 namespace DarknessFallenMod.Tiles.Ores
 {
-	public class FungiteOreTile : ModTile
+    public class FungiteOreTile : ModTile
 	{
 		public override void SetStaticDefaults()
 		{
