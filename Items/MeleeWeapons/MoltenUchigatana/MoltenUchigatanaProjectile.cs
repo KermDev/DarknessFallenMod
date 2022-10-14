@@ -51,13 +51,14 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
 
-            float swingAmount = MoltenUchigatana.alt ? MathHelper.Pi : MathHelper.Pi; 
+            //float swingAmount = MoltenUchigatana.alt ? MathHelper.Pi : MathHelper.Pi; 
             Projectile.rotation = Projectile.velocity.ToRotation() - (MathHelper.Pi * Player.direction * swingDirection);
             swingDirection = -swingDirection;
         }
 
         static int swingDirection = 1;
-        Vector2 rotatedDirection;
+        Vector2 rotationVector;
+        bool shotAlt;
 
         public override void AI()
         {
@@ -84,39 +85,72 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 
             if (MoltenUchigatana.alt)
             {
-                float lower = 0.15f;
-                if (Player.itemAnimation < Player.itemAnimationMax * lower)
-                {
-                    float swingBy = MathF.Pow(Player.itemAnimation / (Player.itemAnimationMax * lower), 4) * 0.6f;
-                    Projectile.rotation += swingBy * Player.direction;
+                float lower = 0.20f;
 
-                    // FX
-                    if (swingBy > 0.01f) SpawnSpinDust(6, -26);
+                float threshold = Player.itemAnimationMax * lower;
+
+                if (Player.itemAnimation == (int)threshold && !shotAlt)
+                {
+                    shotAlt = true;
+                    OnSwingAlt();
+                }
+                else if (Player.itemAnimation < threshold)
+                {
+                    Projectile.friendly = true;
+                    DoSwingAlt(lower);
                 }
                 else
                 {
+                    Projectile.friendly = false;
                     Projectile.rotation = Player.MountedCenter.DirectionTo(Main.MouseWorld).ToRotation() - MathHelper.Pi * Projectile.direction;
                 }
             }
             else 
-            {             
-                float swingBy = MathF.Pow(Player.itemAnimation / Player.itemAnimationMax, 4) * 0.2f * MoltenUchigatana.speedMultiplier;
-                Projectile.rotation += swingBy * Player.direction * swingDirection;
-
-                // FX
-                if (swingBy > 0.01f) SpawnSpinDust(1, -13);
+            {
+                DoSwingNormal();
             }
 
-            rotatedDirection = Projectile.rotation.ToRotationVector2();
+            rotationVector = Projectile.rotation.ToRotationVector2();
 
             Projectile.direction = Player.direction;
             Projectile.spriteDirection = Projectile.direction;
         }
 
+        void OnSwingAlt()
+        {
+            Projectile.NewProjectile(
+                Projectile.GetSource_FromThis(),
+                Player.MountedCenter - rotationVector * bladeLenght * 0.5f,
+                -rotationVector * 25,
+                ModContent.ProjectileType<MoltenUchigatanaFireProjectile>(),
+                200,
+                92,
+                Projectile.owner
+                );
+        }
+
+        void DoSwingAlt(float lower)
+        {
+            float swingBy = MathF.Pow(Player.itemAnimation / (Player.itemAnimationMax * lower), 4) * 0.4f;
+            Projectile.rotation += swingBy * Player.direction;
+
+            // FX
+            if (swingBy > 0.01f) SpawnSpinDust(2, -26, rotationVector);
+        }
+
+        void DoSwingNormal()
+        {
+            float swingBy = MathF.Pow((float)Player.itemAnimation / Player.itemAnimationMax, 4) * 0.2f * MoltenUchigatana.speedMultiplier;
+            Projectile.rotation += swingBy * Player.direction * swingDirection;
+
+            // FX
+            if (swingBy > 0.01f) SpawnSpinDust(1, -13);
+        }
+
         float bladeLenght => TextureAssets.Projectile[Type].Value.Width * 1.414213562373095f;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.MountedCenter, Player.MountedCenter + rotatedDirection * bladeLenght))
+            if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.MountedCenter, Player.MountedCenter + rotationVector * bladeLenght))
             {
                 SpawnSpinDust(14);
                 return true;
@@ -124,14 +158,15 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             return false;
         }
 
-        void SpawnSpinDust(int amount, float speed = 10)
+        void SpawnSpinDust(int amount, float speed = 10, Vector2? direction = null)
         {
             for (int i = 0; i < amount; i++)
             {
-                Vector2 vel = rotatedDirection.RotatedBy(MathHelper.PiOver2 * Player.direction) * speed * Main.rand.NextFloat(0.75f, 1.25f);
+                Vector2 dir = direction ?? rotationVector;
+                Vector2 vel = dir.RotatedBy(MathHelper.PiOver2 * Player.direction) * speed * Main.rand.NextFloat(0.75f, 1.25f);
 
                 Dust.NewDustDirect(
-                    Projectile.Center + rotatedDirection * ((float)i / amount) * bladeLenght + Main.rand.NextFloat(-bladeLenght, bladeLenght) * rotatedDirection / amount, 
+                    Projectile.Center + rotationVector * ((float)i / amount) * bladeLenght + Main.rand.NextFloat(-bladeLenght, bladeLenght) * rotationVector / amount, 
                     0,
                     0, 
                     DustID.AmberBolt, 
@@ -142,7 +177,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
                     ).noGravity = true;
 
                 Dust.NewDustDirect(
-                    Projectile.Center + rotatedDirection * ((float)i / amount) * bladeLenght + Main.rand.NextFloat(-bladeLenght, bladeLenght) * rotatedDirection / amount,
+                    Projectile.Center + rotationVector * ((float)i / amount) * bladeLenght + Main.rand.NextFloat(-bladeLenght, bladeLenght) * rotationVector / amount,
                     0,
                     0,
                     DustID.FireflyHit,
@@ -160,15 +195,15 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             Vector2 texSize = tex.Size();
 
             float drawRotOffset = (Player.direction == -1 ? -MathHelper.Pi - MathHelper.PiOver4 : MathHelper.PiOver4);
-            Vector2 drawPosOffset = new Vector2(0f, Projectile.gfxOffY) + rotatedDirection * bladeLenght * 0.5f;
+            Vector2 drawPosOffset = new Vector2(0f, Projectile.gfxOffY) + rotationVector * bladeLenght * 0.5f;
 
             // After Image
             Main.spriteBatch.BeginReset(DarknessFallenUtils.BeginType.Shader, DarknessFallenUtils.BeginType.Default, s =>
             {
                 Projectile.DrawAfterImage(
-                    prog => Color.Lerp(Color.Black, Color.DarkOrange, prog) * 0.15f,
-                    rotOffset: i => drawRotOffset + Main.rand.NextFloatDirection() * 0.25f,
-                    posOffset: i => -Projectile.Center + Player.MountedCenter + Projectile.oldRot[i].ToRotationVector2() * bladeLenght * 0.5f,
+                    prog => Color.Lerp(Color.OrangeRed, Color.Black, prog) * 0.1f,
+                    rotOffset: i => drawRotOffset,
+                    posOffset: i => -Projectile.Center + Player.MountedCenter + Projectile.oldRot[i].ToRotationVector2() * bladeLenght * 0.5f + rotationVector.RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(-5, 5),
                     altTex: ModContent.Request<Texture2D>(Texture + "AfterImage").Value,
                     scaleOffset: Vector2.One * (Main.rand.NextBool(7) ? 0.2f : 0)
                     );

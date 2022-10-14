@@ -23,11 +23,14 @@ namespace DarknessFallenMod.Utils
             StartCoroutine(EDrawPoint(point, timeInFrames), CoroutineType.PostDrawTiles);
         }
 
+        public static Texture2D LineTexture { get; private set; }
         public static IEnumerator EDrawPoint(Point point, int timeInFrames)
         {
-            Texture2D lineTex = new Texture2D(Main.graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-
-            lineTex.SetData(new Color[] { Color.White });
+            if (LineTexture is null)
+            {
+                LineTexture = new Texture2D(Main.graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                LineTexture.SetData(new Color[] { Color.White });
+            }
 
             int width = 1;
 
@@ -39,8 +42,8 @@ namespace DarknessFallenMod.Utils
             {
                 Main.spriteBatch.BeginDefault();
 
-                Main.spriteBatch.Draw(lineTex, new Rectangle(pointX, point.Y, Main.screenWidth, width), Color.Red);
-                Main.spriteBatch.Draw(lineTex, new Rectangle(point.X, pointY, width, Main.screenWidth), Color.Red);
+                Main.spriteBatch.Draw(LineTexture, new Rectangle(pointX, point.Y, Main.screenWidth, width), Color.Red);
+                Main.spriteBatch.Draw(LineTexture, new Rectangle(point.X, pointY, width, Main.screenWidth), Color.Red);
 
                 Main.spriteBatch.End();
 

@@ -20,7 +20,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 		public static readonly int maxUseTime = 28;
 		public override void SetDefaults()
 		{
-			Item.damage = 140;
+			Item.damage = 27;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;

@@ -175,7 +175,7 @@ namespace DarknessFallenMod.NPCs
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.UmbralEdge>(), 100));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.MeleeWeapons.UmbralEdge.UmbralEdge>(), 100));
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

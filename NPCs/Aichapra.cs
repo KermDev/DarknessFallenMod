@@ -12,7 +12,7 @@ namespace DarknessFallenMod.NPCs
     {
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[Type] = 9;
+            Main.npcFrameCount[Type] = 8;
         }
 
         public override void SetDefaults()
