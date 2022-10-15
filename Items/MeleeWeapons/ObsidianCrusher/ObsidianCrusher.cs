@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DarknessFallenMod.Utils;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 using Terraria;
@@ -9,6 +11,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 {
     public class ObsidianCrusher : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+			Tooltip.SetDefault("Right Click to create boulders or something someone change this tooltip pls...".GetColored(Color.Violet));
+        }
+
         public override void SetDefaults()
         {
 			Item.damage = 58;
@@ -20,7 +27,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 			Item.useStyle = -1;
 			Item.knockBack = 8;
 			Item.value = 17500;
-			Item.rare = 8;
+			Item.rare = ItemRarityID.Purple;
 			Item.UseSound = SoundID.Item71;
 			Item.autoReuse = true;
 			Item.noUseGraphic = true;

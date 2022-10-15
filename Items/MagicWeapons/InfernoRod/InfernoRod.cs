@@ -45,7 +45,8 @@ namespace DarknessFallenMod.Items.MagicWeapons.InfernoRod
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-			DarknessFallenUtils.OffsetShootPos(ref position, velocity, Vector2.UnitX * 50);
+			DarknessFallenUtils.OffsetShootPos(ref position, velocity, new Vector2(38, 20 * player.direction));
+			velocity = position.DirectionTo(Main.MouseWorld) * Item.shootSpeed;
         }
 
         public override void AddRecipes()

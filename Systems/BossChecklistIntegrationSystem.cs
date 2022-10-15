@@ -17,7 +17,7 @@ namespace DarknessFallenMod.Systems
                 "AddBoss",
                 Mod,
                 "Prince Slime",
-                ModContent.NPCType<NPCs.Bosses.PrinceSlime>(),
+                ModContent.NPCType<NPCs.Bosses.PrinceSlime.PrinceSlime>(),
                 0.9f,
                 () => DownedBossSystem.downedPrinceSlime,
                 () => true,

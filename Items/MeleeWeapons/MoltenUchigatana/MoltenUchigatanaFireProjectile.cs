@@ -41,9 +41,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.timeLeft = Main.projFrames[Type] * animSpeed;
-
-            Projectile.spriteDirection = Projectile.velocity.X > 0 ? -1 : 1;
-            Projectile.rotation = Projectile.velocity.ToRotation() + (Projectile.velocity.X < 0 ? MathHelper.Pi : 0);
         }
 
         const int animSpeed = 5;

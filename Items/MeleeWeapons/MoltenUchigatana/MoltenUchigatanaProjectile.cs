@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -49,11 +50,15 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
         {
             if (Main.netMode == NetmodeID.Server) return;
 
+            Projectile.friendly = true;
+
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
 
             //float swingAmount = MoltenUchigatana.alt ? MathHelper.Pi : MathHelper.Pi; 
             Projectile.rotation = Projectile.velocity.ToRotation() - (MathHelper.Pi * Player.direction * swingDirection);
             swingDirection = -swingDirection;
+
+            if (!MoltenUchigatana.alt) SoundEngine.PlaySound(SoundID.Item71, Player.Center);
         }
 
         static int swingDirection = 1;
@@ -118,7 +123,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 
         void OnSwingAlt()
         {
-            Projectile.NewProjectile(
+            SoundEngine.PlaySound(SoundID.Item70, Player.Center);
+
+            var proj = Projectile.NewProjectileDirect(
                 Projectile.GetSource_FromThis(),
                 Player.MountedCenter - rotationVector * bladeLenght * 0.5f,
                 -rotationVector * 25,
@@ -127,6 +134,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
                 92,
                 Projectile.owner
                 );
+
+            proj.spriteDirection = -Projectile.spriteDirection;
+            proj.rotation = proj.velocity.ToRotation() + (proj.spriteDirection > 0 ? MathHelper.Pi : 0);
         }
 
         void DoSwingAlt(float lower)

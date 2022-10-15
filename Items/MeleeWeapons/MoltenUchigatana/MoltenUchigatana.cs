@@ -13,8 +13,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
     {
 		public override void SetStaticDefaults()
 		{
-			//DisplayName.SetDefault("");
-			Tooltip.SetDefault("Uchigatana  is a type of katana basically , just wanted a cooler name then katana".GetColored(Color.Gray));
+			Tooltip.SetDefault("Speeds up on use.".GetColored(Color.LightYellow) + "\n" + "Right Click for a special attack.".GetColored(Color.LightGoldenrodYellow) + "\n" +
+				"Uchigatana  is a type of katana basically , just wanted a cooler name then katana".GetColored(Color.Gray)
+				);
 		}
 
 		public static readonly int maxUseTime = 28;
@@ -30,7 +31,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 			Item.knockBack = 8;
 			Item.value = 17500;
 			Item.rare = 8;
-			Item.UseSound = SoundID.Item71;
 			Item.autoReuse = true;
 			Item.noUseGraphic = true;
 			Item.noMelee = true;

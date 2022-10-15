@@ -34,7 +34,7 @@ namespace DarknessFallenMod.Tiles.Banners
 		{
 			if (closer)
 			{
-				int type = ModContent.NPCType<NPCs.Bosses.PrinceSlime>();
+				int type = ModContent.NPCType<NPCs.Bosses.PrinceSlime.PrinceSlime>();
 
 				Main.SceneMetrics.hasBanner = true;
 				Main.SceneMetrics.NPCBannerBuff[type] = true;
