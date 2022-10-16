@@ -85,9 +85,9 @@ namespace DarknessFallenMod.Utils
         /// Begins the spritebatch with <see cref="SpriteSortMode.Immediate"/>, <see cref="BlendState.AlphaBlend"/>, <see cref="Main.DefaultSamplerState"/>, <see cref="Main.Rasterizer"/>, no effect and <see cref="Main.GameViewMatrix"/><c>.TransformationMatrix</c>
         /// </summary>
         /// <param name="spritebatch">The spritebatch to begin</param>
-        public static void BeginShader(this SpriteBatch spritebatch)
+        public static void BeginShader(this SpriteBatch spritebatch, Effect fx = null)
         {
-            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+            spritebatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, fx, Main.GameViewMatrix.TransformationMatrix);
         }
 
         /// <summary>

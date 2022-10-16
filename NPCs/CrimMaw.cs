@@ -36,6 +36,9 @@ namespace DarknessFallenMod.NPCs
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = 3;
             AIType = NPCID.GoblinScout;
+
+            Banner = Type;
+            BannerItem = ModContent.ItemType<Items.Placeable.Banners.CrimMawBanner>();
         }
 
         public override void AI()

@@ -36,7 +36,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<SlimyRainProjectile>();
 			Item.shootSpeed = 5.5f;
-            Item.mana = (int)(Item.shootSpeed / 60f * 5);
+            Item.mana = (int)(Item.useTime / 60f * 5f);
 			Item.noMelee = true;
 		}
 

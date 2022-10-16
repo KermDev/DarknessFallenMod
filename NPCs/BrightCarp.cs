@@ -36,6 +36,9 @@ namespace DarknessFallenMod.NPCs
             NPC.aiStyle = NPCAIStyleID.Piranha;
             NPC.noGravity = true;
             AIType = NPCID.Shark;
+
+            Banner = Type;
+            BannerItem = ModContent.ItemType<Items.Placeable.Banners.BrightCarpBanner>();
         }
 
         public override void AI()

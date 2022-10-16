@@ -1,9 +1,14 @@
-﻿using System;
+﻿using Terraria.Graphics.Effects;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.Armor
 {
@@ -37,6 +42,25 @@ namespace DarknessFallenMod.Items.Armor
                 .AddIngredient(ModContent.ItemType<Materials.MagmiteBar>(), 20)
                 .AddTile(TileID.Anvils)
                 .Register();
+        }
+
+        public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            var fx = Filters.Scene["Shader"].GetShader().Shader;
+
+            Texture2D tex = TextureAssets.Item[Type].Value;
+            fx.Parameters["sampleTexture"].SetValue(tex);
+
+            spriteBatch.End();
+            spriteBatch.BeginShader(fx);
+            
+            return base.PreDrawInWorld(spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI);
+        }
+
+        public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+        {
+            spriteBatch.End();
+            spriteBatch.BeginDefault();
         }
     }
 }
