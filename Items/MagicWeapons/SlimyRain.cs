@@ -22,7 +22,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 
         public override void SetDefaults()
         {
-			Item.damage = 16;
+			Item.damage = 24;
 			Item.DamageType = DamageClass.Magic;
 			Item.width = 43;
 			Item.height = 43;
@@ -36,6 +36,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<SlimyRainProjectile>();
 			Item.shootSpeed = 5.5f;
+            Item.mana = (int)(Item.shootSpeed / 60f * 5);
 			Item.noMelee = true;
 		}
 

@@ -18,11 +18,6 @@ namespace DarknessFallenMod.Utils
 {
     public static partial class DarknessFallenUtils
     {
-        public static void DrawPoint(this Point point, int timeInFrames)
-        {
-            StartCoroutine(EDrawPoint(point, timeInFrames), CoroutineType.PostDrawTiles);
-        }
-
         public static Texture2D LineTexture { get; private set; }
         public static IEnumerator EDrawPoint(Point point, int timeInFrames)
         {
@@ -34,16 +29,17 @@ namespace DarknessFallenMod.Utils
 
             int width = 1;
 
-            point -= Main.screenPosition.ToPoint();
             int pointX = point.X - (int)(Main.screenWidth * 0.5f);
             int pointY = point.Y - (int)(Main.screenWidth * 0.5f);
 
-            for (int i = 0; i < timeInFrames; i++)
+            for (int i = 0; i < timeInFrames + 1; i++)
             {
                 Main.spriteBatch.BeginDefault();
 
-                Main.spriteBatch.Draw(LineTexture, new Rectangle(pointX, point.Y, Main.screenWidth, width), Color.Red);
-                Main.spriteBatch.Draw(LineTexture, new Rectangle(point.X, pointY, width, Main.screenWidth), Color.Red);
+                Point screenPosPoint = Main.screenPosition.ToPoint();
+
+                Main.spriteBatch.Draw(LineTexture, new Rectangle(pointX - screenPosPoint.X, point.Y - screenPosPoint.Y, Main.screenWidth, width), Color.Red);
+                Main.spriteBatch.Draw(LineTexture, new Rectangle(point.X - screenPosPoint.X, pointY - screenPosPoint.Y, width, Main.screenWidth), Color.Red);
 
                 Main.spriteBatch.End();
 

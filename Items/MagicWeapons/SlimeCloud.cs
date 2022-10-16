@@ -19,7 +19,7 @@ namespace DarknessFallenMod.Items.MagicWeapons
 
         public override void SetDefaults()
         {
-			Item.damage = 9;
+			Item.damage = 18;
 			Item.mana = 6;
 			Item.DamageType = DamageClass.Magic;
 			Item.width = 45;

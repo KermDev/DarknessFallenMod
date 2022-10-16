@@ -13,6 +13,8 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.UI.Chat;
 
+using static DarknessFallenMod.Systems.CoroutineSystem;
+
 namespace DarknessFallenMod.Utils
 {
     public static partial class DarknessFallenUtils
@@ -261,5 +263,18 @@ namespace DarknessFallenMod.Utils
         }
 
         #endregion
+
+        public static void DrawPoint(this Point point, int timeInFrames)
+        {
+            StartCoroutine(EDrawPoint(point, timeInFrames), CoroutineType.PostDrawTiles);
+        }
+
+        public static void DrawRect(this Rectangle rect, int frameTime)
+        {
+            DrawPoint(rect.TopLeft().ToPoint(), frameTime);
+            DrawPoint(rect.TopRight().ToPoint(), frameTime);
+            DrawPoint(rect.BottomLeft().ToPoint(), frameTime);
+            DrawPoint(rect.BottomRight().ToPoint(), frameTime);
+        }
     }
 }

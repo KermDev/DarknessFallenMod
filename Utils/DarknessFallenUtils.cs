@@ -60,6 +60,17 @@ namespace DarknessFallenMod.Utils
             });
         }
 
+        public static void ForeachPlayerInRange(Vector2 center, float rangeSquared, Action<Player> predicate)
+        {
+            Array.ForEach(Main.player, player =>
+            {
+                if (player.DistanceSQ(center) <= rangeSquared)
+                {
+                    predicate.Invoke(player);
+                }
+            });
+        }
+
         public static bool TryGetClosestEnemyNPC(Vector2 center, out NPC closest, float rangeSQ = float.MaxValue, bool checkChase = true)
         {
             return TryGetClosestEnemyNPC(center, out closest, npc => false, out _, rangeSQ, checkChase);
