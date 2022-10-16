@@ -80,5 +80,15 @@ namespace DarknessFallenMod.NPCs
         {
             return base.SpawnChance(spawnInfo); // SpawnCondition.Crimson.Chance * 0.08f;
         }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Jungle,
+                new FlavorTextBestiaryInfoElement("With all things the Light touches, it modifies them to be better suited for their environment. Sharks are an example of this.")
+            });
+        }
+
     }
 }

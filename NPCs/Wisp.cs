@@ -84,10 +84,9 @@ namespace DarknessFallenMod.NPCs
         {
             // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
             bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
-                // BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCrimson,
-                // new FlavorTextBestiaryInfoElement("A manifestation of the crimson's violent nature, these monsters will attack anything that moves")
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Jungle,
+                new FlavorTextBestiaryInfoElement("Scorched remains of slain humans coalesced into this flaming omen. Their flames are surprisingly helpful for cooking.")
             });
         }
-
     }
 }

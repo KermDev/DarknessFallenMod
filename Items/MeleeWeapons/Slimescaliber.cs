@@ -20,9 +20,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.autoReuse = true;
 
 			Item.DamageType = DamageClass.Melee;
-			Item.damage = 16;
+			Item.damage = 28;
 			Item.knockBack = 6;
-			Item.crit = 4;
+			Item.crit = 5;
 
 			Item.value = Item.buyPrice(silver: 21);
 			Item.rare = ItemRarityID.Green;

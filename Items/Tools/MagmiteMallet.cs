@@ -10,7 +10,6 @@ namespace DarknessFallenMod.Items.Tools
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Magmite Mallet");
-            Tooltip.SetDefault("Bonk!");
         }
 
         public override void SetDefaults()
@@ -20,14 +19,14 @@ namespace DarknessFallenMod.Items.Tools
             Item.scale = 1f;
 
             Item.useStyle = ItemUseStyleID.Swing;
-            Item.useTime = 20;
-            Item.useAnimation = 20;
+            Item.useTime = 15;
+            Item.useAnimation = 30;
             Item.autoReuse = true;
-            Item.hammer = 80;
+            Item.hammer = 110;
             Item.useTurn = true;
 
             Item.DamageType = DamageClass.Melee;
-            Item.damage = 31;
+            Item.damage = 22;
             Item.knockBack = 3.2f;
             Item.crit = 4;
 
@@ -40,7 +39,7 @@ namespace DarknessFallenMod.Items.Tools
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient<MagmiteBar>(10);
+            recipe.AddIngredient<MagmiteBar>(12);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }

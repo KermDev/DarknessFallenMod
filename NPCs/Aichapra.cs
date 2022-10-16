@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -29,6 +30,11 @@ namespace DarknessFallenMod.NPCs
 
             NPC.aiStyle = 3;
             AIType = NPCID.GoblinScout;
+
+
+            Banner = Type;
+            BannerItem = ModContent.ItemType<Items.Placeable.Banners.AichapraBanner>();
+
         }
 
         public override void AI()
@@ -52,5 +58,17 @@ namespace DarknessFallenMod.NPCs
         {
             if (NPC.velocity.X != 0 && NPC.collideY) NPC.BasicAnimation(frameHeight, 4);
         }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Jungle,
+                new FlavorTextBestiaryInfoElement("A hideous creature covered in sharp spikes. Their nails are however very useful for crafting.")
+            });
+
+        }
+
+
     }
 }

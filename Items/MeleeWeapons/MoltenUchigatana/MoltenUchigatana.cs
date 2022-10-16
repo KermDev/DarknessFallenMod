@@ -14,8 +14,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Speeds up on use.".GetColored(Color.LightYellow) + "\n" + "Right Click for a special attack.".GetColored(Color.LightGoldenrodYellow) + "\n" +
-				"Uchigatana  is a type of katana basically , just wanted a cooler name then katana".GetColored(Color.Gray)
-				);
+				"Forged from molten lava, said to have a powerful ability".GetColored(Color.Red));
+				
 		}
 
 		public static readonly int maxUseTime = 28;

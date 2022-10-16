@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -71,5 +72,15 @@ namespace DarknessFallenMod.NPCs
             NPC.DrawNPCInHBCenter(drawColor);
             return false;
         }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Jungle,
+                new FlavorTextBestiaryInfoElement("A swirling void of Darkness primordial. Its many eyes watch for nearby prey")
+            });
+        }
+
     }
 }

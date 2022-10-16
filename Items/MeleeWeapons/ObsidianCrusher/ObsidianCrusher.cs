@@ -13,7 +13,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
     {
         public override void SetStaticDefaults()
         {
-			Tooltip.SetDefault("Right Click to create boulders or something someone change this tooltip pls...".GetColored(Color.Violet));
+			Tooltip.SetDefault("Right Click to create boulders".GetColored(Color.LightYellow) + "\n" + "forged with strong metals, seems heavy".GetColored(Color.Purple));
         }
 
         public override void SetDefaults()

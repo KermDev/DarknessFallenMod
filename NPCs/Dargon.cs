@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -39,6 +40,18 @@ namespace DarknessFallenMod.NPCs
 
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
+        }
+
+
+
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // Makes it so whenever you beat the boss associated with it, it will also get unlocked immediately
+            bestiaryEntry.Info.AddRange(new List<IBestiaryInfoElement> {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Jungle,
+                new FlavorTextBestiaryInfoElement("Sometimes, when the Darkness devours life, the lingering souls are corrupted. These creatures are such an example.")
+            });
         }
 
         enum AIPhase
@@ -229,5 +242,10 @@ namespace DarknessFallenMod.NPCs
 
             return false;
         }
+
+
+
+
+
     }
 }
