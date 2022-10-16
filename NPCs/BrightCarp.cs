@@ -13,11 +13,11 @@ using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.NPCs
 {
-    public class Fish : ModNPC
+    public class BrightCarp : ModNPC
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fish");
+            DisplayName.SetDefault("Bright Carp");
             Main.npcFrameCount[NPC.type] = 4;
         }
 

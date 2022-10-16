@@ -15,8 +15,8 @@ namespace DarknessFallenMod.Items.RangeWeapons
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Blood Wave"); // Name of the projectile. It can be appear in chat
-            Main.projFrames[Projectile.type] = 2; //number of frames in the animation;
+            DisplayName.SetDefault("Holy bow projectile"); // Name of the projectile. It can be appear in chat
+            Main.projFrames[Projectile.type] = 1; //number of frames in the animation;
         }
 
         // Setting the default parameters of the projectile
