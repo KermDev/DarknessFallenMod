@@ -15,7 +15,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
 			Item.height = 49;
 
 			Item.useStyle = ItemUseStyleID.Swing;
-			Item.useTime = 20;
+			Item.useTime = 28;
 			Item.useAnimation = 20;
 			Item.autoReuse = true;
 
@@ -32,6 +32,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
         {
 			target.AddBuff(BuffID.Slimed, 180);
+			target.AddBuff(ModContent.BuffType<Buffs.SlownessBuff>(), 180);
 		}
     }
 }
