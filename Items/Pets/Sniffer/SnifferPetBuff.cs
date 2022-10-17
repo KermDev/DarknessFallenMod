@@ -1,27 +1,31 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.Pets
+namespace DarknessFallenMod.Items.Pets.Sniffer
 {
-    public class BloodySquidBuff : ModBuff
+    public class SnifferPetBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Bloody Squid");
-            Description.SetDefault("A little squid will follow you around");
+            DisplayName.SetDefault("Sniffer");
+            Description.SetDefault("A friendly Sniffer will follow you around.");
 
             Main.buffNoTimeDisplay[Type] = true;
             Main.vanityPet[Type] = true;
+            Main.persistentBuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
             player.buffTime[buffIndex] = 18000;
 
-            int projType = ModContent.ProjectileType<BloodySquid>();
+            int projType = ModContent.ProjectileType<SnifferPet>();
 
-            // If the player is local, and there hasn't been a pet projectile spawned yet - spawn it.
             if (player.whoAmI == Main.myPlayer && player.ownedProjectileCounts[projType] <= 0)
             {
                 var entitySource = player.GetSource_Buff(buffIndex);

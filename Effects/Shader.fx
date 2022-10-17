@@ -14,7 +14,7 @@ float time;
 float4 ArmorBasic(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
     float4 color = tex2D(samplerTexture, coords);
-    color.rgb *= coords.x;
+    color.rgb *= (sin(time) + 1f) / 2f;
     return color * sampleColor;
 }
 

@@ -48,8 +48,10 @@ namespace DarknessFallenMod.Items.Armor
         {
             var fx = Filters.Scene["Shader"].GetShader().Shader;
 
-            Texture2D tex = TextureAssets.Item[Type].Value;
+            var tex = TextureAssets.Item[Type].Value;
+
             fx.Parameters["sampleTexture"].SetValue(tex);
+            fx.Parameters["time"].SetValue(Main.GameUpdateCount * 0.1f);
 
             spriteBatch.End();
             spriteBatch.BeginShader(fx);

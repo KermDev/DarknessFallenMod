@@ -111,7 +111,7 @@ namespace DarknessFallenMod.NPCs
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SoulOfDestruction>(), 5, minimumDropped: 1, maximumDropped: 3));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Pets.BloodyTentacle>(), 33));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Pets.BloodySquid.BloodyTentacle>(), 33));
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

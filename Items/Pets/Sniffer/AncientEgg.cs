@@ -1,17 +1,19 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.GameContent.Creative;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
 
-namespace DarknessFallenMod.Items.Pets
+using Terraria;
+using Terraria.GameContent.Creative;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace DarknessFallenMod.Items.Pets.Sniffer
 {
-	public class BloodyTentacle : ModItem
-	{
+    public class AncientEgg : ModItem
+    {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Bloody Tentacle");
-			Tooltip.SetDefault("Summons a lil squid to follow you");
+			Tooltip.SetDefault("Summons a friendly Sniffer");
 
 			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
@@ -20,16 +22,16 @@ namespace DarknessFallenMod.Items.Pets
 		{
 			Item.damage = 0;
 			Item.useStyle = ItemUseStyleID.Swing;
-			Item.shoot = ModContent.ProjectileType<BloodySquid>();
+			Item.shoot = ModContent.ProjectileType<SnifferPet>();
 			Item.width = 16;
 			Item.height = 30;
 			Item.UseSound = SoundID.Item2;
 			Item.useAnimation = 20;
 			Item.useTime = 20;
-			Item.rare = ItemRarityID.Yellow;
+			Item.rare = ItemRarityID.LightRed;
 			Item.noMelee = true;
 			Item.value = Item.sellPrice(0, 5, 50);
-			Item.buffType = ModContent.BuffType<BloodySquidBuff>();
+			Item.buffType = ModContent.BuffType<SnifferPetBuff>();
 		}
 
 		public override void UseStyle(Player player, Rectangle heldItemFrame)

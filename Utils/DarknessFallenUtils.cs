@@ -448,5 +448,37 @@ namespace DarknessFallenMod.Utils
 
             return other;
         }
+
+        /// <summary>
+        /// Checks if there is solid terrain at specified world position is
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public static bool SolidTerrain(Vector2 position)
+        {
+            Point tileCoord = position.ToTileCoordinates();
+            Tile tile = Main.tile[tileCoord.X, tileCoord.Y];
+
+            return tile.HasTile && Main.tileSolid[tile.TileType] && (tile.BlockType == BlockType.Solid || (tile.IsHalfBlock && (position.Y % (tileCoord.Y * 16) > 8) && tile.BlockType == BlockType.HalfBlock));
+        }
+
+        public static bool SolidTerrain(Rectangle rect)
+        {
+            for (int i = rect.X; i < rect.X + rect.Width; i += 4)
+            {
+                for (int j = rect.Y; j < rect.Y + rect.Height; j += 4)
+                {
+                    //Point tileCoords = new Vector2(i, j).ToTileCoordinates();
+
+                    Tile tile = Main.tile[i / 16, j / 16];
+                    if (tile.HasTile && Main.tileSolid[tile.TileType] && !tile.IsHalfBlock || ((tile.IsHalfBlock && (j * 16 + 8 < rect.Bottom) && tile.BlockType == BlockType.HalfBlock)))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 }

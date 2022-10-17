@@ -24,7 +24,6 @@ namespace DarknessFallenMod.NPCs
 
         public override void SetDefaults()
         {
-            
             NPC.width = 35;
             NPC.height = 53;
             NPC.damage = 17;
