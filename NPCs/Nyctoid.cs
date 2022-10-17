@@ -1,4 +1,5 @@
 ﻿using DarknessFallenMod.Utils;
+using Terraria.GameContent.ItemDropRules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -82,5 +83,9 @@ namespace DarknessFallenMod.NPCs
             });
         }
 
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.Nyctoplasm>(), 10));
+        }
     }
 }
