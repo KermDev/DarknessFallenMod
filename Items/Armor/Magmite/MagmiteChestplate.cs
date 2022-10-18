@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using DarknessFallenMod.Utils;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Magmite
 {
     [AutoloadEquip(EquipType.Body)]
     public class MagmiteChestplate : ModItem
@@ -55,7 +55,7 @@ namespace DarknessFallenMod.Items.Armor
 
             spriteBatch.End();
             spriteBatch.BeginShader(fx);
-            
+
             return base.PreDrawInWorld(spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI);
         }
 
@@ -63,6 +63,8 @@ namespace DarknessFallenMod.Items.Armor
         {
             spriteBatch.End();
             spriteBatch.BeginDefault();
+
+
         }
     }
 }

@@ -8,7 +8,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Magmite
 {
     [AutoloadEquip(EquipType.Head)]
     public class MagmiteHelmet : ModItem
@@ -36,7 +36,7 @@ namespace DarknessFallenMod.Items.Armor
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return body.type == ModContent.ItemType<MagmiteChestplate>() && legs.type == ModContent.ItemType<MagmiteLeggings>(); 
+            return body.type == ModContent.ItemType<MagmiteChestplate>() && legs.type == ModContent.ItemType<MagmiteLeggings>();
         }
 
         public override void UpdateArmorSet(Player player)
@@ -92,7 +92,8 @@ namespace DarknessFallenMod.Items.Armor
                 Gore.NewGore(Player.GetSource_FromThis(), center, randPos.DirectionFrom(center) * 2.5f, GoreID.Smoke1 + Main.rand.Next(2));
             }
 
-            DarknessFallenUtils.ForeachNPCInRectangle(rect, npc => {
+            DarknessFallenUtils.ForeachNPCInRectangle(rect, npc =>
+            {
                 if (!npc.friendly)
                 {
                     Player.ApplyDamageToNPC(npc, 15, 0.2f, (int)(npc.Center.X - Player.Center.X), false);
