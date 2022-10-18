@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using Terraria;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -69,6 +70,9 @@ namespace DarknessFallenMod.NPCs
 
         }
 
-
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.CapraNail>(), 10));
+        }
     }
 }
