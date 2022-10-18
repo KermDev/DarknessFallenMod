@@ -1,11 +1,13 @@
 ﻿using DarknessFallenMod.Utils;
 using Microsoft.Xna.Framework;
+using Terraria.Graphics.Effects;
 using System;
 using System.Collections.Generic;
 
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent;
 
 namespace DarknessFallenMod.Items.Pets.Sniffer
 {
@@ -129,7 +131,24 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
 
         public override bool PreDraw(ref Color lightColor)
         {
+            var fx = Filters.Scene["Shader"].GetShader().Shader;
+
+            var tex = TextureAssets.Item[Type].Value;
+
+            int frameHeight = tex.Height / Main.projFrames[Type];
+
+            fx.Parameters["sampleTexture"].SetValue(tex);
+            fx.Parameters["time"].SetValue(Main.GameUpdateCount * 0.05f);
+            fx.Parameters["imageSize"].SetValue(tex.Size());
+            fx.Parameters["source"].SetValue(new float[4] { 0, Projectile.frame * frameHeight, tex.Width, frameHeight });
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginShader(fx);
+
             Projectile.DrawProjectileInHBCenter(lightColor, true, origin: Projectile.spriteDirection == 1 ? new Vector2(20, 20) : new Vector2(36, 20));
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginDefault();
             return false;
         }
     }

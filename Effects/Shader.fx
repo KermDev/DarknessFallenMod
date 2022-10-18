@@ -11,17 +11,28 @@ sampler2D samplerTexture = sampler_state
 
 float time;
 
-float4 ArmorBasic(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
+float2 imageSize;
+float4 source;
+
+float4 ShinePass(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
     float4 color = tex2D(samplerTexture, coords);
-    color.rgb *= (sin(time) + 1f) / 2f;
-    return color * sampleColor;
+    
+    float localCoordsY = (coords.y * imageSize.y - source.y) / source.w;
+    
+    float val = 0.3 * (sin((coords.x * 4 + time)) * 5 + 1);
+    
+    float3 cache_color = color.brb;
+    color.rgb -= color.rgb * val;
+    color.rgb += cache_color * val;
+    
+    return color * color.a;
 }
 
 technique Technique1
 {
-    pass ArmorBasic
+    pass ShinePass
     {
-        PixelShader = compile ps_2_0 ArmorBasic();
+        PixelShader = compile ps_2_0 ShinePass();
     }
 }

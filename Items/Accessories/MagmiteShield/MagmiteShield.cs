@@ -2,7 +2,7 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.Accessories
+namespace DarknessFallenMod.Items.Accessories.MagmiteShield
 {
     [AutoloadEquip(EquipType.Shield)]
     public class MagmiteShield : ModItem

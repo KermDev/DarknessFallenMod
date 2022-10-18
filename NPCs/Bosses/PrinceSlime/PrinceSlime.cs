@@ -147,6 +147,8 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
 
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<Items.Consumables.PrinceSlimeBossBag>()));
 
+            npcLoot.Add(ItemDropRule.Common(ItemID.LesserHealingPotion, 1, 1, 5));
+
             npcLoot.Add(ItemDropRule.Common(ItemID.Gel, minimumDropped: 2, maximumDropped: 12));
         }
 
