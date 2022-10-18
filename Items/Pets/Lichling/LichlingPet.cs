@@ -9,7 +9,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.Pets
+namespace DarknessFallenMod.Items.Pets.Lichling
 {
     public class LichlingPet : ModProjectile
     {

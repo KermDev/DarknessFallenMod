@@ -34,12 +34,17 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
 
         Player Player => Main.player[Projectile.owner];
 
-        const float _GRAVITY = 0.2f;
+        const float _GRAVITY = 0.3f;
         const float _ACCELERATION = 0.6f;
         const float _DEACCELERATIONMULT = 0.7f;
+
+        ref float JumpTimer => ref Projectile.ai[0];
         public override void AI()
         {
-            Projectile.timeLeft = 10;
+            if (Player.active && !Player.dead && Player.HasBuff(ModContent.BuffType<SnifferPetBuff>()))
+            {
+                Projectile.timeLeft = 2;
+            }
 
             int dirXToPlayer = (Projectile.DirectionTo(Player.Center).X > 0 ? 1 : -1);
             float distSQToPlayer = Projectile.Center.DistanceSQ(Player.Center);
@@ -58,6 +63,9 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
                 }
 
                 Projectile.Center = teleportPos;
+                Projectile.velocity = Vector2.Zero;
+
+                //CombatText.NewText(Projectile.Hitbox, Color.BlueViolet, Main.rand.NextFromList(new string[] { "Hello", "Hi" }));
 
                 DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.ShadowbeamStaff, 10, speedFromCenter: 10, amount: 16);
             }
@@ -74,20 +82,25 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
             {
                 if (DarknessFallenUtils.SolidTerrain(Projectile.BottomLeft + Vector2.UnitX * collOffset - Vector2.UnitY * 18))
                 {
-                    if (DarknessFallenUtils.SolidTerrain(new Rectangle(Projectile.Hitbox.X, Projectile.Hitbox.Y + 16, Projectile.width, Projectile.height)))
+                    if (JumpTimer <= 0 && DarknessFallenUtils.SolidTerrain(new Rectangle(Projectile.Hitbox.X, Projectile.Hitbox.Y + 16, Projectile.width, Projectile.height)))
                     {
-                        Projectile.velocity.Y -= 1f;
+
+                        JumpTimer = 60;
+                        Projectile.velocity.Y -= 7f;
                     }
                 }
                 else if (DarknessFallenUtils.SolidTerrain(Projectile.BottomLeft + Vector2.UnitX * collOffset - Vector2.UnitY * 2))
                 {
-                    Projectile.velocity.Y -= 0.5f;
+                    
+                    Projectile.velocity.Y -= 0.6f;
                 }
             }
 
             Projectile.velocity.Y += _GRAVITY;
 
             Projectile.spriteDirection = dirXToPlayer;
+
+            JumpTimer--;
 
             Animate(7);
         }
