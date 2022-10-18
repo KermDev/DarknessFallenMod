@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.RangeWeapons
 {
-    public class SandScaleLongBow : ModItem
+    public class SandscaleLongbow : ModItem
     {
 		public override void SetStaticDefaults()
 		{
