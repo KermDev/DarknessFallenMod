@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DarknessFallenMod.Items.Materials;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -9,12 +10,12 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.RangeWeapons
 {
-    public class ScaleLongbow : ModItem
+    public class SandscaleLongbow : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Scale Longbow");
-			Tooltip.SetDefault("placeholder tooltip");
+			DisplayName.SetDefault("Sandscale Longbow");
+			Tooltip.SetDefault("Does double damage in desert biome");
 		}
 
 		public override void SetDefaults()
@@ -48,7 +49,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
         public override void AddRecipes()
         {
 			CreateRecipe()
-                //.AddIngredient(ModContent.ItemType<SandstoneScale>(), 7) Uncomment this line when Sandstone Scale is added
+                .AddIngredient(ModContent.ItemType<SandstoneScales>(), 6)
                 .AddTile(TileID.WorkBenches)
 				.Register();
         }

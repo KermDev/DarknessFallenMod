@@ -11,8 +11,7 @@ namespace DarknessFallenMod.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Slightly increases attack speed" +
-                $"\n In memory of RocketLauncher269");
+            Tooltip.SetDefault("Slightly increases attack speed");
         }
 
         public override void SetDefaults()

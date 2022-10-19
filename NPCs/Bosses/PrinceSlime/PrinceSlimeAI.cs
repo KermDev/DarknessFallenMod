@@ -131,12 +131,12 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
                 {
                     JumpTimer = 0;
 
-                    float xVel = Math.Clamp((Target.Center.X - NPC.Center.X) * 0.3f, -6f, 6f);
+                    float xVel = Math.Clamp((Target.Center.X - NPC.Center.X) * 0.05f, -6f, 6f);
                     NPC.velocity.X += xVel;
 
                     float maxJ = 14f;
-                    float yVel = Collision.SolidTiles(NPC.position + new Vector2(xVel, 2), NPC.width, (int)(NPC.height * 0.2f)) ? maxJ : Math.Clamp((NPC.Center.Y - Target.Center.Y) * 0.5f, 5f, maxJ);
-
+                    //float yVel = Collision.SolidTiles(NPC.position + new Vector2(xVel, 2), NPC.width, (int)(NPC.height * 0.2f)) ? maxJ : Math.Clamp((NPC.Center.Y - Target.Center.Y) * 0.5f, 5f, maxJ);
+                    float yVel = DarknessFallenUtils.SolidTerrain(NPC.Hitbox.MovedBy(NPC.velocity)) ? maxJ : Math.Clamp((NPC.Center.Y - Target.Center.Y) * 0.5f, 5f, maxJ);
                     NPC.velocity.Y -= yVel;
 
                 }
@@ -151,7 +151,7 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
         {
             if (MortarTimer <= 0)
             {
-                MortarTimer = Main.rand.Next(90, 200);
+                MortarTimer = Main.rand.Next(80, 200);
 
                 if (!Main.dedServ) Lighting.AddLight(ShootPosition, TorchID.Red);
 
@@ -185,6 +185,8 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
                         42,
                         1
                         );
+
+                    SoundEngine.PlaySound(SoundID.Item117, shootFrom);
                 }
             }
             else if (MortarTimer < 60)

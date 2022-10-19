@@ -1,11 +1,13 @@
 ﻿using DarknessFallenMod.Utils;
 using Microsoft.Xna.Framework;
+using Terraria.Graphics.Effects;
 using System;
 using System.Collections.Generic;
 
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent;
 
 namespace DarknessFallenMod.Items.Pets.Sniffer
 {
@@ -34,12 +36,17 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
 
         Player Player => Main.player[Projectile.owner];
 
-        const float _GRAVITY = 0.2f;
+        const float _GRAVITY = 0.3f;
         const float _ACCELERATION = 0.6f;
         const float _DEACCELERATIONMULT = 0.7f;
+
+        ref float JumpTimer => ref Projectile.ai[0];
         public override void AI()
         {
-            Projectile.timeLeft = 10;
+            if (Player.active && !Player.dead && Player.HasBuff(ModContent.BuffType<SnifferPetBuff>()))
+            {
+                Projectile.timeLeft = 2;
+            }
 
             int dirXToPlayer = (Projectile.DirectionTo(Player.Center).X > 0 ? 1 : -1);
             float distSQToPlayer = Projectile.Center.DistanceSQ(Player.Center);
@@ -58,6 +65,9 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
                 }
 
                 Projectile.Center = teleportPos;
+                Projectile.velocity = Vector2.Zero;
+
+                //CombatText.NewText(Projectile.Hitbox, Color.BlueViolet, Main.rand.NextFromList(new string[] { "Hello", "Hi" }));
 
                 DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.ShadowbeamStaff, 10, speedFromCenter: 10, amount: 16);
             }
@@ -74,20 +84,25 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
             {
                 if (DarknessFallenUtils.SolidTerrain(Projectile.BottomLeft + Vector2.UnitX * collOffset - Vector2.UnitY * 18))
                 {
-                    if (DarknessFallenUtils.SolidTerrain(new Rectangle(Projectile.Hitbox.X, Projectile.Hitbox.Y + 16, Projectile.width, Projectile.height)))
+                    if (JumpTimer <= 0 && DarknessFallenUtils.SolidTerrain(new Rectangle(Projectile.Hitbox.X, Projectile.Hitbox.Y + 16, Projectile.width, Projectile.height)))
                     {
-                        Projectile.velocity.Y -= 1f;
+
+                        JumpTimer = 60;
+                        Projectile.velocity.Y -= 7f;
                     }
                 }
                 else if (DarknessFallenUtils.SolidTerrain(Projectile.BottomLeft + Vector2.UnitX * collOffset - Vector2.UnitY * 2))
                 {
-                    Projectile.velocity.Y -= 0.5f;
+                    
+                    Projectile.velocity.Y -= 0.6f;
                 }
             }
 
             Projectile.velocity.Y += _GRAVITY;
 
             Projectile.spriteDirection = dirXToPlayer;
+
+            JumpTimer--;
 
             Animate(7);
         }
@@ -116,7 +131,24 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
 
         public override bool PreDraw(ref Color lightColor)
         {
+            var fx = Filters.Scene["Shader"].GetShader().Shader;
+
+            var tex = TextureAssets.Item[Type].Value;
+
+            int frameHeight = tex.Height / Main.projFrames[Type];
+
+            fx.Parameters["sampleTexture"].SetValue(tex);
+            fx.Parameters["time"].SetValue(Main.GameUpdateCount * 0.05f);
+            fx.Parameters["imageSize"].SetValue(tex.Size());
+            fx.Parameters["source"].SetValue(new float[4] { 0, Projectile.frame * frameHeight, tex.Width, frameHeight });
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginShader(fx);
+
             Projectile.DrawProjectileInHBCenter(lightColor, true, origin: Projectile.spriteDirection == 1 ? new Vector2(20, 20) : new Vector2(36, 20));
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginDefault();
             return false;
         }
     }

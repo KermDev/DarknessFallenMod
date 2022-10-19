@@ -480,5 +480,10 @@ namespace DarknessFallenMod.Utils
 
             return false;
         }
+
+        public static Rectangle MovedBy(this Rectangle rect, Vector2 offset)
+        {
+            return new Rectangle(rect.X + (int)offset.X, rect.Y + (int)offset.Y, rect.Width, rect.Height);
+        }
     }
 }

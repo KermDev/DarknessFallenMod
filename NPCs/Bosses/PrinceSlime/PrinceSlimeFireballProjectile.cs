@@ -1,8 +1,10 @@
 ﻿using DarknessFallenMod.Utils;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,6 +14,14 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
     public class PrinceSlimeFireballProjectile : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.Fireball;
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Royal Fireball");
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
+        }
 
         public override void SetDefaults()
         {
@@ -28,7 +38,7 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
             Projectile.timeLeft = 180;
         }
 
-        public const float GRAVITY = 0.8f;
+        public const float GRAVITY = 0.4f;
         int dustTimer;
         public override void AI()
         {
@@ -52,8 +62,8 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
         public override void Kill(int timeLeft)
         {
             int damage = Projectile.damage;
-            float range = 6400;
-            DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, range, npc =>
+            float rangeSQ = 6400;
+            DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, rangeSQ, npc =>
             {
                 if (npc.friendly)
                 {
@@ -61,7 +71,7 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
                 }
             });
 
-            DarknessFallenUtils.ForeachPlayerInRange(Projectile.Center, range, player =>
+            DarknessFallenUtils.ForeachPlayerInRange(Projectile.Center, rangeSQ, player =>
             {
                 if (!player.immune)
                 {
@@ -69,10 +79,19 @@ namespace DarknessFallenMod.NPCs.Bosses.PrinceSlime
                 }
             });
 
-            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.InfernoFork, 20, speedFromCenter: 10, amount: 24).ForEach(d =>
+            DarknessFallenUtils.NewDustCircular(Projectile.Center, DustID.InfernoFork, 5, speedFromCenter: 8, amount: 24, dustVelocity: Projectile.velocity).ForEach(d =>
             {
                 d.noGravity = true;
             });
+
+            SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Projectile.DrawAfterImage(prog => Color.White * 0.6f);
+            Projectile.DrawProjectileInHBCenter(Color.White);
+            return false;
         }
     }
 }

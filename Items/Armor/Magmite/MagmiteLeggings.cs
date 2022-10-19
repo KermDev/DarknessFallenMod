@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Magmite
 {
     [AutoloadEquip(EquipType.Legs)]
     public class MagmiteLeggings : ModItem
