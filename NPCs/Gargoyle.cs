@@ -63,10 +63,10 @@ namespace DarknessFallenMod.NPCs
                 NPC.ai[0] -= 1;
                 if (NPC.ai[0] <= 0)
                 {
-                    target = ((player.Center - NPC.Center) + player.Center);
-                    NPC.ai[0] = 60;
+                    target = (Vector2.Normalize(player.Center - NPC.Center) * 50f + player.Center);
+                    NPC.ai[0] = 120;
                 }
-                NPC.Center = Vector2.Lerp(NPC.Center, target, (60 - NPC.ai[0]) / 60);
+                NPC.Center = Vector2.Lerp(NPC.Center, target, (120 - NPC.ai[0]) / 120);
             }
         }
 
