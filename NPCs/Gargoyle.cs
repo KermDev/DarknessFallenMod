@@ -33,7 +33,7 @@ namespace DarknessFallenMod.NPCs
             NPC.aiStyle = 0;
 
 
-            Banner = Type;
+            //Banner = Type;
             //BannerItem = ModContent.ItemType<Items.Placeable.Banners.GargoyleBanner>();
 
         }

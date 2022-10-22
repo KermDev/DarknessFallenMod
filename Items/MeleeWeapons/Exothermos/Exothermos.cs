@@ -31,9 +31,13 @@ namespace DarknessFallenMod.Items.MeleeWeapons.Exothermos
             Item.rare = ItemRarityID.Red;
             Item.UseSound = SoundID.Item1;
 
+            Item.shoot = ModContent.ProjectileType<ExothermosProjectile>();
+            Item.shootSpeed = 10;
+
             Item.GetGlobalItem<DarknessFallenItem>().WorldGlowMask = ModContent.Request<Texture2D>(Texture + "Glowmask").Value;
         }
 
+        /*
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
         {
             target.AddBuff(ModContent.BuffType<Buffs.ExoflameBuff>(), 600);
@@ -58,6 +62,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.Exothermos
                 }
             }
         }
+        */
 
         public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
         {
