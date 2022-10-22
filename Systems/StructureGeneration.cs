@@ -113,6 +113,9 @@ namespace DarknessFallenMod.Systems
                     StyleIDS += structureChars[iterationPosition + NoPos + 1 + numberLength];
                 }
 
+                int XPos = posX + (int)Math.Floor((float)i / jSize);
+                int YPos = posY + (i % jSize);
+
                 if (TileIDS != "i" && TileIDS != "w" && TileIDS != "a")
                 {
                     int TileToPlaceID = int.Parse(TileIDS.ToString());
@@ -126,8 +129,44 @@ namespace DarknessFallenMod.Systems
                     {
                         default:
                             {
-                                WorldGen.KillTile(posX + (int)Math.Floor((float)i / jSize), posY + (i % jSize));
-                                WorldGen.PlaceTile(posX + (int)Math.Floor((float)i / jSize), posY + (i % jSize), TileToPlaceID, style: int.Parse(StyleIDS));
+                                WorldGen.PlaceTile(XPos, YPos, TileToPlaceID, style: int.Parse(StyleIDS), forced: true);
+                                break;
+                            }
+                        case "79": //bed;
+                            {
+                                if (Main.tile[XPos, YPos + 2].TileType != TileID.Stone)
+                                {
+                                    for (int TempFloor = 0; TempFloor < 4; TempFloor++)
+                                    {
+                                        WorldGen.PlaceTile(XPos + TempFloor, YPos + 2, TileID.Stone);
+                                    }
+                                }
+                                WorldGen.PlaceTile(XPos, YPos, TileToPlaceID, style: int.Parse(StyleIDS));
+                                
+                                break;
+                            }
+                        case "21": //chest;
+                            {
+                                if (Main.tile[XPos, YPos + 2].TileType != TileID.Stone)
+                                {
+                                    for (int TempFloor = 0; TempFloor < 2; TempFloor++)
+                                    {
+                                        WorldGen.PlaceTile(XPos + TempFloor, YPos + 2, TileID.Stone);
+                                    }
+                                }
+                                WorldGen.PlaceTile(XPos, YPos, TileToPlaceID, style: int.Parse(StyleIDS));
+                                break;
+                            }
+                        case "104": //grandfatherclock;
+                            {
+                                if (Main.tile[XPos, YPos + 5].TileType != TileID.Stone)
+                                {
+                                    for (int TempFloor = 0; TempFloor < 2; TempFloor++)
+                                    {
+                                        WorldGen.PlaceTile(XPos + TempFloor, YPos + 5, TileID.Stone);
+                                    }
+                                }
+                                WorldGen.PlaceTile(XPos, YPos, TileToPlaceID, style: int.Parse(StyleIDS));
                                 break;
                             }
                     }
@@ -136,7 +175,12 @@ namespace DarknessFallenMod.Systems
                 {
                     if (TileIDS == "w")
                     {
-                        WorldGen.PlaceLiquid(posX + (int)Math.Floor((float)i / jSize), posY + (i % jSize), LiquidID.Water, 255);
+                        WorldGen.PlaceLiquid(XPos, YPos, LiquidID.Water, 255);
+                    }
+
+                    if(TileIDS == "a")
+                    {
+                        WorldGen.KillTile(XPos, YPos);
                     }
                 }
 
@@ -146,7 +190,7 @@ namespace DarknessFallenMod.Systems
 
         /*Notes:
          * for the flying castle, use 
-         *  //GennerateStructureTile(x, y, 65, 36, @"C:\Users\ooba1\Documents\My Games\Terraria\tModLoader\ModSources\DarknessFallenMod\TextFile1.txt");
+         *  //GennerateStructureTile(x, y, 65, 36, path)
          * 
          * */
     }

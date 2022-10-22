@@ -1,7 +1,7 @@
 ﻿using DarknessFallenMod.Utils;
 using System;
 using System.Collections.Generic;
-
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
@@ -12,6 +12,9 @@ namespace DarknessFallenMod.NPCs
 {
     public class Gargoyle : ModNPC
     {
+        bool awake = false;
+        Vector2 target = Vector2.Zero;
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 4;
@@ -31,7 +34,7 @@ namespace DarknessFallenMod.NPCs
             NPC.DeathSound = SoundID.NPCDeath1;
 
             NPC.aiStyle = 0;
-
+            NPC.noGravity = true;
 
             //Banner = Type;
             //BannerItem = ModContent.ItemType<Items.Placeable.Banners.GargoyleBanner>();
@@ -40,7 +43,31 @@ namespace DarknessFallenMod.NPCs
 
         public override void AI()
         {
-            // Do AI
+            NPC.TargetClosest(true);
+            Player player = Main.player[NPC.target];
+
+            if (Vector2.DistanceSquared(NPC.Center, player.Center) <= 20000)
+            {
+                awake = true;
+            }
+
+            if(!awake)
+            {
+                NPC.velocity = Vector2.Zero;
+                NPC.frame = new Rectangle(0, 126, 52, 42);
+                NPC.velocity.Y += 5f;
+                return;
+            }
+            else
+            {
+                NPC.ai[0] -= 1;
+                if (NPC.ai[0] <= 0)
+                {
+                    target = ((player.Center - NPC.Center) + player.Center);
+                    NPC.ai[0] = 60;
+                }
+                NPC.Center = Vector2.Lerp(NPC.Center, target, (60 - NPC.ai[0]) / 60);
+            }
         }
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
@@ -50,7 +77,12 @@ namespace DarknessFallenMod.NPCs
 
         public override void FindFrame(int frameHeight)
         {
-            //if (NPC.velocity.X != 0 && NPC.collideY) NPC.BasicAnimation(frameHeight, 4);
+            if (awake)
+            {
+                base.FindFrame(frameHeight);
+                NPC.BasicAnimation(frameHeight, 10);
+
+            }
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
