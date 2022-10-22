@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Fungite
 {
     [AutoloadEquip(EquipType.Head)]
     public class FungiteHelmet : ModItem
@@ -89,7 +89,7 @@ namespace DarknessFallenMod.Items.Armor
 
         public override bool OnTileCollide(Vector2 oldVelocity) => false;
         public override bool MinionContactDamage() => true;
-        
+
 
         Player Player => Main.player[Projectile.owner];
 

@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Fungite
 {
     [AutoloadEquip(EquipType.Body)]
     public class FungiteChestplate : ModItem
@@ -21,7 +21,7 @@ namespace DarknessFallenMod.Items.Armor
         {
             Item.width = 29;
             Item.height = 29;
-            Item.value = Item.sellPrice(silver:72);
+            Item.value = Item.sellPrice(silver: 72);
             Item.rare = ItemRarityID.LightPurple;
             Item.defense = 6;
         }

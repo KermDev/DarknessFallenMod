@@ -36,7 +36,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.Exothermos
 
             //DarknessFallenUtils.NewDustCircular(Projectile.Hitbox.TopLeft() + Projectile.Hitbox.Size() * 0.5f + , DustID.FlameBurst, 7).ForEach(d => d.noGravity = true);
             
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 14; i++)
             {
                 int resize = 5;
                 Dust.NewDustDirect(Projectile.Hitbox.TopLeft() + (Projectile.velocity.X < 0 ? -3 : -3) * Vector2.UnitY + Vector2.One * resize, Projectile.width - resize, Projectile.height - resize, DustID.FlameBurst).noGravity = true;

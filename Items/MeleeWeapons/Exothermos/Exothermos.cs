@@ -32,7 +32,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.Exothermos
             Item.UseSound = SoundID.Item1;
 
             Item.shoot = ModContent.ProjectileType<ExothermosProjectile>();
-            Item.shootSpeed = 10;
+            Item.shootSpeed = 14;
 
             Item.GetGlobalItem<DarknessFallenItem>().WorldGlowMask = ModContent.Request<Texture2D>(Texture + "Glowmask").Value;
         }
@@ -63,6 +63,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.Exothermos
             }
         }
         */
+
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+            velocity = velocity.RotatedByRandom(MathHelper.PiOver4 * 0.09f);
+        }
 
         public override void UseItemHitbox(Player player, ref Rectangle hitbox, ref bool noHitbox)
         {

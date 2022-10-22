@@ -8,28 +8,18 @@ struct VertexShaderOutput
 
 float time;
 
-float2 imageSize;
-
-float4 source;
-
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR
 {
     float4 output = tex2D(sampleTexture, input.TextureCoordinates);
-    
-    float localCoordsY = (input.TextureCoordinates.y * imageSize.y - source.y) / source.w;
 
-    float str = 1 - localCoordsY;
-    output.rgb -= str;
-    
-    output.r += str;
-    output.g += str * 0.5f;
+    output.gb += 2;
     
     return output * output.a;
 }
 
 technique Technique1
 {
-    pass FlamePass
+    pass Pass1
     {
         PixelShader = compile ps_2_0 PixelShaderFunction();
     }
