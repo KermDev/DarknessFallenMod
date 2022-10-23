@@ -25,7 +25,7 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(silver: 72);
-            Item.rare = ItemRarityID.LightPurple;
+            Item.rare = ItemRarityID.Yellow;
             Item.defense = 3;
         }
 
@@ -36,7 +36,7 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
 
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "2 Sandstone Shards will slice your enemies (2x damage in the desert)";
+            player.setBonus = "2 Sandstone Shards will slice your enemies (2x damage in the desert)".GetColored(Color.LightGoldenrodYellow);
 
             int minionType = ModContent.ProjectileType<SandstoneShard>();
             if (player.ownedProjectileCounts[minionType] < 2)

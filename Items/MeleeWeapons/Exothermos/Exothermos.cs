@@ -7,10 +7,11 @@ using Terraria.ModLoader;
 using Microsoft.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using DarknessFallenMod.Core;
 
 namespace DarknessFallenMod.Items.MeleeWeapons.Exothermos
 {
-    public class Exothermos : ModItem
+    public class Exothermos : ModItem, IGlowmask
     {
         public override void SetDefaults()
         {
@@ -33,8 +34,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons.Exothermos
 
             Item.shoot = ModContent.ProjectileType<ExothermosProjectile>();
             Item.shootSpeed = 14;
-
-            Item.GetGlobalItem<DarknessFallenItem>().WorldGlowMask = ModContent.Request<Texture2D>(Texture + "Glowmask").Value;
         }
 
         /*

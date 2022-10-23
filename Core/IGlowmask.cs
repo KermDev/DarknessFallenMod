@@ -10,22 +10,30 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Core
 {
-    public interface IGlowmask
-    {
-        /// <summary>
-        /// Allows for custom glowmask drawing. Return false to disable automatic drawing.
-        /// </summary>
-        /// <returns></returns>
-        public virtual bool PreDraw(ref PlayerDrawSet drawInfo, Texture2D glowTex) => true;
-
-		public Texture2D GlowwmaskTexture => ModContent.Request<Texture2D>($"DarknessFallenMod/{GetType().Namespace.Replace(".", "/")}/{GetType().Name}_Glow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-    }
+	/// <summary>
+	/// Draws an item glowmask with a texture named "ItemName_Glow.png"
+	/// </summary>
+	public interface IGlowmask
+	{
+		/// <summary>
+		/// Allows for custom glowmask drawing. Return false to disable automatic drawing.
+		/// </summary>
+		/// <returns></returns>
+		public virtual bool PreDraw(ref PlayerDrawSet drawInfo, Texture2D glowTex) => true;
+		Texture2D GlowmaskTexture
+		{
+            get
+            {
+				if (this is ModItem modItem)
+					return ModContent.Request<Texture2D>($"{modItem.Texture}_Glow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+				return null;
+			}
+		}
+	}
 
     public class GlowmaskPlayerDrawLayer : PlayerDrawLayer
 	{
 		public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.ArmOverItem);
-
-		public static Dictionary<string, Texture2D> glowMasks;
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
 		{
@@ -34,8 +42,8 @@ namespace DarknessFallenMod.Core
 
 			if (drawPlayer.ItemAnimationActive && item.ModItem is IGlowmask glowMaskItem)
             {
-				Texture2D texture = glowMaskItem.GlowwmaskTexture;
-				if (!glowMaskItem.PreDraw(ref drawInfo, texture)) return;
+				Texture2D texture = glowMaskItem.GlowmaskTexture;
+				if (texture is null || !glowMaskItem.PreDraw(ref drawInfo, texture)) return;
 
 				SpriteEffects drawEffect = drawPlayer.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 

@@ -3,10 +3,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using DarknessFallenMod.Items.Materials;
 using Microsoft.Xna.Framework.Graphics;
+using DarknessFallenMod.Core;
 
 namespace DarknessFallenMod.Items.Tools.MagmiteTools
 {
-    internal class MagmiteWaraxe : ModItem
+    internal class MagmiteWaraxe : ModItem, IGlowmask
     {
         public override void SetStaticDefaults()
         {
@@ -35,8 +36,6 @@ namespace DarknessFallenMod.Items.Tools.MagmiteTools
             Item.rare = ItemRarityID.Blue;
 
             Item.UseSound = SoundID.Item1;
-
-            Item.GetGlobalItem<DarknessFallenItem>().WorldGlowMask = ModContent.Request<Texture2D>(Texture + "Glowmask").Value;
         }
 
         public override void AddRecipes()

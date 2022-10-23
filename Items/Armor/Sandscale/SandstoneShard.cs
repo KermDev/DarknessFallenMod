@@ -39,49 +39,70 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
 
         Player Player => Main.player[Projectile.owner];
 
-        Vector2 PlayerFollowPos => Player.Center + Vector2.UnitX * 50 * (Projectile.whoAmI % 2 == 0 ? 1 : -1);
-        public override void OnSpawn(IEntitySource source)
+        enum AIState
         {
-            goPos = PlayerFollowPos;
+            Idle,
+            Attack
         }
 
-        Vector2 goPos;
-        bool attacking;
+        AIState state = AIState.Idle;
         public override void AI()
         {
-            if (attacking || DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC _, npc => npc.boss, 640000f))
+            switch (state)
             {
-                float distSQ = goPos.DistanceSQ(Projectile.Center);
-                if (distSQ < 0.02f)
-                {
-                    if (!attacking && DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC target, npc => npc.boss, 640000f))
-                    {
-                        goPos = target.Center;
-                        attacking = true;
-                    }
-                    else
-                    {
-                        goPos = PlayerFollowPos;
-                        attacking = false;
-                    }
-
-                    Projectile.rotation = Projectile.Center.DirectionTo(goPos).ToRotation();
-                }
-
-            }
-            else
-            {
-                goPos = PlayerFollowPos;
-                Projectile.rotation = Player.velocity.ToRotation();
+                case AIState.Idle:
+                    Idle();
+                    break;
+                case AIState.Attack:
+                    Attack();
+                    break;
             }
 
-            if (Main.rand.NextBool(15))
+            FX();
+        }
+
+        const float INERTIA = 3;
+        const float SPEED = 4.5f;
+        void Attack()
+        {
+            Vector2 velToTarg = (currentTarget.Center + Main.rand.NextVector2Unit() * currentTarget.width * 0.5f).DirectionFrom(Projectile.Center) * SPEED;
+            Projectile.velocity = (Projectile.velocity * (INERTIA - 1) + velToTarg) / INERTIA;
+
+            Projectile.rotation = Projectile.Center.DirectionTo(currentTarget.Center).ToRotation();
+
+            if (!currentTarget.CanBeChasedBy())
+            {
+                state = AIState.Idle;
+                return;
+            }
+        }
+
+        NPC currentTarget;
+        Vector2 PlayerFollowPos => Player.Center + Vector2.UnitX * 50 * (Projectile.whoAmI % 2 == 0 ? 1 : -1);
+        void Idle()
+        {
+            Projectile.velocity = Vector2.Zero;
+
+            Projectile.Center = Vector2.Lerp(Projectile.Center, PlayerFollowPos, 0.04f);
+
+            Projectile.rotation = Projectile.Center.DirectionTo(PlayerFollowPos).ToRotation() + MathHelper.Pi;
+
+            float distSQ = Projectile.Center.DistanceSQ(PlayerFollowPos);
+            if (distSQ < 4096 && DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC target, npc => npc.boss, 640000f))
+            {
+                currentTarget = target;
+                state = AIState.Attack;
+                return;
+            }
+        }
+
+        void FX()
+        {
+            if (Main.rand.NextBool(10))
             {
                 for (int i = 0; i < 1; i++)
                     Dust.NewDustDirect(Projectile.position - Vector2.One * Projectile.width, Projectile.width * 3, Projectile.height * 3, DustID.TreasureSparkle).noGravity = true;
             }
-
-            Projectile.Center = Vector2.Lerp(Projectile.Center, goPos, 0.1f);
 
             //if (Main.rand.NextBool(7)) Dust.NewDust(Projectile.position, Projectile.width * 2, Projectile.height * 2, DustID.Sand);
         }
@@ -91,7 +112,12 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
             if (Player.ZoneDesert || Player.ZoneUndergroundDesert) damage *= 2;
         }
 
-        public override bool MinionContactDamage() => attacking;
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            if (target.whoAmI == currentTarget.whoAmI) state = AIState.Idle;
+        }
+
+        public override bool MinionContactDamage() => state == AIState.Attack;
 
         public override bool PreDraw(ref Color lightColor)
         {

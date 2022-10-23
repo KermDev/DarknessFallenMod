@@ -22,7 +22,7 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
             Item.width = 20;
             Item.height = 20;
             Item.value = Item.sellPrice(silver: 72);
-            Item.rare = ItemRarityID.LightPurple;
+            Item.rare = ItemRarityID.Yellow;
             Item.defense = 3;
         }
 

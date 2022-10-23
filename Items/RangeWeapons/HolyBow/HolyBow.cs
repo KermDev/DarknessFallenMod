@@ -7,8 +7,7 @@ using DarknessFallenMod.Core;
 
 namespace DarknessFallenMod.Items.RangeWeapons.HolyBow
 {
-    public class HolyBow : ModItem
-
+    public class HolyBow : ModItem, IGlowmask
     {
         public override void SetStaticDefaults()
         {

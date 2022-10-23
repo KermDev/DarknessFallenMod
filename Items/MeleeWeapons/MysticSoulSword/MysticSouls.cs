@@ -4,10 +4,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Audio;
 using Terraria.ModLoader;
+using DarknessFallenMod.Core;
 
 namespace DarknessFallenMod.Items.MeleeWeapons.MysticSoulSword
 {
-	public class MysticSouls : ModItem
+	public class MysticSouls : ModItem, IGlowmask
 	{
 		public override void SetStaticDefaults()
 		{
@@ -29,8 +30,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MysticSoulSword
 			Item.rare = 5;
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
-			
-			Item.GetGlobalItem<DarknessFallenItem>().WorldGlowMask = ModContent.Request<Texture2D>(Texture).Value;
         }
 
         int charger;
