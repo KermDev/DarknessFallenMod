@@ -36,19 +36,24 @@ namespace DarknessFallenMod.Items.MagicWeapons
 			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<SlimyRainProjectile>();
 			Item.shootSpeed = 5.5f;
-            Item.mana = (int)(Item.useTime / 60f * 5f);
 			Item.noMelee = true;
 		}
 
-        /*
+        float manaToEat;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-			Vector2 pos = player.Center - Vector2.UnitY * Main.screenHeight;
+            manaToEat += Item.useTime / 60f * 5f;
+            int manaInt = (int)manaToEat;
+            manaToEat -= manaInt;
+
+            player.RemoveMana(manaInt);
+
+            Vector2 pos = player.Center - Vector2.UnitY * Main.screenHeight;
 			Projectile.NewProjectileDirect(source, pos, pos.DirectionTo(Main.MouseWorld).RotatedByRandom(MathHelper.PiOver4 * 0.1f) * Item.shootSpeed, type, damage, 0, player.whoAmI).netUpdate = true;
 
             return false;
         }
-        */
+        
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {

@@ -19,7 +19,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Hell Butcher");
-            Main.projFrames[Projectile.type] = 3;
 
             ProjectileID.Sets.TrailCacheLength[Type] = 4;
             ProjectileID.Sets.TrailingMode[Type] = 4;
@@ -97,8 +96,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             Main.spriteBatch.BeginWithDefaultOptions();
             */
 
-            Projectile.DrawAfterImage(prog => Color.Lerp(Color.Yellow, Color.OrangeRed, prog) * 0.5f, animated: true, origin: new Vector2(49, 14));
-            Projectile.DrawProjectileInHBCenter(lightColor, true, origin: new Vector2(49, 14));
+            Projectile.DrawAfterImage(prog => Color.Lerp(Color.Yellow, Color.OrangeRed, prog) * 0.5f, animated: true);
+            Projectile.DrawProjectileInHBCenter(lightColor, centerOrigin: true);
 
             return false;
         }

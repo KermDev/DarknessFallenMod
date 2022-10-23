@@ -111,7 +111,7 @@ namespace DarknessFallenMod.Items.Armor.Magmite
             fireballTimer++;
             if (Player.active && fireballTimer >= fireballCd)
             {
-                if (DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC npc, 102400))
+                if (DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC npc, npc => npc.boss, 102400))
                 {
                     int i = Projectile.NewProjectile(Player.GetSource_FromThis(), Player.Center, Player.Center.DirectionTo(npc.Center) * 5, ProjectileID.Fireball, 40, 1, Player.whoAmI);
                     Main.projectile[i].friendly = true;

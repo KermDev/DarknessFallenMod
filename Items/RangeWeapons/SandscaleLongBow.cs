@@ -40,7 +40,7 @@ namespace DarknessFallenMod.Items.RangeWeapons
 
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
         {
-            if (player.ZoneDesert)
+            if (player.ZoneDesert || player.ZoneUndergroundDesert)
             {
                 damage *= 2;
             }

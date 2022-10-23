@@ -485,5 +485,11 @@ namespace DarknessFallenMod.Utils
         {
             return new Rectangle(rect.X + (int)offset.X, rect.Y + (int)offset.Y, rect.Width, rect.Height);
         }
+
+        public static void RemoveMana(this Player player, int mana)
+        {
+            player.manaRegenDelay = (int)(0.7f * ((1f - (player.statMana / player.statManaMax)) * 240 + 45));
+            player.statMana -= mana;
+        }
     }
 }

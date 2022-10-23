@@ -131,24 +131,7 @@ namespace DarknessFallenMod.Items.Pets.Sniffer
 
         public override bool PreDraw(ref Color lightColor)
         {
-            var fx = Filters.Scene["MagmiteFlame"].GetShader().Shader;
-            var tex = TextureAssets.Projectile[Type].Value;
-
-            int frameHeight = tex.Height / Main.projFrames[Type];
-            
-            //fx.Parameters["sampleTexture"].SetValue(tex);
-            //fx.Parameters["time"].SetValue(Main.GameUpdateCount * 0.05f);
-            fx.Parameters["imageSize"].SetValue(tex.Size());
-            fx.Parameters["source"].SetValue(new float[4] { 0, Projectile.frame * frameHeight, tex.Width, frameHeight });
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.BeginShader();
-            fx.CurrentTechnique.Passes[0].Apply();
-            
             Projectile.DrawProjectileInHBCenter(lightColor, true, origin: Projectile.spriteDirection == 1 ? new Vector2(20, 20) : new Vector2(36, 20));
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.BeginDefault();
             return false;
         }
     }

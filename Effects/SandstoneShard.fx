@@ -7,12 +7,13 @@ struct VertexShaderOutput
 };
 
 float time;
+float imageSize;
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR
 {
     float4 output = tex2D(sampleTexture, input.TextureCoordinates);
 
-    output.gb += 2;
+    output.rgb += sin((input.TextureCoordinates.x + input.TextureCoordinates.y) * 6 + time) * 0.3;
     
     return output * output.a;
 }

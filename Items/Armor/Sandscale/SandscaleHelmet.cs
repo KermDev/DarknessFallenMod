@@ -36,13 +36,13 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
 
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "2 Sandstone Shards will slice your enemies";
+            player.setBonus = "2 Sandstone Shards will slice your enemies (2x damage in the desert)";
 
             int minionType = ModContent.ProjectileType<SandstoneShard>();
             if (player.ownedProjectileCounts[minionType] < 2)
             {
                 Projectile proj = Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, minionType, 10, 0, player.whoAmI);
-                proj.originalDamage = 10;
+                proj.originalDamage = 4;
             }
 
             Main.projectile.ForEach(proj =>
