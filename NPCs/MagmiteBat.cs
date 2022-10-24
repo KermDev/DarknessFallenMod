@@ -29,7 +29,9 @@ namespace DarknessFallenMod.NPCs
             NPC.aiStyle = NPCAIStyleID.Bat;
             AIType = NPCID.CaveBat;
 
-            Banner = Type;
+            AnimationType = NPCID.CaveBat;
+
+            //Banner = Type;
             //BannerItem = ModContent.ItemType<Items.Placeable.Banners.>();
         }
 

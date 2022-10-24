@@ -29,7 +29,9 @@ namespace DarknessFallenMod.NPCs
             NPC.aiStyle = NPCAIStyleID.Slime;
             AIType = NPCID.BlueSlime;
 
-            Banner = Type;
+            AnimationType = NPCID.BlueSlime;
+
+            //Banner = Type;
             //BannerItem = ModContent.ItemType<Items.Placeable.Banners.>();
         }
 
