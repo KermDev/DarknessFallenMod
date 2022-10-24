@@ -61,39 +61,72 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
             FX();
         }
 
-        const float INERTIA = 3;
-        const float SPEED = 4.5f;
+
+        const float SPEED = 9f;
+
+        bool stop;
+
+        Vector2 originalPos;
         void Attack()
         {
-            Vector2 velToTarg = (currentTarget.Center + Main.rand.NextVector2Unit() * currentTarget.width * 0.5f).DirectionFrom(Projectile.Center) * SPEED;
-            Projectile.velocity = (Projectile.velocity * (INERTIA - 1) + velToTarg) / INERTIA;
-
-            Projectile.rotation = Projectile.Center.DirectionTo(currentTarget.Center).ToRotation();
-
-            if (!currentTarget.CanBeChasedBy())
+            if (!stop)
             {
-                state = AIState.Idle;
+                float distSQ = Projectile.Center.DistanceSQ(originalPos);
+                if (distSQ > distToEnemy)
+                {
+                    stop = true;
+                }
+            }
+            else
+            {
+                Projectile.velocity *= 0.97f;
+
+                float velLengthSQ = Projectile.velocity.LengthSquared();
+
+                if (velLengthSQ < 0.0001f)
+                {
+                    stop = false;
+
+                    if (DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC target, npc => npc.boss, MAXDIST))
+                    {
+                        AttackTarget(target);
+
+                        return;
+                    }
+                    else
+                    {
+                        state = AIState.Idle;
+                        return;
+                    }
+                }
+            }
+        }
+
+        Vector2 PlayerFollowPos => Player.Center + Vector2.UnitX * 50 * (Projectile.whoAmI % 2 == 0 ? 1 : -1);
+        const float MAXDIST = 640000f;
+        float distToEnemy;
+        void Idle()
+        {
+            Projectile.Center = Vector2.Lerp(Projectile.Center, PlayerFollowPos, 0.04f);
+            Projectile.rotation = Player.velocity.ToRotation();
+
+            if (DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC target, npc => npc.boss, MAXDIST))
+            {
+                AttackTarget(target);
+                
                 return;
             }
         }
 
-        NPC currentTarget;
-        Vector2 PlayerFollowPos => Player.Center + Vector2.UnitX * 50 * (Projectile.whoAmI % 2 == 0 ? 1 : -1);
-        void Idle()
+        void AttackTarget(NPC target)
         {
-            Projectile.velocity = Vector2.Zero;
+            originalPos = Projectile.Center;
+            distToEnemy = Projectile.Center.DistanceSQ(target.Center);
 
-            Projectile.Center = Vector2.Lerp(Projectile.Center, PlayerFollowPos, 0.04f);
+            Projectile.velocity = Projectile.Center.DirectionTo(target.Center) * SPEED;
+            Projectile.rotation = Projectile.velocity.ToRotation();
 
-            Projectile.rotation = Projectile.Center.DirectionTo(PlayerFollowPos).ToRotation() + MathHelper.Pi;
-
-            float distSQ = Projectile.Center.DistanceSQ(PlayerFollowPos);
-            if (distSQ < 4096 && DarknessFallenUtils.TryGetClosestEnemyNPC(Player.Center, out NPC target, npc => npc.boss, 640000f))
-            {
-                currentTarget = target;
-                state = AIState.Attack;
-                return;
-            }
+            state = AIState.Attack;
         }
 
         void FX()
@@ -112,10 +145,12 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
             if (Player.ZoneDesert || Player.ZoneUndergroundDesert) damage *= 2;
         }
 
+        
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (target.whoAmI == currentTarget.whoAmI) state = AIState.Idle;
+            stop = true;
         }
+        
 
         public override bool MinionContactDamage() => state == AIState.Attack;
 

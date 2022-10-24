@@ -41,7 +41,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
 		}
 
 		public static float speedMultiplier = 1;
-		public static readonly float maxSpeedMult = 2f;
+		public static readonly float maxSpeedMult = 2.5f;
 
 		public static bool alt;
         public override bool CanUseItem(Player player)

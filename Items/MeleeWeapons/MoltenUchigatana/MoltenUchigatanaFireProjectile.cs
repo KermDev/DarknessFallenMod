@@ -30,7 +30,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             Projectile.hostile = false;
             Projectile.penetrate = -1;
             Projectile.timeLeft = 900;
-            Projectile.light = 2.50f;
             Projectile.ignoreWater = false;
             Projectile.tileCollide = false;
 
@@ -62,7 +61,10 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
                     Projectile.velocity.Y
                     );
             }
-            
+
+
+            if (!Main.dedServ)
+                Lighting.AddLight(Projectile.Center, 8f, 1.5f, 1.5f);
         }
 
         public override bool PreDraw(ref Color lightColor)

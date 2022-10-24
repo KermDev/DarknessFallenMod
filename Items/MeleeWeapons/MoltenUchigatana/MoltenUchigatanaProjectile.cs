@@ -130,7 +130,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
                 Player.MountedCenter - rotationVector * bladeLenght * 0.5f,
                 -rotationVector * 25,
                 ModContent.ProjectileType<MoltenUchigatanaFireProjectile>(),
-                200,
+                350,
                 92,
                 Projectile.owner
                 );
@@ -211,10 +211,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             Main.spriteBatch.BeginReset(DarknessFallenUtils.BeginType.Shader, DarknessFallenUtils.BeginType.Default, s =>
             {
                 Projectile.DrawAfterImage(
-                    prog => Color.Lerp(Color.OrangeRed, Color.Black, prog) * 0.1f,
+                    prog => Color.Lerp(Color.OrangeRed, Color.White, prog) * 0.1f,
                     rotOffset: i => drawRotOffset,
                     posOffset: i => -Projectile.Center + Player.MountedCenter + Projectile.oldRot[i].ToRotationVector2() * bladeLenght * 0.5f + rotationVector.RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(-5, 5),
-                    altTex: ModContent.Request<Texture2D>(Texture + "AfterImage").Value,
                     scaleOffset: Vector2.One * (Main.rand.NextBool(7) ? 0.2f : 0)
                     );
             });
