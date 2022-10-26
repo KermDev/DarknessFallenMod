@@ -91,10 +91,6 @@ namespace DarknessFallenMod.NPCs
             {
                 NPC.damage = 9;
             }
-
-            Main.NewText(TargetDirection);
-            Main.NewText($"MOve, {MoveDirection}");
-            Main.NewText($"Velocity: {NPC.velocity}");
             if (TargetDirection != MoveDirection)
             {
                 NPC.velocity.X += 0.25f * TargetDirection * SpeedFactor; //going left;
@@ -106,7 +102,7 @@ namespace DarknessFallenMod.NPCs
 
             if(NPC.collideY && NPC.Center.Y > player.Center.Y)
             {
-                NPC.velocity.Y -= 4f;
+                NPC.velocity.Y -= 5f;
             }
         }
     }
