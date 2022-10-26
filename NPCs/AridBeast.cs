@@ -100,10 +100,13 @@ namespace DarknessFallenMod.NPCs
                 NPC.velocity.X += 0.5f * TargetDirection * SpeedFactor; //going right
             }
 
-            if(NPC.collideY && NPC.Center.Y > player.Center.Y)
+            if(NPC.collideY && NPC.Center.Y > player.Center.Y && (NPC.ai[1] <= 0 || NPC.collideX))
             {
-                NPC.velocity.Y -= 5f;
+                NPC.ai[1] = 3;
+                NPC.velocity.Y -= 7f;
             }
+
+            NPC.ai[1] -= 0.01666f;
         }
     }
 }
