@@ -118,10 +118,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
         }
 
         float bladeLenght => TextureAssets.Projectile[Type].Value.Width * 1.7f;
-
+        float bladeWidth = 20;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.MountedCenter, Player.MountedCenter + rotatedDirection * bladeLenght);
+            float _ = 0;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.MountedCenter, Player.MountedCenter + rotatedDirection * bladeLenght, bladeWidth, ref _);
         }
 
         VertexStrip vrtx = new();

@@ -158,9 +158,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
         }
 
         float bladeLenght => TextureAssets.Projectile[Type].Value.Width * 1.414213562373095f;
+        float bladeWidth = 7;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.MountedCenter, Player.MountedCenter + rotationVector * bladeLenght))
+            float _ = 0;
+            if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.MountedCenter, Player.MountedCenter + rotationVector * bladeLenght, bladeWidth, ref _))
             {
                 SpawnSpinDust(14);
                 return true;

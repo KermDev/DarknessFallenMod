@@ -45,7 +45,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
         const int animSpeed = 5;
         public override void AI()
         {
-            Projectile.velocity *= 0.8f;
+            Projectile.velocity *= 0.92f;
             Projectile.scale += 0.02f;
 
             Projectile.BasicAnimation(animSpeed);

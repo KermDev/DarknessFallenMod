@@ -43,7 +43,11 @@ namespace DarknessFallenMod.Items.RangeWeapons
             Vector2 pos = position + offset;
             for (int i = 0; i < 2; i++)
             {
-                Projectile.NewProjectile(source, pos, velocity, type, damage, knockback, player.whoAmI);
+                Projectile proj = Projectile.NewProjectileDirect(source, pos, velocity, type, damage, knockback, player.whoAmI);
+
+                proj.usesIDStaticNPCImmunity = false;
+                proj.usesLocalNPCImmunity = true;
+                proj.localNPCHitCooldown = 60;
 
                 pos -= 2 * offset;
             }
