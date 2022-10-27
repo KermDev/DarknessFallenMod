@@ -22,9 +22,29 @@ using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod
 {
-    public class DarknessFallenWorld : ModSystem
+	public class DarknessFallenWorld : ModSystem
 	{
 		string FlyingCastleTiles = "";
+
+		public override void PreUpdateWorld()
+		{
+			if (Main.time == 0 && Main.dayTime)
+			{
+				for (int i = 0; i < Main.player.Length; i++)
+				{
+					try
+                    {
+						Main.player[i].GetModPlayer<DarknessFallenPlayer>().HasRodGambled = false;
+						Main.player[i].GetModPlayer<DarknessFallenPlayer>().GambleRodBuff = -1;
+					}
+					catch
+                    {
+						return;
+                    }
+				}
+			}
+		}
+
 		public override void PostWorldGen()
 		{
 			// chest style 1 is gold chest
@@ -39,13 +59,13 @@ namespace DarknessFallenMod
 		}
 
 		void SpawnItemsInChest(int[][] items)
-        {
+		{
 			foreach (Chest chest in Main.chest)
 			{
 				if (chest == null) continue;
-				
-                for (int i = 0; i < items.Length; i++)
-                {
+
+				for (int i = 0; i < items.Length; i++)
+				{
 					int chestStyle = items[i][2];
 
 					if (TileObjectData.GetTileStyle(Main.tile[chest.x, chest.y]) == chestStyle)
@@ -64,18 +84,18 @@ namespace DarknessFallenMod
 							item.stack = Math.Clamp(itemStack, 1, item.maxStack);
 						}
 					}
-                }
-				
+				}
+
 			}
 		}
 
 		int[] SetChestItem(int itemType, int chanceDenominator, int chestStyle, int itemStack)
-        {
-			return new int[] { itemType, chanceDenominator, chestStyle, itemStack};
-        }
+		{
+			return new int[] { itemType, chanceDenominator, chestStyle, itemStack };
+		}
 
-        int[] SetChestItem(int itemType, int chanceDenominator, int chestStyle, int itemStackMin, int itemStackMax)
-        {
+		int[] SetChestItem(int itemType, int chanceDenominator, int chestStyle, int itemStackMin, int itemStackMax)
+		{
 			return new int[] { itemType, chanceDenominator, chestStyle, itemStackMin, itemStackMax };
 		}
 
@@ -91,8 +111,8 @@ namespace DarknessFallenMod
 			}
 		}
 
-        // 6. This is the actual world generation code.
-        private void FlyingCastleGeneration(GenerationProgress progress, GameConfiguration configuration)
+		// 6. This is the actual world generation code.
+		private void FlyingCastleGeneration(GenerationProgress progress, GameConfiguration configuration)
 		{
 			// 7. Setting a progress message is always a good idea. This is the message the user sees during world generation and can be useful for identifying infinite loops.      
 			progress.Message = DarknessFallenUtils.FlyingCastleGenMessage;
@@ -119,4 +139,4 @@ namespace DarknessFallenMod
 			Systems.StructureGeneration.GenerateStructureTlies(x, y, 65, 36, FlyingCastleTiles);
 		}
 	}
-}	
+}

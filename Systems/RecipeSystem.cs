@@ -1,11 +1,16 @@
-﻿using System;
+﻿using DarknessFallenMod.Items;
+using DarknessFallenMod.NPCs;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-
 using Terraria;
+using Terraria.GameContent.Generation;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.GameContent;
 using System.Linq;
+using System;
+using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Systems
 {
@@ -35,6 +40,17 @@ namespace DarknessFallenMod.Systems
             //ConsumableGroup();
             PlatformGroup();
             TorchGroup();
+            FishingRodGroup();
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe = Recipe.Create(ModContent.ItemType<Items.Tools.GamblerRod.GamblerRod>());
+            recipe
+                .AddIngredient(ItemID.Goldfish, stack: 5)
+                .AddRecipeGroup(nameof(ItemID.WoodFishingPole))
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
 
         /*
@@ -88,6 +104,12 @@ namespace DarknessFallenMod.Systems
             torches.IconicItemId = ItemID.Torch;
             torches.GetText = () => "Any torch";
             RecipeGroup.RegisterGroup("Torches", torches);
+        }
+
+        void FishingRodGroup()
+        {
+            RecipeGroup FishingRods = new RecipeGroup(() => $"{Language.GetTextValue("LegacyMisc.37")} {Lang.GetItemName(ItemID.WoodFishingPole)}", ItemID.WoodFishingPole, ItemID.ReinforcedFishingPole, ItemID.FisherofSouls, ItemID.Fleshcatcher, ItemID.ScarabFishingRod, ItemID.BloodFishingRod, ItemID.FiberglassFishingPole, ItemID.MechanicsRod, ItemID.SittingDucksFishingRod, ItemID.HotlineFishingHook, ItemID.GoldenFishingRod, ModContent.ItemType<Items.Tools.LightRod.LightRod>());
+            RecipeGroup.RegisterGroup(nameof(ItemID.WoodFishingPole), FishingRods);
         }
     }
 }
