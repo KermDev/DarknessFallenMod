@@ -91,10 +91,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 
         float SwordResize => swingSpeed * 0.6f;
         const int bladeLenght = 68;
+        float bladeWidth = 14;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             Vector2 bladeDir = Projectile.rotation.ToRotationVector2();
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + bladeDir * (bladeLenght + bladeLenght * SwordResize));
+            float _ = 0;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + bladeDir * (bladeLenght + bladeLenght * SwordResize), bladeWidth, ref _);
         }
 
         public override void SendExtraAI(BinaryWriter writer)

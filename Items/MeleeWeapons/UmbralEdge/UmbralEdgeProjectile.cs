@@ -72,9 +72,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.UmbralEdge
         }
 
         const int swordLength = 84;
+        float swordWidth = 13;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * swordLength);
+            float _ = 0;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * swordLength, swordWidth, ref _);
         }
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
