@@ -18,7 +18,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.PhaloriteStabber
 
         public override void SetDefaults()
         {
-            Item.damage = 170;
+            Item.damage = 164;
             Item.DamageType = DamageClass.Melee;
             Item.width = 36;
             Item.height = 36;

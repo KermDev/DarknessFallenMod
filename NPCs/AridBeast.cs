@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Terraria;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
+using Terraria.ID;
+using Terraria.Audio;
 
 namespace DarknessFallenMod.NPCs
 {
@@ -118,6 +120,7 @@ namespace DarknessFallenMod.NPCs
 
         public override void OnKill()
         {
+            SoundEngine.PlaySound(SoundID.NPCDeath11);
             Item.NewItem(NPC.GetSource_Death(), NPC.Center, ModContent.ItemType<Items.Materials.SandstoneScales>(), Stack:new Random().Next(1, 9));
         }
     }
