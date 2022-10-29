@@ -115,5 +115,10 @@ namespace DarknessFallenMod.NPCs
 
             NPC.ai[1] -= 0.01666f;
         }
+
+        public override void OnKill()
+        {
+            Item.NewItem(NPC.GetSource_Death(), NPC.Center, ModContent.ItemType<Items.Materials.SandstoneScales>(), Stack:new Random().Next(1, 9));
+        }
     }
 }
