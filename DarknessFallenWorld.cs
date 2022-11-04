@@ -60,6 +60,8 @@ namespace DarknessFallenMod
 
 		void SpawnItemsInChest(int[][] items)
 		{
+			
+
 			foreach (Chest chest in Main.chest)
 			{
 				if (chest == null) continue;

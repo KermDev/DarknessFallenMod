@@ -107,6 +107,15 @@ namespace DarknessFallenMod.Utils
         {
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
         }
+
+        /// <summary>
+        /// Begins the spritebatch with <see cref="SpriteSortMode.BackToFront"/> and <see cref="BlendState.Additive"/>
+        /// </summary>
+        /// <param name="spriteBatch">The spritebatch to begin</param>
+        public static void BeginAdditive(this SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.Additive);
+        }
         #endregion
 
         #region Entity Draw Code
