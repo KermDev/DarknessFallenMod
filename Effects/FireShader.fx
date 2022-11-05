@@ -15,9 +15,9 @@ float4 PixelPass(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR
 {
     float4 color = tex2D(samplerTexture, coords);
     
-    color.rgb *= noise(time % .1);
+    color.rgb = 0;
     
-    return color * color.a;
+    return color;
 }
 
 technique Technique1

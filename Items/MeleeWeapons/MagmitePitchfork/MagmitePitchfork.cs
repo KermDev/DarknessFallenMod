@@ -11,18 +11,18 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
     {
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Holy Greatsword");
-			Tooltip.SetDefault("A great sword powered by the souls of light");
+			//DisplayName.SetDefault("");
+			//Tooltip.SetDefault("A great sword powered by the souls of light");
 		}
 
 		public override void SetDefaults()
 		{
-			Item.damage = 140;
+			Item.damage = 25;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;
-			Item.useTime = 45;
-			Item.useAnimation = 45;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
 			Item.useStyle = -1;
 			Item.knockBack = 8;
 			Item.value = 17500;
@@ -35,5 +35,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
 			Item.shootSpeed = 9f;
 			Item.reuseDelay = 0;
 		}
-	}
+
+        public override bool CanUseItem(Player player)
+        {
+            return player.ownedProjectileCounts[Item.shoot] == 0 && player.ownedProjectileCounts[ModContent.ProjectileType<MagmitePitchforkThrownProjectile>()] == 0;
+        }
+
+        public override bool AltFunctionUse(Player player) => true;
+    }
 }

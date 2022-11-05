@@ -19,40 +19,79 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
 
         public override void SetDefaults()
         {
-            Projectile.width = 5;
-            Projectile.height = 5;
+            Projectile.width = 40;
+            Projectile.height = 40;
             Projectile.aiStyle = 0;
-            Projectile.DamageType = DamageClass.Magic;
+            Projectile.DamageType = DamageClass.Ranged;
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.ignoreWater = true;
             Projectile.tileCollide = true;
             Projectile.timeLeft = 55;
             Projectile.penetrate = -1;
-            Projectile.alpha = 255;
-            Projectile.scale = 0;
 
-            Projectile.idStaticNPCHitCooldown = 10;
+            //Projectile.localNPCHitCooldown = 60;
+            //Projectile.usesLocalNPCImmunity = true;
+
             Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 5;
         }
 
+        bool purple;
+        float sizeMult;
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.velocity = Projectile.velocity.RotatedByRandom(0.15f);
+            float randRot = 0.1f * Main.rand.NextFloatDirection();
+            sizeMult = Main.rand.NextFloat(0.7f, 1.2f);
+
+            purple = Main.rand.NextBool();
+
+            Projectile.velocity = Projectile.velocity.RotatedBy(randRot);
+            Projectile.scale = 0f;
         }
 
+        float alpha = 1f;
         public override void AI()
         {
-            Projectile.velocity *= 0.98f;
+            Projectile.velocity *= 0.95f;
 
-            if (Projectile.timeLeft < 20)
+            if (Projectile.timeLeft < 30)
             {
-                Projectile.scale *= 0.9f;
+                alpha -= 0.03f;
+                Projectile.velocity.Y -= 0.25f;
             }
             else if (Projectile.scale < 1)
             {
                 Projectile.scale += 0.14f;
             }
+
+            if (!Main.dedServ)
+            {
+                Lighting.AddLight(
+                    Projectile.Center,
+                    purple ? 0.2f : 0.4f,
+                    purple ? 0 : 0.2f,
+                    purple ? 0.6f : 0
+                    );
+            }
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            if (purple)
+            {
+                target.AddBuff(BuffID.ShadowFlame, 300);
+            }
+            else
+            {
+                target.AddBuff(BuffID.OnFire, 300);
+            }
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Projectile.velocity = oldVelocity * 0.4f;
+            return false;
         }
 
         public override void Kill(int timeLeft)
@@ -60,40 +99,38 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
             //Dust.NewDust(Projectile.Center, 0, 0, DustID.Firefly, Projectile.velocity.X, Projectile.velocity.Y);
         }
 
-        public override void PostDraw(Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            var fx = Filters.Scene["FireShader"].GetShader().Shader;
-
-            fx.Parameters["time"].SetValue(Main.GameUpdateCount * 0.001f);
-
             Main.spriteBatch.End();
             Main.spriteBatch.BeginAdditive();
-            fx.CurrentTechnique.Passes[0].Apply();
 
             Texture2D texture = ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Glow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
+            Color lerp1 = purple ? Color.Purple : Color.DarkOrange;
+            Color lerp2 = purple ? Color.BlueViolet : Color.Red;
+
             Main.spriteBatch.Draw(
                 texture,
-                Projectile.Center - Main.screenPosition,
+                Projectile.Center - Main.screenPosition + Main.rand.NextVector2Unit() * 5 * Projectile.scale * sizeMult,
                 null,
-                Color.Lerp(Color.Yellow, Color.Red, Main.rand.NextFloat()) * 0.8f,
-                0,
+                Color.Lerp(lerp1, lerp2, Main.rand.NextFloat()) * 0.95f * alpha,
+                Main.rand.NextFloatDirection(),
                 texture.Size() * 0.5f,
-                0.6f * Main.rand.NextFloat() * Projectile.scale,
+                0.5f * (Main.rand.NextFloat(0.7f, 1.5f)) * Projectile.scale * sizeMult,
                 SpriteEffects.None,
                 0
                 );
 
-            for (int i = 0; i < Main.rand.Next(3, 7); i++)
+            for (int i = 0; i < Main.rand.Next(3, 6); i++)
             {
                 Main.spriteBatch.Draw(
                 texture,
-                Projectile.Center - Main.screenPosition + Main.rand.NextVector2Unit() * 12 * Projectile.scale,
+                Projectile.Center - Main.screenPosition + Main.rand.NextVector2Unit() * 12 * Projectile.scale * sizeMult,
                 null,
-                Color.Lerp(Color.Red, Color.OrangeRed, Main.rand.NextFloat()) * 0.9f,
-                0,
+                Color.Lerp(lerp1, lerp2, Main.rand.NextFloat()) * 0.8f * alpha,
+                Main.rand.NextFloatDirection(),
                 texture.Size() * 0.5f,
-                0.3f * Main.rand.NextFloat() * Projectile.scale,
+                0.3f * Main.rand.NextFloat() * Projectile.scale * sizeMult,
                 SpriteEffects.None,
                 0
                 );
@@ -101,6 +138,8 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
 
             Main.spriteBatch.End();
             Main.spriteBatch.BeginDefault();
+
+            return false;
         }
     }
 }

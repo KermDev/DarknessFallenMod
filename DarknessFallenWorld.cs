@@ -32,15 +32,13 @@ namespace DarknessFallenMod
 			{
 				for (int i = 0; i < Main.player.Length; i++)
 				{
-					try
+					Player player = Main.player[i];
+
+					if (player is not null)
                     {
-						Main.player[i].GetModPlayer<DarknessFallenPlayer>().HasRodGambled = false;
-						Main.player[i].GetModPlayer<DarknessFallenPlayer>().GambleRodBuff = -1;
+						player.GetModPlayer<DarknessFallenPlayer>().HasRodGambled = false;
+						player.GetModPlayer<DarknessFallenPlayer>().GambleRodBuff = -1;
 					}
-					catch
-                    {
-						return;
-                    }
 				}
 			}
 		}
@@ -60,8 +58,6 @@ namespace DarknessFallenMod
 
 		void SpawnItemsInChest(int[][] items)
 		{
-			
-
 			foreach (Chest chest in Main.chest)
 			{
 				if (chest == null) continue;
@@ -101,36 +97,22 @@ namespace DarknessFallenMod
 			return new int[] { itemType, chanceDenominator, chestStyle, itemStackMin, itemStackMax };
 		}
 
-		// 3. We use the ModifyWorldGenTasks method to tell the game the order that our world generation code should run
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
-			// 4. We use FindIndex to locate the index of the vanilla world generation task called "Shinies". This ensures our code runs at the correct step.
 			int FloatingIsland = tasks.FindIndex(genpass => genpass.Name.Equals("Floating Island Houses"));
 			if (FloatingIsland != -1)
 			{
-				// 5. We register our world generation pass by passing in a name and the method that will execute our world generation code.	
 				tasks.Insert(FloatingIsland + 1, new PassLegacy(DarknessFallenUtils.FlyingCastleGenMessage, FlyingCastleGeneration));
 			}
 		}
 
-		// 6. This is the actual world generation code.
 		private void FlyingCastleGeneration(GenerationProgress progress, GameConfiguration configuration)
-		{
-			// 7. Setting a progress message is always a good idea. This is the message the user sees during world generation and can be useful for identifying infinite loops.      
+		{    
 			progress.Message = DarknessFallenUtils.FlyingCastleGenMessage;
 
-
-			// 8. Here we use a for loop to run the code inside the loop many times. This for loop scales to the product of Main.maxTilesX, Main.maxTilesY, and 2E-05. 2E-05 is scientific notation and equal to 0.00002. Sometimes scientific notation is easier to read when dealing with a lot of zeros.
-			// 9. In a small world, this math results in 4200 * 1200 * 0.00002, which is about 100. This means that we'll run the code inside the for loop 100 times. This is the amount Crimtane or Demonite will spawn. Since we are scaling by both dimensions of the world size, the ammount spawned will adjust automatically to different world sizes for a consistent distribution of ores.
-			//for (int k = 0; k < (int)((Main.maxTilesX * Main.maxTilesY) * 6E-05); k++)
-			//{
-			// 10. We randomly choose an x and y coordinate. The x coordinate is choosen from the far left to the far right coordinates. The y coordinate, however, is choosen from between WorldGen.worldSurfaceLow and the bottom of the map. We can use this technique to determine the depth that our ore should spawn at.
 			int x = new Random().Next(60, Main.maxTilesX - 150);
 			int y = 68;
 
-			// 11. Finally, we do the actual world generation code. In this example, we use the WorldGen.TileRunner method. This method spawns splotches of the Tile type we provide to the method. The behavior of TileRunner is detailed in the Useful Methods section below.
-			//	WorldGen.TileRunner(x, y, WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(2, 6), TileID.CobaltBrick);
-			//}		
 
 			using (Stream fileStream = Mod.GetFileStream("Structures/FlyingCastleTiles.txt"))
 			using (StreamReader reader = new StreamReader(fileStream))

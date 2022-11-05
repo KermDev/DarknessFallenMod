@@ -24,10 +24,10 @@ namespace DarknessFallenMod.Utils
         public const string SoundsPath = "DarknessFallenMod/Sounds/";
 
 
-        public static void OffsetShootPos(ref Vector2 position, Vector2 velocity, Vector2 offset)
+        public static void OffsetShootPos(ref Vector2 position, Vector2 velocity, Vector2 offset, bool noHitCheck = false)
         {
             Vector2 shootOffset = offset.RotatedBy(velocity.ToRotation());
-            if (Collision.CanHit(position, 5, 5, position + shootOffset, 5, 5))
+            if (noHitCheck || Collision.CanHit(position, 5, 5, position + shootOffset, 5, 5))
             {
                 position += shootOffset;
             }

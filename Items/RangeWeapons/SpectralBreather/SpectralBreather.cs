@@ -1,4 +1,5 @@
-﻿using DarknessFallenMod.Items.MagicWeapons;
+﻿using DarknessFallenMod.Core;
+using DarknessFallenMod.Items.MagicWeapons;
 using DarknessFallenMod.Utils;
 using Microsoft.Xna.Framework;
 using System;
@@ -11,11 +12,11 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
 {
-    public class SpectralBreather : ModItem
+    public class SpectralBreather : ModItem, IGlowmask
     {
         public override void SetDefaults()
         {
-            Item.damage = 24;
+            Item.damage = 50;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 43;
             Item.height = 43;
@@ -25,21 +26,30 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
             Item.knockBack = 0;
             Item.value = 18764;
             Item.rare = 3;
-            Item.UseSound = SoundID.Item8;
+            Item.UseSound = SoundID.Item10;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<SpectralBreatherProjectile>();
-            Item.shootSpeed = 14f;
+            Item.shootSpeed = 18f;
             Item.noMelee = true;
+            Item.channel = true;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            DarknessFallenUtils.OffsetShootPos(ref position, velocity, Vector2.UnitX * 55);
+            DarknessFallenUtils.OffsetShootPos(ref position, velocity, Vector2.UnitX * 55, true);
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            if (Main.rand.NextBool(18)) Gore.NewGore(source, position, velocity.RotatedByRandom(0.3f) * 0.2f, GoreID.Smoke1 + Main.rand.Next(3), Main.rand.NextFloat(0.5f, 0.8f));
+            Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
+
+            if (Main.rand.NextBool(4))
+            {
+                Vector2 vel1 = velocity.RotatedByRandom(0.1f) * 0.2f;
+                Dust.NewDustDirect(position, 0, 0, DustID.InfernoFork, vel1.X, vel1.Y, Scale: Main.rand.NextFloat() * 2).noGravity = true;
+
+                Dust.NewDust(position, 0, 0, DustID.Smoke, 0, -4, Scale: Main.rand.NextFloat());
+            }
             return base.Shoot(player, source, position, velocity, type, damage, knockback);
         }
 

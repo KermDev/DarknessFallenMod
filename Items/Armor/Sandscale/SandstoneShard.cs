@@ -150,7 +150,6 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
         {
             stop = true;
         }
-        
 
         public override bool MinionContactDamage() => state == AIState.Attack;
 

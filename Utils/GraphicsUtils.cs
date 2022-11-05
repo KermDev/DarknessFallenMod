@@ -114,7 +114,7 @@ namespace DarknessFallenMod.Utils
         /// <param name="spriteBatch">The spritebatch to begin</param>
         public static void BeginAdditive(this SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.Additive);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
         #endregion
 
