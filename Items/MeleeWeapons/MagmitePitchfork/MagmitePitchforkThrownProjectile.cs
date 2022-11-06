@@ -15,6 +15,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
     {
         public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/MagmitePitchfork/MagmitePitchforkProjectile";
 
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 30;
+            ProjectileID.Sets.TrailingMode[Type] = 2;
+        }
         public override void SetDefaults()
         {
             Projectile.width = 10;
@@ -37,6 +42,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
 
         public NPC StabbedNPC { get; set; }
         public Vector2 OffsetFromCenter { get; set; }
+
+        int damageMultiplierTimer;
         public override void AI()
         {
             Projectile.velocity.Y += 0.2f;
@@ -45,6 +52,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
             StabbedNPC.Center = OffsetFromCenter + Projectile.Center;
             StabbedNPC.velocity = Vector2.Zero;
 
+            damageMultiplierTimer++;
             
             if (DarknessFallenUtils.SolidTerrain(StabbedNPC.Hitbox))
             {
@@ -64,15 +72,16 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
 
         void Explode()
         {
-            int radius = 2304;
-
             SoundEngine.PlaySound(SoundID.Item66, Projectile.Center);
 
-            DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, MathF.Pow((StabbedNPC.width > StabbedNPC.height ? StabbedNPC.width : StabbedNPC.height) + 48, 2), npc =>
+            int maxDamageTimer = 120;
+            int damage = (int)(Projectile.damage * ((float)Math.Clamp(damageMultiplierTimer, 1, maxDamageTimer) / maxDamageTimer));
+
+            DarknessFallenUtils.ForeachNPCInRange(Projectile.Center, MathF.Pow((StabbedNPC.width > StabbedNPC.height ? StabbedNPC.width : StabbedNPC.height) + 78, 2), npc =>
             {
                 if (!npc.friendly && npc.life > 0 && npc.active && npc.immune[Projectile.owner] <= 0)
                 {
-                    Main.player[Projectile.owner].ApplyDamageToNPC(npc, Projectile.damage, 2, Projectile.HitDirection(npc.Center), true);
+                    Main.player[Projectile.owner].ApplyDamageToNPC(npc, damage, 2, Projectile.HitDirection(npc.Center), true);
                 }
             });
 
@@ -83,6 +92,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
 
         public override bool PreDraw(ref Color lightColor)
         {
+            Projectile.DrawAfterImage(prog => Color.Lerp(Color.Red, Color.Yellow, prog) * 0.1f, origin: Vector2.Zero, rotOffset: i => (Projectile.oldRot[i] == 0 ? Projectile.rotation : 0) + MathHelper.PiOver2 + MathHelper.PiOver4, oldPos: true);
             Projectile.DrawProjectileInHBCenter(lightColor, origin: Vector2.Zero, rotOffset: MathHelper.PiOver2 + MathHelper.PiOver4);
             return false;
         }

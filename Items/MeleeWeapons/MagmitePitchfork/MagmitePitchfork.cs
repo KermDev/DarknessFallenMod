@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DarknessFallenMod.Utils;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 using Terraria;
@@ -12,12 +14,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
 		public override void SetStaticDefaults()
 		{
 			//DisplayName.SetDefault("");
-			//Tooltip.SetDefault("A great sword powered by the souls of light");
+			Tooltip.SetDefault("Use RMB to stab enemies then LMB to throw them with tremendous force.".GetColored(Color.OrangeRed));
 		}
 
 		public override void SetDefaults()
 		{
-			Item.damage = 25;
+			Item.damage = 75;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;

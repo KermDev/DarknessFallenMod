@@ -17,6 +17,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
     {
         Player Player => Main.player[Projectile.owner];
 
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 4;
+        }
         public override void SetDefaults()
         {
             Projectile.width = 0;
@@ -45,6 +50,10 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
         public override void OnSpawn(IEntitySource source)
         {
             altAttack = Player.altFunctionUse == 2;
+
+            if (Main.myPlayer == Player.whoAmI)
+                Projectile.rotation = Player.Center.DirectionTo(Main.MouseWorld).ToRotation();
+            rotationDirection = Projectile.rotation.ToRotationVector2();
         }
 
         public override bool ShouldUpdatePosition() => false;
@@ -53,8 +62,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             Vector2 startCollision = Projectile.Center + rotationDirection * (originMult - 1f) * spearLength;
+            Vector2 endCollision = startCollision + rotationDirection * spearLength;
+            //startCollision.ToPoint().DrawPoint(10);
+            //endCollision.ToPoint().DrawPoint(10);
             float _ = 0;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), startCollision, startCollision + rotationDirection * spearLength, 15, ref _);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), startCollision, endCollision, 20, ref _);
         }
 
         Vector2 rotationDirection;
@@ -74,6 +86,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
             Behaviour();
 
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
+
+            FX();
         }
 
         NPC stabbedNPC;
@@ -82,7 +96,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
         {
             if (altAttack)
             {
-                Projectile.rotation = Player.Center.DirectionTo(Main.MouseWorld).ToRotation();
+                if (Main.myPlayer == Player.whoAmI)
+                    Projectile.rotation = Player.Center.DirectionTo(Main.MouseWorld).ToRotation();
 
                 if (stabbedNPC is not null)
                 {
@@ -98,11 +113,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
                     if (Main.myPlayer == Player.whoAmI && PlayerInput.Triggers.JustPressed.MouseLeft)
                     {
                         Projectile fork = Projectile.NewProjectileDirect(
-                            Projectile.GetSource_FromAI(), 
+                            Projectile.GetSource_FromAI(),
                             Projectile.Center + rotationDirection * spearLength * originMult,
                             rotationDirection * 16,
                             ModContent.ProjectileType<MagmitePitchforkThrownProjectile>(),
-                            300,
+                            999,
                             0,
                             Player.whoAmI
                             );
@@ -142,12 +157,27 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
                     Projectile.rotation = Player.Center.DirectionTo(Main.MouseWorld).ToRotation() + y * 0.9f * -Player.direction;
                 }
                 */
-
-                Projectile.rotation = Player.Center.DirectionTo(Main.MouseWorld).ToRotation() + MathF.Sin((1f - (float)Player.itemAnimation / Player.itemAnimationMax) * MathHelper.TwoPi) * 0.1f * Player.direction;
-                originMult = 0.35f + MathF.Sin((1f - (float)Player.itemAnimation / Player.itemAnimationMax) * MathHelper.Pi) * 0.6f;
+                if (Main.myPlayer == Player.whoAmI)
+                    Projectile.rotation = Player.Center.DirectionTo(Main.MouseWorld).ToRotation() + MathF.Sin((1f - (float)Player.itemAnimation / Player.itemAnimationMax) * MathHelper.TwoPi) * 0.075f * Player.direction;
+                originMult = 0.25f + MathF.Sin((1f - (float)Player.itemAnimation / Player.itemAnimationMax) * MathHelper.Pi) * 0.7f;
             }
         }
 
+
+        void FX()
+        {
+            if ((float)Player.itemAnimation / Player.itemAnimationMax > 0.52f && Main.rand.NextBool(14))
+            {
+                Vector2 pos = Projectile.Center + rotationDirection * spearLength * originMult - rotationDirection * 15;
+                Vector2 offset = rotationDirection.RotatedBy(MathHelper.PiOver2) * 15;
+
+                Vector2 velocity = rotationDirection * 4;
+
+                Dust.NewDust(pos, 0, 0, DustID.AmberBolt, velocity.X, velocity.Y, Alpha: (int)(Main.rand.NextFloat() * 255), Scale: Main.rand.NextFloat(0.4f, 1f));
+                Dust.NewDust(pos + offset, 0, 0, DustID.AmberBolt, velocity.X, velocity.Y, Alpha: (int)(Main.rand.NextFloat() * 255), Scale: Main.rand.NextFloat(0.4f, 1f));
+                Dust.NewDust(pos - offset, 0, 0, DustID.AmberBolt, velocity.X, velocity.Y, Alpha: (int)(Main.rand.NextFloat() * 255), Scale: Main.rand.NextFloat(0.4f, 1f));
+            }
+        }
 
         public override bool? CanHitNPC(NPC target)
         {
@@ -162,11 +192,18 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (altAttack && !target.boss && target.type != NPCID.TargetDummy)
+            if (altAttack && (float)Player.itemAnimation / Player.itemAnimationMax > 0.52f && !target.boss && target.type != NPCID.TargetDummy)
             {
                 stabbedNPC = target;
                 distanceToNPC = Projectile.Center.Distance(target.Center);
+
+                DarknessFallenUtils.NewDustCircular(target.Center, DustID.Blood, 15, amount: 32, speedFromCenter: 5);
             }
+        }
+
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (altAttack) damage = 1;
         }
 
         float originMult;
@@ -177,15 +214,17 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
             float rotation = Projectile.rotation + rotOffset;
             Vector2 scale = Vector2.One;
 
-            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, null, lightColor, rotation, originMult * tex.Size(), scale, SpriteEffects.None, 0);
+            if (altAttack) Projectile.DrawAfterImage(prog => Color.Lerp(Color.Red, Color.Yellow, prog) * 0.05f, origin: originMult * tex.Size(), rotOffset: i => Projectile.oldRot[i] == 0 ? Projectile.rotation + rotOffset : rotOffset, oldPos: false);
 
+            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, null, lightColor, rotation, originMult * tex.Size(), scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(ModContent.Request<Texture2D>(Texture + "_Glow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value, Projectile.Center - Main.screenPosition, null, Color.White, rotation, originMult * tex.Size(), scale, SpriteEffects.None, 0);
             return false;
         }
 
         public override void PostDraw(Color lightColor)
         {
             Texture2D texture = ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Glow2", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Vector2 glowPos = Projectile.Center + rotationDirection * originMult * spearLength - rotationDirection * 25;
+            Vector2 glowPos = Projectile.Center + rotationDirection * originMult * spearLength - rotationDirection * 8;
 
             Main.spriteBatch.End();
             Main.spriteBatch.BeginAdditive();
@@ -194,10 +233,10 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
                 texture,
                 glowPos - Main.screenPosition,
                 null,
-                Color.Lerp(Color.Gold, Color.Red, originMult) * originMult * 0.7f * Main.rand.Next(2),
+                Color.Lerp(Color.Gold, Color.Red, originMult) * originMult * 0.7f,
                 0,
                 texture.Size() * 0.5f,
-                (originMult + 1.3f) * 0.3f,
+                (originMult - 0.4f) * 1.2f,
                 SpriteEffects.None,
                 0
                 );
