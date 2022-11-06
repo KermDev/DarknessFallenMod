@@ -226,6 +226,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
             Texture2D texture = ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Glow2", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             Vector2 glowPos = Projectile.Center + rotationDirection * originMult * spearLength - rotationDirection * 8;
 
+            if (!Main.dedServ) 
+                Lighting.AddLight(glowPos, 0.7f, 0.22f, 0f);
+
             Main.spriteBatch.End();
             Main.spriteBatch.BeginAdditive();
 

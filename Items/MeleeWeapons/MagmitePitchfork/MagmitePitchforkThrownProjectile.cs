@@ -1,5 +1,6 @@
 ﻿using DarknessFallenMod.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -82,10 +83,11 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
                 if (!npc.friendly && npc.life > 0 && npc.active && npc.immune[Projectile.owner] <= 0)
                 {
                     Main.player[Projectile.owner].ApplyDamageToNPC(npc, damage, 2, Projectile.HitDirection(npc.Center), true);
+
+                    DarknessFallenUtils.NewGoreCircular(npc.Center, GoreID.Smoke1 + Main.rand.Next(3), StabbedNPC.width * 0.5f, amount: Main.rand.Next(1, 3), scale: Main.rand.NextFloat(0.8f, 1.2f));
+                    DarknessFallenUtils.NewDustCircular(npc.Center, DustID.Torch, 15, speedFromCenter: 5, amount: 7);
                 }
             });
-
-            DarknessFallenUtils.NewGoreCircular(StabbedNPC.Center, GoreID.Smoke1 + Main.rand.Next(3), StabbedNPC.width * 0.5f, amount: Main.rand.Next(2, 4));
 
             Projectile.Kill();
         }
@@ -94,7 +96,34 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
         {
             Projectile.DrawAfterImage(prog => Color.Lerp(Color.Red, Color.Yellow, prog) * 0.1f, origin: Vector2.Zero, rotOffset: i => (Projectile.oldRot[i] == 0 ? Projectile.rotation : 0) + MathHelper.PiOver2 + MathHelper.PiOver4, oldPos: true);
             Projectile.DrawProjectileInHBCenter(lightColor, origin: Vector2.Zero, rotOffset: MathHelper.PiOver2 + MathHelper.PiOver4);
+
+            Texture2D tex = ModContent.Request<Texture2D>(Texture + "_Glow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation + MathHelper.PiOver2 + MathHelper.PiOver4, Vector2.Zero, Projectile.scale, SpriteEffects.None, 0);
             return false;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Glow2", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Vector2 glowPos = Projectile.Center - Projectile.rotation.ToRotationVector2() * 8;
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginAdditive();
+
+            Main.spriteBatch.Draw(
+                texture,
+                glowPos - Main.screenPosition,
+                null,
+                Color.Lerp(Color.Gold, Color.Red, 0.5f) * 0.5f,
+                0,
+                texture.Size() * 0.5f,
+                0.7f,
+                SpriteEffects.None,
+                0
+                );
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.BeginDefault();
         }
     }
 }
