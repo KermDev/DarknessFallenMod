@@ -16,20 +16,24 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
 
         public override void SetDefaults()
         {
-            Item.damage = 41;
+            Item.damage = 75;
             Item.DamageType = DamageClass.Melee;
             Item.width = 40;
             Item.height = 40;
-            Item.useTime = 22;
-            Item.useAnimation = 22;
-            Item.useStyle = 1;
-            Item.knockBack = 6;
-            Item.value = 17764;
+            Item.useTime = 5;
+            Item.useAnimation = 5;
+            Item.useStyle = -1;
+            Item.knockBack = 8;
+            Item.value = 17500;
             Item.rare = 8;
-            Item.UseSound = SoundID.Item1;
-            Item.autoReuse = true;
+            Item.UseSound = SoundID.Item71;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
             Item.shoot = ModContent.ProjectileType<HellButcherProjectile>();
-            Item.shootSpeed = 20f;
+            Item.shootSpeed = 9f;
+            Item.reuseDelay = 0;
+            Item.channel = true;
+            Item.useTurn = false;
         }
         /*
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

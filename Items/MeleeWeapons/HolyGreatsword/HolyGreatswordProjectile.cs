@@ -161,7 +161,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
                 0
                 );
 
-            Texture2D glowMaskTex = ModContent.Request<Texture2D>("DarknessFallenMod/Items/MeleeWeapons/HolyGreatsword/HolyGreatswordGlowmask").Value;
+            Texture2D glowMaskTex = ModContent.Request<Texture2D>("DarknessFallenMod/Items/MeleeWeapons/HolyGreatsword/HolyGreatsword_Glow").Value;
 
             Main.EntitySpriteDraw(
                 glowMaskTex,

@@ -5,11 +5,12 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
+using Terraria.DataStructures;
 
 namespace DarknessFallenMod.Systems
 {
     /// <summary>
-    /// Unity-like coroutine system by sucss :3
+    /// Unity-like coroutine system by sucss
     /// </summary>
     public class CoroutineSystem : ModSystem
     {

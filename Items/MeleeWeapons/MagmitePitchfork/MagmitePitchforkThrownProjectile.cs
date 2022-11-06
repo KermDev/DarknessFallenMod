@@ -84,8 +84,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
                 {
                     Main.player[Projectile.owner].ApplyDamageToNPC(npc, damage, 2, Projectile.HitDirection(npc.Center), true);
 
-                    DarknessFallenUtils.NewGoreCircular(npc.Center, GoreID.Smoke1 + Main.rand.Next(3), StabbedNPC.width * 0.5f, amount: Main.rand.Next(1, 3), scale: Main.rand.NextFloat(0.8f, 1.2f));
-                    DarknessFallenUtils.NewDustCircular(npc.Center, DustID.Torch, 15, speedFromCenter: 5, amount: 7);
+                    DarknessFallenUtils.NewGoreCircular(npc.Center, GoreID.Smoke1 + Main.rand.Next(3), StabbedNPC.width * 0.5f, amount: Main.rand.Next(2, 3), scale: Main.rand.NextFloat(0.6f, 1.2f), speedFromCenter: 4);
+                    DarknessFallenUtils.NewDustCircular(npc.Center, DustID.Torch, 15, speedFromCenter: 8, amount: 5);
                 }
             });
 

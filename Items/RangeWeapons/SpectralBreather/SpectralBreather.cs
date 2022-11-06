@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,7 +27,6 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
             Item.knockBack = 0;
             Item.value = 18764;
             Item.rare = 3;
-            Item.UseSound = SoundID.Item10;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<SpectralBreatherProjectile>();
             Item.shootSpeed = 18f;
@@ -39,8 +39,15 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
             DarknessFallenUtils.OffsetShootPos(ref position, velocity, Vector2.UnitX * 55, true);
         }
 
+        int soundTimer;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            if (soundTimer-- < 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item100, position);
+                soundTimer = 30;
+            }
+
             Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
 
             if (Main.rand.NextBool(4))
