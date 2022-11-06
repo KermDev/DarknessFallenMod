@@ -18,14 +18,18 @@ namespace DarknessFallenMod
 	{
 		public static int GelCurrency;
 		public static DarknessFallenMod Instance { get; private set; }
-
+		public static Effect TrailShader;
 		public override void Load()
 		{
 			Instance = this;
-
+			TrailShader = ModContent.Request<Effect>("DarknessFallenMod/Effects/TrailShader").Value;
 			// Registers a new custom currency
 			GelCurrency = CustomCurrencyManager.RegisterCurrency(new Systems.Currencies.GelCurrency(ItemID.Gel, 999L, "Gel"));
 		}
-
+		public override void Unload()
+		{
+			Instance = null;
+			TrailShader = null;
+		}
 	}
 }
