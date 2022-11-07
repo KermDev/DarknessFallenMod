@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -27,7 +28,8 @@ namespace DarknessFallenMod.Utils
             /// <inheritdoc cref="BeginShader(SpriteBatch)"/>
             Shader,
             /// <inheritdoc cref="BeginExperimental(SpriteBatch)"/>
-            Experimental
+            Experimental,
+            Additive
         }
 
         /*
@@ -78,6 +80,9 @@ namespace DarknessFallenMod.Utils
                 case BeginType.Experimental:
                     spriteBatch.BeginExperimental();
                     break;
+                case BeginType.Additive:
+                    spriteBatch.BeginAdditive();
+                    break;
             }
         }
 
@@ -108,7 +113,7 @@ namespace DarknessFallenMod.Utils
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
         }
 
-        /// <summary>
+        /// <summary>s
         /// Begins the spritebatch with <see cref="SpriteSortMode.BackToFront"/> and <see cref="BlendState.Additive"/>
         /// </summary>
         /// <param name="spriteBatch">The spritebatch to begin</param>
@@ -116,6 +121,35 @@ namespace DarknessFallenMod.Utils
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
         }
+
+        public static bool HasBegun(this SpriteBatch spriteBatch)
+        {
+            return (bool)spriteBatch.GetType().GetField("beginCalled", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+        }
+        public static void Reload(this SpriteBatch spriteBatch, BlendState blendState = default, SpriteSortMode sortMode = SpriteSortMode.Deferred)
+        {
+            if (spriteBatch.HasBegun())
+            {
+                spriteBatch.End();
+            }
+            SamplerState state = (SamplerState)spriteBatch.GetType().GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+            DepthStencilState state2 = (DepthStencilState)spriteBatch.GetType().GetField("depthStencilState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+            RasterizerState state3 = (RasterizerState)spriteBatch.GetType().GetField("rasterizerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+            Effect effect = (Effect)spriteBatch.GetType().GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+            Matrix matrix = (Matrix)spriteBatch.GetType().GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+            spriteBatch.Begin(sortMode, blendState, state, state2, state3, effect, matrix);
+        }
+
+        public static void Reload(this SpriteBatch spriteBatch, BeginType beginType)
+        {
+            if (spriteBatch.HasBegun())
+            {
+                spriteBatch.End();
+            }
+
+            spriteBatch.Begin(beginType);
+        }
+
         #endregion
 
         #region Entity Draw Code

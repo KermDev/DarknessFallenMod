@@ -59,24 +59,7 @@ public static class PrimitiveUtils
     {
         return new Vector3(vector.X, vector.Y, 0);
     }
-    
-    private static bool HasBegun(this SpriteBatch spriteBatch)
-    {
-        return (bool)spriteBatch.GetType().GetField("beginCalled", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-    }
-    public static void Reload(this SpriteBatch spriteBatch, BlendState blendState = default, SpriteSortMode sortMode = SpriteSortMode.Deferred)
-    {
-        if (spriteBatch.HasBegun())
-        {
-            spriteBatch.End();
-        }
-        SamplerState state = (SamplerState)spriteBatch.GetType().GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-        DepthStencilState state2 = (DepthStencilState)spriteBatch.GetType().GetField("depthStencilState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-        RasterizerState state3 = (RasterizerState)spriteBatch.GetType().GetField("rasterizerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-        Effect effect = (Effect)spriteBatch.GetType().GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-        Matrix matrix = (Matrix)spriteBatch.GetType().GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-        spriteBatch.Begin(sortMode, blendState, state, state2, state3, effect, matrix);
-    }
+
     public static Vector2 GetRotation(IReadOnlyList<Vector2> oldPos, int index)
     {
         if (oldPos.Count == 1)

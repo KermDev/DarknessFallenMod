@@ -1,5 +1,6 @@
 using DarknessFallenMod.Items.MagicWeapons;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -16,7 +17,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
 
         public override void SetDefaults()
         {
-            Item.damage = 75;
+            Item.damage = 500;
+            Item.crit = 34;
             Item.DamageType = DamageClass.Melee;
             Item.width = 40;
             Item.height = 40;
@@ -25,8 +27,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             Item.useStyle = -1;
             Item.knockBack = 8;
             Item.value = 17500;
-            Item.rare = 8;
-            Item.UseSound = SoundID.Item71;
+            Item.rare = 8;;
             Item.noUseGraphic = true;
             Item.noMelee = true;
             Item.shoot = ModContent.ProjectileType<HellButcherProjectile>();
@@ -35,13 +36,17 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             Item.channel = true;
             Item.useTurn = false;
         }
-        /*
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+
+        public override bool CanUseItem(Player player)
         {
-			position.Y -= 20;
-			velocity = Item.shootSpeed * position.DirectionTo(Main.MouseWorld);
+            return player.ownedProjectileCounts[Item.shoot] == 0;
         }
-		*/
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            tooltips.Find(t => t.Name == "Damage").Text = $"{(HellButcherProjectile.MAX_DAMAGE * (4f / HellButcherProjectile.MAX_DAMAGE_TIMER_COUNT)).ToString("F0")}-{HellButcherProjectile.MAX_DAMAGE} damage";
+        }
+
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();

@@ -13,6 +13,7 @@ using Terraria.GameContent;
 using System.Collections;
 
 using static DarknessFallenMod.Systems.CoroutineSystem;
+using Terraria.Audio;
 
 namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
 {
@@ -51,18 +52,18 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             Projectile.localNPCHitCooldown = 999;
         }
 
-        public override bool ShouldUpdatePosition() => false;
-
-        int initialPlayerDir;
         public override void OnSpawn(IEntitySource source)
         {
-            initialPlayerDir = Player.direction;
+            StartCoroutine(DrawChargeEffect(1.2f), CoroutineType.PostDrawTiles);
+            StartCoroutine(DrawChargeEffect(1.5f), CoroutineType.PostDrawTiles);
+            StartCoroutine(DrawChargeEffect(2f), CoroutineType.PostDrawTiles);
         }
+
+        public override bool ShouldUpdatePosition() => false;
 
         Player Player => Main.player[Projectile.owner];
         Vector2 rotationDirection;
         Vector2 directionToMouse;
-        float scaleMult = 1;
         public override void AI()
         {
             Player.heldProj = Projectile.whoAmI;
@@ -85,20 +86,33 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
         }
 
-        const int MAXDAMAGE = 500;
-        const int MAXDAMAGETIMERCOUNT = 120;
+        public static readonly int MAX_DAMAGE = 500;
+        public static readonly int MAX_DAMAGE_TIMER_COUNT = 120;
 
-        const int MAXSWINGFRAMES = 35;
+        const int MAX_SWING_FRAMES = 27;
 
         int damageMultTimer;
         int swingTimer;
+
+        const float MAX_SCALE_MULT = 0.3f;
+        bool soundPlayed;
+        int swingDir;
         void Behaviour()
         {
             if (!Player.channel)
             {
-                Projectile.rotation += Player.direction * -MathF.Sin(MathF.Pow((float)swingTimer / MAXSWINGFRAMES * 1.35f - 1.35f, 3)) * 0.2f;
+                if (!soundPlayed)
+                {
+                    SoundEngine.PlaySound(SoundID.Item71, Projectile.Center);
+                    swingDir = Player.direction;
+                    soundPlayed = true;
+                }
 
-                if (swingTimer++ > MAXSWINGFRAMES
+                Player.direction = swingDir;
+
+                Projectile.rotation += swingDir * -MathF.Sin(MathF.Pow((float)swingTimer / MAX_SWING_FRAMES * 1.35f - 1.35f, 3)) * 0.2f;
+
+                if (swingTimer++ > MAX_SWING_FRAMES)
                 {
                     Projectile.Kill();
                     return;
@@ -106,6 +120,13 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             }
             else
             {
+                float progress = (float)Math.Clamp(damageMultTimer, 1, MAX_DAMAGE_TIMER_COUNT) / MAX_DAMAGE_TIMER_COUNT;
+
+                if (Projectile.scale < MAX_SCALE_MULT + 1)
+                {
+                    Projectile.scale = 1f + MAX_SCALE_MULT * progress;
+                }
+
                 Projectile.rotation = directionToMouse.RotatedBy(-(MathHelper.PiOver2 + MathHelper.PiOver4) * Player.direction).ToRotation();
                 damageMultTimer++;
             }
@@ -118,13 +139,31 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             return false;
         }
 
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            float hitStr = (float)Math.Clamp(damageMultTimer, 1, MAX_DAMAGE_TIMER_COUNT) / MAX_DAMAGE_TIMER_COUNT;
+            damage = (int)(hitStr * MAX_DAMAGE);
+            knockback = hitStr * 5;
+
+            Vector2 hitDir = Player.DirectionTo(target.Center);
+
+            if (damage == MAX_DAMAGE)
+                for (int i = 0; i < 2; i++)
+                    StartCoroutine(DrawHitEffect(target, hitDir), CoroutineType.PostDrawTiles);
+
+            for (int i = 0; i < (int)(hitStr * 32); i++)
+            {
+                Vector2 vel = hitDir * 9 * hitStr * Main.rand.NextFloat();
+                Dust.NewDust(target.position, target.width, target.height, DustID.Blood, vel.X, vel.Y, Scale: Main.rand.NextFloat(0.4f, 1.7f));
+            }
+        }
+
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float _ = 0;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + rotationDirection * 60, 37, ref _);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + rotationDirection * 60 * Projectile.scale, 45 * Projectile.scale, ref _);
         }
 
-        int fxTimer;
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = TextureAssets.Projectile[Type].Value;
@@ -133,29 +172,83 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             float originX = 13;
 
             Main.EntitySpriteDraw(
-                tex, 
+                tex,
                 Projectile.Center - Main.screenPosition,
-                null, 
-                lightColor, 
+                null,
+                lightColor,
                 Projectile.rotation + MathHelper.PiOver2,
-                Player.direction == -1 ? new Vector2(44 - originX, originY) : new Vector2(originX, originY), 
-                Projectile.scale * scaleMult,
-                Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 
+                Player.direction == -1 ? new Vector2(44 - originX, originY) : new Vector2(originX, originY),
+                Projectile.scale,
+                Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                 0
                 );
-
-            if (swingTimer == 0 && fxTimer++ > 10)
-            {
-                StartCoroutine(BeginEffect(), CoroutineType.PostDrawTiles);
-            }
 
             return false;
         }
 
-        IEnumerator BeginEffect()
+        IEnumerator DrawHitEffect(NPC npc, Vector2 hitDir)
+        {
+            hitDir.Normalize();
+            Vector2 lerpOffset = hitDir * 100;
+
+            float npcScale = npc.scale;
+            float scale = 1;
+            float maxScale = 2;
+
+            Texture2D tex = TextureAssets.Npc[npc.type].Value;
+
+            Vector2 initPos = npc.Center;
+            Vector2 pos = initPos;
+
+            Rectangle frame = npc.frame;
+
+            while (true)
+            {
+                bool began = Main.spriteBatch.HasBegun();
+
+                if (began)
+                {
+                    Main.spriteBatch.End();
+                }
+
+                Main.spriteBatch.BeginDefault();
+
+                Main.EntitySpriteDraw(
+                    tex,
+                    pos - Main.screenPosition + Main.rand.NextVector2Unit() * 3,
+                    frame,
+                    Color.Yellow * ((float)(maxScale - scale) / maxScale),
+                    npc.rotation,
+                    frame.Size() * 0.5f,
+                    scale * npcScale,
+                    npc.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                    0
+                    );
+
+                Main.spriteBatch.End();
+
+                if (began)
+                {
+                    Main.spriteBatch.BeginDefault();
+                }
+
+                pos = Vector2.Lerp(pos, initPos + lerpOffset, 0.15f);
+
+                scale += 0.06f;
+                if (scale > maxScale)
+                {
+                    break;
+                }
+
+                yield return null;
+            }
+        }
+
+        IEnumerator DrawChargeEffect(float timeMult)
         {
             float maxScale = 2f;
             float scale = maxScale;
+
             while (true)
             {
                 Texture2D tex = TextureAssets.Projectile[Type].Value;
@@ -163,20 +256,36 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
                 float originY = 64;
                 float originX = 13;
 
-                Main.EntitySpriteDraw(
-                tex,
-                Projectile.Center - Main.screenPosition,
-                null,
-                Color.White * ((float)(maxScale - scale) / maxScale),
-                Projectile.rotation + MathHelper.PiOver2,
-                Player.direction == -1 ? new Vector2(44 - originX, originY) : new Vector2(originX, originY),
-                Projectile.scale * scale,
-                Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
-                0
-                );
+                bool began = Main.spriteBatch.HasBegun();
 
-                scale -= 0.05f;
-                if (scale < 1)
+                if (began)
+                {
+                    Main.spriteBatch.End();
+                }
+
+                Main.spriteBatch.BeginDefault();
+
+                Main.EntitySpriteDraw(
+                    tex,
+                    Projectile.Center - Main.screenPosition + Main.rand.NextVector2Unit() * 3,
+                    null,
+                    Color.Yellow * ((float)(maxScale - scale) / maxScale),
+                    Projectile.rotation + MathHelper.PiOver2,
+                    Player.direction == -1 ? new Vector2(44 - originX, originY) : new Vector2(originX, originY),
+                    Projectile.scale * scale,
+                    Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                    0
+                    );
+
+                Main.spriteBatch.End();
+
+                if (began)
+                {
+                    Main.spriteBatch.BeginDefault();
+                }
+
+                scale -= (maxScale - 1f) / MAX_DAMAGE_TIMER_COUNT * Projectile.extraUpdates * timeMult;
+                if (scale < 1 || swingTimer != 0 || Player.HeldItem.type != ModContent.ItemType<HellButcher>())
                 {
                     break;
                 }
