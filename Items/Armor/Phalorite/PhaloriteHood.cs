@@ -2,7 +2,7 @@
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Phalorite
 {
     [AutoloadEquip(EquipType.Head)]
     internal class PhaloriteHood : ModItem
@@ -21,7 +21,7 @@ namespace DarknessFallenMod.Items.Armor
             Item.value = 1500;
             Item.rare = 3;
             Item.defense = 7;
-            
+
 
 
 
@@ -50,7 +50,7 @@ namespace DarknessFallenMod.Items.Armor
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ModContent.ItemType<Items.Materials.PhaloriteBar>(), 15)
+                .AddIngredient(ModContent.ItemType<Materials.PhaloriteBar>(), 15)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

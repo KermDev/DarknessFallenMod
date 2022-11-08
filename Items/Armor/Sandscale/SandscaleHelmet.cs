@@ -42,7 +42,7 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
             if (player.ownedProjectileCounts[minionType] < 2)
             {
                 Projectile proj = Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, minionType, 10, 0, player.whoAmI);
-                proj.originalDamage = 8;
+                proj.originalDamage = 16;
             }
 
             Main.projectile.ForEach(proj =>

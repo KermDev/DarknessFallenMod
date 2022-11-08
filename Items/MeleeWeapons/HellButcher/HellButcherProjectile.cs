@@ -86,15 +86,15 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
         }
 
-        public static readonly int MAX_DAMAGE = 500;
-        public static readonly int MAX_DAMAGE_TIMER_COUNT = 120;
+        public static readonly int MAX_DAMAGE = 400;
+        public static readonly int MAX_DAMAGE_TIMER_COUNT = 180;
 
-        const int MAX_SWING_FRAMES = 27;
+        const int MAX_SWING_FRAMES = 28;
 
         int damageMultTimer;
         int swingTimer;
 
-        const float MAX_SCALE_MULT = 0.3f;
+        const float MAX_SCALE_MULT = 0.8f;
         bool soundPlayed;
         int swingDir;
         void Behaviour()
@@ -110,7 +110,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
 
                 Player.direction = swingDir;
 
-                Projectile.rotation += swingDir * -MathF.Sin(MathF.Pow((float)swingTimer / MAX_SWING_FRAMES * 1.35f - 1.35f, 3)) * 0.2f;
+                Projectile.rotation += swingDir * -MathF.Sin(MathF.Pow((float)swingTimer / MAX_SWING_FRAMES * 1.35f - 1.35f, 3)) * 0.25f;
 
                 if (swingTimer++ > MAX_SWING_FRAMES)
                 {

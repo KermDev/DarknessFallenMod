@@ -17,7 +17,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
 
         public override void SetDefaults()
         {
-            Item.damage = 500;
+            Item.damage = 400; // doesnt matter whats here check ModifyTooltips
             Item.crit = 34;
             Item.DamageType = DamageClass.Melee;
             Item.width = 40;
@@ -50,8 +50,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HellButcher
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ItemID.MeteoriteBar, 35);
-            recipe.AddIngredient(ItemID.HellstoneBar, 35);
+            recipe.AddIngredient(ModContent.ItemType<Materials.MagmiteBar>(), 15);
+            recipe.AddIngredient(ItemID.HellstoneBar, 20);
             recipe.AddTile(TileID.Anvils);
             recipe.Register();
         }

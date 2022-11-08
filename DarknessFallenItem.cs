@@ -16,7 +16,8 @@ namespace DarknessFallenMod
 
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
-			//tooltips.Add(new TooltipLine(Mod, "ITEMID", $"Item Type : {item.type}"));
+            //tooltips.Add(new TooltipLine(Mod, "ITEMID", $"Item Type : {item.type}"));
+            //tooltips.Add(new TooltipLine(Mod, "TILE", $"Tile Type : {item.createTile}\nTile Style : {item.placeStyle}"));
             switch (item.type)
             {
 				case 4797:

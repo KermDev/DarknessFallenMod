@@ -11,6 +11,11 @@ namespace DarknessFallenMod.Items.Materials
 {
     public class MagmiteBar : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+			DisplayName.SetDefault("Magmite Crystal");
+        }
+
         public override void SetDefaults()
         {
 			Item.useStyle = ItemUseStyleID.Swing;

@@ -2,7 +2,7 @@
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Phalorite
 {
     [AutoloadEquip(EquipType.Body)]
     internal class PhaloriteChestplate : ModItem
@@ -20,7 +20,7 @@ namespace DarknessFallenMod.Items.Armor
             Item.value = 2000;
             Item.rare = 3;
             Item.defense = 25;
-            
+
 
 
 
@@ -32,13 +32,13 @@ namespace DarknessFallenMod.Items.Armor
             player.GetAttackSpeed(DamageClass.Melee) += .1f;
         }
 
-      
-       
+
+
 
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ModContent.ItemType<Items.Materials.PhaloriteBar>(), 25)
+                .AddIngredient(ModContent.ItemType<Materials.PhaloriteBar>(), 25)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

@@ -134,7 +134,7 @@ namespace DarknessFallenMod.Items.Armor.Sandscale
             if (Main.rand.NextBool(10))
             {
                 for (int i = 0; i < 1; i++)
-                    Dust.NewDustDirect(Projectile.position - Vector2.One * Projectile.width, Projectile.width * 3, Projectile.height * 3, DustID.TreasureSparkle).noGravity = true;
+                    Dust.NewDustDirect(Projectile.position - Vector2.One * Projectile.width * 0.5f, Projectile.width * 2, Projectile.height * 2, DustID.TreasureSparkle).noGravity = true;
             }
 
             //if (Main.rand.NextBool(7)) Dust.NewDust(Projectile.position, Projectile.width * 2, Projectile.height * 2, DustID.Sand);

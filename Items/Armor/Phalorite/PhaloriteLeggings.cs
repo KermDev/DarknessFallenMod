@@ -2,7 +2,7 @@
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Phalorite
 {
     [AutoloadEquip(EquipType.Legs)]
     internal class PhaloriteLeggings : ModItem
@@ -20,7 +20,7 @@ namespace DarknessFallenMod.Items.Armor
             Item.value = 2000;
             Item.rare = 3;
             Item.defense = 20;
-            
+
 
 
 
@@ -34,7 +34,7 @@ namespace DarknessFallenMod.Items.Armor
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ModContent.ItemType<Items.Materials.PhaloriteBar>(), 20)
+                .AddIngredient(ModContent.ItemType<Materials.PhaloriteBar>(), 20)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

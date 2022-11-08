@@ -19,7 +19,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
 
 		public override void SetDefaults()
 		{
-			Item.damage = 75;
+			Item.damage = 85;
 			Item.DamageType = DamageClass.Melee;
 			Item.width = 40;
 			Item.height = 40;
@@ -44,5 +44,14 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
         }
 
         public override bool AltFunctionUse(Player player) => true;
+
+        public override void AddRecipes()
+        {
+			Recipe recipe = CreateRecipe();
+			recipe.AddIngredient(ModContent.ItemType<Materials.MagmiteBar>(), 15);
+			recipe.AddIngredient(ItemID.HellstoneBar, 20);
+			recipe.AddTile(TileID.Anvils);
+			recipe.Register();
+		}
     }
 }

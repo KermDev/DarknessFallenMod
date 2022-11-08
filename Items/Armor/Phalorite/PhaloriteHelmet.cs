@@ -1,27 +1,26 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
-using System.Security.Cryptography.X509Certificates;
 
-namespace DarknessFallenMod.Items.Armor
+namespace DarknessFallenMod.Items.Armor.Phalorite
 {
     [AutoloadEquip(EquipType.Head)]
-    internal class PhaloriteMask : ModItem
+    internal class PhaloriteHelmet : ModItem
     {
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Phalorite Helmet");
-            Tooltip.SetDefault("10% increased Ranged Damage");
+            Tooltip.SetDefault("13% increased Melee Damage");
         }
 
         public override void SetDefaults()
         {
-            Item.width = 20;
-            Item.height = 20;
+            Item.width = 13;
+            Item.height = 13;
             Item.value = 1500;
             Item.rare = 3;
-            Item.defense = 12;
-            
+            Item.defense = 20;
+
 
 
 
@@ -43,13 +42,13 @@ namespace DarknessFallenMod.Items.Armor
         }
         public override void UpdateEquip(Player player)
         {
-            player.GetDamage(DamageClass.Ranged) += .1f;
+            player.GetDamage(DamageClass.Melee) += .13f;
         }
 
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ModContent.ItemType<Items.Materials.PhaloriteBar>(), 15)
+                .AddIngredient(ModContent.ItemType<Materials.PhaloriteBar>(), 15)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

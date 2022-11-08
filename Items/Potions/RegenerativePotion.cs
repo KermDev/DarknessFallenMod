@@ -9,11 +9,11 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Items.Potions
 {
-    public class LesserRegenerativePotion : ModItem
+    public class RegenerativePotion : ModItem
     {
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Restores 50 health and gives regeneration".GetColored(Color.PaleVioletRed));
+			Tooltip.SetDefault("Restores 100 health and gives regeneration".GetColored(Color.MediumVioletRed));
 		}
 
 		public override void SetDefaults()
@@ -29,16 +29,16 @@ namespace DarknessFallenMod.Items.Potions
 			Item.autoReuse = true;
 			Item.potion = true;
 			Item.consumable = true;
-			Item.healLife = 50;
+			Item.healLife = 100;
 			Item.maxStack = 30;
 			Item.buffType = BuffID.Regeneration;
-			Item.buffTime = 1200;
+			Item.buffTime = 1800;
 		}
 
 		public override void AddRecipes()
 		{
 			Recipe recipe = CreateRecipe();
-			recipe.AddIngredient(ItemID.LesserHealingPotion, 2);
+			recipe.AddIngredient(ItemID.HealingPotion, 2);
 			recipe.AddTile(TileID.Bottles);
 			recipe.Register();
 		}

@@ -45,18 +45,18 @@ namespace DarknessFallenMod
 
 		public override void PostWorldGen()
 		{
-			// chest style 1 is gold chest
-			SpawnItemsInChest(new int[][]
+			SpawnItemsInChest(new ChestItem[]
 			{
-				SetChestItem(ModContent.ItemType<Items.Accessories.HellFlame>(), 12, 1, 1),
-				SetChestItem(ModContent.ItemType<Items.Throwables.Gearspark>(), 4, 1, 5, 18),
-				SetChestItem(ModContent.ItemType<Items.Accessories.BrokenGlove>(), 12, 1, 1),
-				SetChestItem(ModContent.ItemType<Items.Materials.FungiteBar>(), 20, 32, 1, 5), //mushroom chest
-				SetChestItem(ModContent.ItemType<Items.MagicWeapons.FungiteStaff>(), 100, 32, 1) //mushroom chest
+				new ChestItem(ModContent.ItemType<Items.Accessories.HellFlame>(), 12, 1, 1, 1),
+				new ChestItem(ModContent.ItemType<Items.Throwables.Gearspark>(), 4, 1, 5, 18),
+				new ChestItem(ModContent.ItemType<Items.Accessories.BrokenGlove>(), 12, 1, 1, 1),
+				new ChestItem(ModContent.ItemType<Items.Materials.FungiteBar>(), 20, 32, 1, 5), //mushroom chest
+				new ChestItem(ModContent.ItemType<Items.MagicWeapons.FungiteStaff>(), 100, 32, 1, 1), //mushroom chest
+				new ChestItem(ModContent.ItemType<Items.Materials.SandstoneScales>(), 1, 10, 2, 6, TileID.Containers2) //sandstone chest
 			});
 		}
 
-		void SpawnItemsInChest(int[][] items)
+		void SpawnItemsInChest(ChestItem[] items)
 		{
 			foreach (Chest chest in Main.chest)
 			{
@@ -64,21 +64,20 @@ namespace DarknessFallenMod
 
 				for (int i = 0; i < items.Length; i++)
 				{
-					int chestStyle = items[i][2];
+					ChestItem chestItem = items[i];
 
-					if (TileObjectData.GetTileStyle(Main.tile[chest.x, chest.y]) == chestStyle)
+					Tile chestTile = Main.tile[chest.x, chest.y];
+
+					if (chestTile.TileType == chestItem.chestType && TileObjectData.GetTileStyle(chestTile) == chestItem.chestStyle)
 					{
-						int itemType = items[i][0];
-						int itemChanceDenominator = items[i][1];
-						int itemStack = items[i].Length > 4 ? Main.rand.Next(items[i][3], items[i][4]) : items[i][3];
-
+						int itemStack = Main.rand.Next(chestItem.itemStackMin, chestItem.itemStackMax + 1);
 						int chestIndex = Array.FindIndex(chest.item, item => item.type == ItemID.None);
 
-						if (chestIndex >= 0 && Main.rand.NextBool(itemChanceDenominator))
+						if (chestIndex >= 0 && Main.rand.NextBool(chestItem.itemChanceDenominator))
 						{
 							Item item = chest.item[chestIndex];
 
-							item.SetDefaults(itemType);
+							item.SetDefaults(chestItem.itemType);
 							item.stack = Math.Clamp(itemStack, 1, item.maxStack);
 						}
 					}
@@ -87,14 +86,24 @@ namespace DarknessFallenMod
 			}
 		}
 
-		int[] SetChestItem(int itemType, int chanceDenominator, int chestStyle, int itemStack)
-		{
-			return new int[] { itemType, chanceDenominator, chestStyle, itemStack };
-		}
+		struct ChestItem
+        {
+			public int itemType;
+			public int itemChanceDenominator;
+			public int chestStyle;
+			public ushort chestType;
+			public int itemStackMin;
+			public int itemStackMax;
 
-		int[] SetChestItem(int itemType, int chanceDenominator, int chestStyle, int itemStackMin, int itemStackMax)
-		{
-			return new int[] { itemType, chanceDenominator, chestStyle, itemStackMin, itemStackMax };
+			public ChestItem(int itemType, int itemChanceDenominator, int chestStyle, int itemStackMin, int itemStackMax, ushort chestType = TileID.Containers)
+            {
+				this.itemType = itemType;
+				this.itemChanceDenominator = itemChanceDenominator;
+				this.chestStyle = chestStyle;
+				this.itemStackMin = itemStackMin;
+				this.itemStackMax = itemStackMax;
+				this.chestType = chestType;
+            }
 		}
 
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)

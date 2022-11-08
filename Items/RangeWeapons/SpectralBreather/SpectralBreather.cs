@@ -4,7 +4,8 @@ using DarknessFallenMod.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-
+using System.Collections.ObjectModel;
+using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -15,6 +16,11 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
 {
     public class SpectralBreather : ModItem, IGlowmask
     {
+        public override void SetStaticDefaults()
+        {
+            Tooltip.SetDefault("Breaths purple and orange flames".GetColored(Color.BlueViolet));
+        }
+
         public override void SetDefaults()
         {
             Item.damage = 50;
@@ -26,7 +32,7 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.knockBack = 0;
             Item.value = 18764;
-            Item.rare = 3;
+            Item.rare = ModContent.RarityType<SpectralBreatherRarity>();
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<SpectralBreatherProjectile>();
             Item.shootSpeed = 18f;
@@ -38,6 +44,18 @@ namespace DarknessFallenMod.Items.RangeWeapons.SpectralBreather
         {
             DarknessFallenUtils.OffsetShootPos(ref position, velocity, Vector2.UnitX * 55, true);
         }
+
+        /*
+        public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset)
+        {
+            if (line.Name == "DisplayName")
+            {
+                DarknessFallenUtils.DrawTooltipLineEffect(line, line.X, line.Y, DarknessFallenUtils.TooltipLineEffectStyle.Epileptic);
+            }
+
+            return base.PreDrawTooltipLine(line, ref yOffset);
+        }
+        */
 
         int soundTimer;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

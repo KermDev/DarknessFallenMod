@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -190,9 +190,36 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MagmitePitchfork
             return null;
         }
 
+        int[] stabBlacklist = new int[]
+        {
+            NPCID.TargetDummy,
+            NPCID.GolemFistLeft,
+            NPCID.GolemFistRight,
+            NPCID.GolemHead,
+            NPCID.GolemHeadFree,
+            NPCID.EaterofWorldsBody,
+            NPCID.EaterofWorldsTail,
+            NPCID.EaterofWorldsHead,
+            NPCID.TheDestroyer,
+            NPCID.TheDestroyerBody,
+            NPCID.TheDestroyerTail,
+            NPCID.WallofFleshEye,
+            NPCID.MartianSaucerTurret,
+            NPCID.PirateShipCannon,
+            NPCID.WyvernBody,
+            NPCID.WyvernBody2,
+            NPCID.WyvernBody3,
+            NPCID.WyvernHead,
+            NPCID.WyvernLegs,
+            NPCID.WyvernTail,
+            NPCID.DiggerBody,
+            NPCID.DiggerHead,
+            NPCID.DiggerTail
+        };
+
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (altAttack && (float)Player.itemAnimation / Player.itemAnimationMax > 0.52f && !target.boss && target.type != NPCID.TargetDummy)
+            if (altAttack && (float)Player.itemAnimation / Player.itemAnimationMax > 0.52f && !target.boss && !stabBlacklist.Contains(target.type))
             {
                 stabbedNPC = target;
                 distanceToNPC = Projectile.Center.Distance(target.Center);
