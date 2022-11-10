@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 using Microsoft.Xna.Framework;
 
-namespace Trinitarian.Content.NPCs.Enemies.Ocean
+namespace DarknessFallenMod.NPCs.Fish
 {
     public class SeaSnake : ModNPC
     {
