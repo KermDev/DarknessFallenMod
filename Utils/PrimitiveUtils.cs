@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace DarknessFallenMod.Utils;
 
-public static class PrimitiveUtils
+public static partial class DarknessFallenUtils
 {
     private static int width;
     private static int height;
@@ -104,7 +104,7 @@ public class PrimitiveList
         GraphicsDevice device = Main.graphics.GraphicsDevice;
         Effect effect = DarknessFallenMod.TrailShader;
         if (vertices.Length < 3) return;
-        effect.Parameters["WorldViewProjection"].SetValue(PrimitiveUtils.GetMatrix());
+        effect.Parameters["WorldViewProjection"].SetValue(DarknessFallenUtils.GetMatrix());
 
         device.SetVertexBuffer(null);
         DynamicVertexBuffer vertexBuffer = new DynamicVertexBuffer(device, typeof(VertexPositionColorTexture), vertices.Length, BufferUsage.WriteOnly);
@@ -120,7 +120,7 @@ public class PrimitiveList
         {
             effect.CurrentTechnique.Passes["Default"].Apply();
         }
-        device.DrawPrimitives(type, 0, PrimitiveUtils.GetPrimitiveCount(vertices.Length, type));
+        device.DrawPrimitives(type, 0, DarknessFallenUtils.GetPrimitiveCount(vertices.Length, type));
     }
 }
 
@@ -258,6 +258,13 @@ public class CircularBuffer<T> : IReadOnlyList<T>
         }
     }
     private void Increment(ref int index)
+    {
+        if (++index == Capacity)
+        {
+            index = 0;
+        }
+    }
+    private void Decrement(ref int index)
     {
         if (++index == Capacity)
         {

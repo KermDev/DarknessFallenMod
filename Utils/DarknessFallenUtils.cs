@@ -410,7 +410,7 @@ namespace DarknessFallenMod.Utils
                     {
                         Tile tileLZ = Framing.GetTileSafely(l, z);
                         float dist = new Vector2(l, z).DistanceSQ(new Vector2(curI, curJ));
-                        float chance = Math.Clamp(10 * InverseLerp(dist, 0, strenght * strenght), 1, 10);
+                        float chance = Math.Clamp(10 * Terraria.Utils.GetLerpValue(0, strenght * strenght, dist), 1, 10);
                         if (Main.rand.NextBool((int)chance) && !ignoreTiles.Contains(tileLZ.TileType))
                         {
                             tileLZ.Get<TileWallWireStateData>().HasTile = true;

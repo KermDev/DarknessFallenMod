@@ -30,7 +30,7 @@ namespace DarknessFallenMod.Items.RangeWeapons.HolyBow
             Item.UseSound = SoundID.Item5;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<LightArrow>();
-            Item.shootSpeed = 12f;
+            Item.shootSpeed = 20f;
             Item.noMelee = true;
         }
 
