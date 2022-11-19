@@ -47,14 +47,14 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
-            trail = new SwordTrail(Projectile, 30, ColorFunction, ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Trail3").Value);
+            trail = new SwordTrailAlt(Projectile, 20, ColorFunction, ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Trail3").Value);
         }
 
         public Color ColorFunction(float prog)
         {
-            return Color.Lerp(Color.Violet, Color.White, 1f - prog) * prog;
+            return Color.Lerp(Color.Violet, Color.White, 1f - prog);
         }
-        public SwordTrail trail;
+        public SwordTrailAlt trail;
         public override void Kill(int timeLeft)
         {
             trail.Kill();
@@ -93,8 +93,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
             Vector2 rotVector90 = rotVector.RotatedBy(-MathHelper.PiOver2);
 
             Dust.NewDust(Projectile.Center + rotVector * Main.rand.NextFloat(40, SwordResize * 100 + 100) + rotVector90 * 20 * Player.direction, 1, 1, DustID.ShadowbeamStaff, Scale: 0.4f);
-            
-            trail.AddPos(Projectile.rotation.ToRotationVector2() * (bladeLenght + bladeLenght * SwordResize));
+            Vector2 dir = Projectile.rotation.ToRotationVector2();
+            trail.AddPos(dir * (20f + 10f * SwordResize), dir * (bladeLenght + bladeLenght * SwordResize));
         }
 
         public override bool? CanCutTiles()

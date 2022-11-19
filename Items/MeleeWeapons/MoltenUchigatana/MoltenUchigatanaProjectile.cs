@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-
+using DarknessFallenMod.Core.PrimitiveDrawing;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -44,6 +44,12 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             Projectile.MaxUpdates = 3;
 
             Projectile.usesLocalNPCImmunity = true;
+            trail = new SwordTrail(Projectile, 24, f => Color.Orange, ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Trail").Value);
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            trail.Kill();
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -65,10 +71,10 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
         Vector2 rotationVector;
         bool shotAlt;
 
+        public SwordTrail trail;
         public override void AI()
         {
             if (Main.netMode == NetmodeID.Server) return;
-
             // PLAYER AI
             if (Player.ItemAnimationEndingOrEnded)
             {
@@ -114,6 +120,8 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             {
                 DoSwingNormal();
             }
+            trail.AddPos(rotationVector * (bladeLenght - 7f));
+
 
             rotationVector = Projectile.rotation.ToRotationVector2();
 
@@ -210,7 +218,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
             Vector2 drawPosOffset = new Vector2(0f, Projectile.gfxOffY) + rotationVector * bladeLenght * 0.5f;
 
             // After Image
-            Main.spriteBatch.BeginReset(DarknessFallenUtils.BeginType.Shader, DarknessFallenUtils.BeginType.Default, s =>
+            /*Main.spriteBatch.BeginReset(DarknessFallenUtils.BeginType.Shader, DarknessFallenUtils.BeginType.Default, s =>
             {
                 Projectile.DrawAfterImage(
                     prog => Color.Lerp(Color.OrangeRed, Color.White, prog) * 0.1f,
@@ -218,7 +226,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.MoltenUchigatana
                     posOffset: i => -Projectile.Center + Player.MountedCenter + Projectile.oldRot[i].ToRotationVector2() * bladeLenght * 0.5f + rotationVector.RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(-5, 5),
                     scaleOffset: Vector2.One * (Main.rand.NextBool(7) ? 0.2f : 0)
                     );
-            });
+            });*/
 
             // Blade
             Main.EntitySpriteDraw(

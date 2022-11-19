@@ -3,14 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-
+using DarknessFallenMod.Core.PrimitiveDrawing;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.Graphics;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static DarknessFallenMod.Systems.CoroutineSystem;
@@ -49,6 +46,13 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
+            trail = new SwordTrailAlt(Projectile, 20, f => new Color(87, 81, 173) * f,
+                ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Trail2").Value);
+        }
+
+        public override void Kill(int timeLeft)
+        {
+            trail.Kill();
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -110,6 +114,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
 
             Projectile.direction = Player.direction;
             Projectile.spriteDirection = Projectile.direction;
+            trail.AddPos(rotatedDirection * 30f, rotatedDirection * bladeLenght);
         }
 
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -125,7 +130,7 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Player.MountedCenter, Player.MountedCenter + rotatedDirection * bladeLenght, bladeWidth, ref _);
         }
 
-        VertexStrip vrtx = new();
+        private SwordTrailAlt trail;
 
         Vector2[] drawPos = new Vector2[120]; 
         public override bool PreDraw(ref Color lightColor)
@@ -139,28 +144,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons.ObsidianCrusher
                 drawPos[i + 1] = drawPos[i];
             }
             drawPos[0] = drawPosition;
-
-            /*
-            Main.spriteBatch.BeginReset(DarknessFallenUtils.BeginType.Shader, DarknessFallenUtils.BeginType.Default, s =>
-            {
-                GameShaders.Misc["EmpressBlade"]
-                .UseShaderSpecificData(new Vector4(1f, 0.0f, 0.0f, 0.6f))
-                .Apply();
-
-                vrtx.PrepareStrip(
-                    drawPos,
-                    new float[drawPos.Length],
-                    prog => Color.Purple * 0.7f,
-                    prog => 36f, rotatedDirection * bladeLenght * 0.25f,
-                    drawPos.Length,
-                    true
-                    );
-                vrtx.DrawTrail();
-
-                Main.pixelShader.CurrentTechnique.Passes[0].Apply();
-
-            });
-            */
 
             Main.EntitySpriteDraw(
                 tex,
