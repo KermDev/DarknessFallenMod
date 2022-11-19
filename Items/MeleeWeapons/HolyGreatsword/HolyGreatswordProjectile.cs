@@ -11,11 +11,12 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Graphics.Shaders;
 using System.IO;
+using DarknessFallenMod.Core.PrimitiveDrawing;
 using DarknessFallenMod.Utils;
 
 namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 {
-    public class HolyGreatswordProjectile : ModProjectile, IPrimitiveDrawer
+    public class HolyGreatswordProjectile : ModProjectile
     {
         Player Player => Main.player[Projectile.owner];
         public override string Texture => "DarknessFallenMod/Items/MeleeWeapons/HolyGreatsword/HolyGreatsword";
@@ -46,7 +47,17 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = Projectile.MaxUpdates * Player.itemAnimationMax - 10;
+            trail = new SwordTrail(Projectile, 30, ColorFunction, ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Trail3").Value);
+        }
 
+        public Color ColorFunction(float prog)
+        {
+            return Color.Lerp(Color.Violet, Color.White, 1f - prog) * prog;
+        }
+        public SwordTrail trail;
+        public override void Kill(int timeLeft)
+        {
+            trail.Kill();
         }
 
         float goBackAngle = MathHelper.PiOver2 * 1.75f;
@@ -83,8 +94,9 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
 
             Dust.NewDust(Projectile.Center + rotVector * Main.rand.NextFloat(40, SwordResize * 100 + 100) + rotVector90 * 20 * Player.direction, 1, 1, DustID.ShadowbeamStaff, Scale: 0.4f);
             
-            endBuffer.PushBack(Projectile.rotation.ToRotationVector2() * (bladeLenght + bladeLenght * SwordResize));
+            trail.AddPos(Projectile.rotation.ToRotationVector2() * (bladeLenght + bladeLenght * SwordResize));
         }
+
         public override bool? CanCutTiles()
         {
             return true;
@@ -176,36 +188,6 @@ namespace DarknessFallenMod.Items.MeleeWeapons.HolyGreatsword
                 );
 
             return false;
-        }
-        
-        private CircularBuffer<Vector2> endBuffer = new(30);
-        public void DrawPrimitives()
-        {
-            if (endBuffer.Count < 2) return;
-            PrimitiveList list = new PrimitiveList((endBuffer.Count - 1) * 6, PrimitiveType.TriangleList);
-            Texture2D tex = ModContent.Request<Texture2D>("DarknessFallenMod/Assets/Trail").Value;
-            list.SetTexture(tex);
-            for (int i = 0; i < endBuffer.Count - 1; i++)
-            {
-                Vector2 pos = Projectile.Center;
-                Vector2 pos2 = Projectile.Center + endBuffer[i];
-                Vector2 pos3 = Projectile.Center + endBuffer[i + 1];
-
-                float prog1 = (float)i / endBuffer.Count;
-                float prog2 = (float)(i + 1) / endBuffer.Count;
-
-                Color c1 = Color.Lerp(Color.White, Color.Purple, 1f - prog1) * (prog1);
-                Color c2 = Color.Lerp(Color.White, Color.Purple, 1f - prog2) * (prog2);
-
-                list.AddVertex(pos2, c1, new Vector2(prog1, 1));
-                list.AddVertex(pos, c1, new Vector2(prog1, 0));
-                list.AddVertex(pos, c2, new Vector2(prog2, 0));
-
-                list.AddVertex(pos, c2, new Vector2(prog2, 0));
-                list.AddVertex(pos3, c2, new Vector2(prog2, 1));
-                list.AddVertex(pos2, c1, new Vector2(prog1, 1));
-            }
-            list.Draw();
         }
     }
 }
