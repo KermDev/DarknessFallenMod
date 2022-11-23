@@ -11,5 +11,17 @@ namespace DarknessFallenMod
 {
     public class DarknessFallenBuff : GlobalBuff
     {
+        public override void Update(int type, NPC npc, ref int buffIndex)
+        {
+            switch(type)
+            {
+                default:
+                    break;
+                case 30:
+                    //bleeding;
+                    npc.lifeRegen = -10;
+                    break;
+            }
+        }
     }
 }
