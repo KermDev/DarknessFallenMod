@@ -22,8 +22,8 @@ namespace DarknessFallenMod.Core
 		public virtual bool PreDraw(ref PlayerDrawSet drawInfo, Texture2D glowTex) => true;
 		Texture2D GlowmaskTexture
 		{
-            get
-            {
+			get
+			{
 				if (this is ModItem modItem)
 					return ModContent.Request<Texture2D>($"{modItem.Texture}_Glow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 				return null;
@@ -31,17 +31,17 @@ namespace DarknessFallenMod.Core
 		}
 	}
 
-    public class GlowmaskPlayerDrawLayer : PlayerDrawLayer
+	public class GlowmaskPlayerDrawLayer : PlayerDrawLayer
 	{
 		public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.ArmOverItem);
 
-        protected override void Draw(ref PlayerDrawSet drawInfo)
+		protected override void Draw(ref PlayerDrawSet drawInfo)
 		{
 			Player drawPlayer = drawInfo.drawPlayer;
 			Item item = drawPlayer.HeldItem;
 
 			if (drawPlayer.ItemAnimationActive && item.ModItem is IGlowmask glowMaskItem)
-            {
+			{
 				Texture2D texture = glowMaskItem.GlowmaskTexture;
 				if (texture is null || !glowMaskItem.PreDraw(ref drawInfo, texture)) return;
 
@@ -86,6 +86,29 @@ namespace DarknessFallenMod.Core
 
 				drawInfo.DrawDataCache.Add(drawData);
 			}
+		}
+	}
+
+	/// <summary>
+	/// Draws glowmasks on dropped items.
+	/// </summary>
+	public class GlowmaskItem : GlobalItem
+	{
+		public override bool AppliesToEntity(Item entity, bool lateInstantiation)
+		{
+			return entity.ModItem is IGlowmask glowmask && glowmask.GlowmaskTexture != null;
+		}
+
+		public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+		{
+			// Code adapted from vanilla.
+			Texture2D texture = (item.ModItem as IGlowmask).GlowmaskTexture;
+			Rectangle frame = Main.itemAnimations[item.type]?.GetFrame(texture) ?? texture.Frame();
+			Vector2 drawOrigin = frame.Size() / 2f;
+			Vector2 drawOffset = new((item.width / 2) - drawOrigin.X, item.height - frame.Height);
+			Vector2 drawPosition = item.position - Main.screenPosition + drawOrigin + drawOffset;
+
+			spriteBatch.Draw(texture, drawPosition, frame, new Color(250, 250, 250, item.alpha), rotation, drawOrigin, scale, SpriteEffects.None, 0f);
 		}
 	}
 }

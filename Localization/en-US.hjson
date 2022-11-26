@@ -1,5 +1,20 @@
 ﻿Mods:{
 	DarknessFallenMod:{
+		
+		ItemName: {
+			IceDrill: "Ice Drill"
+			IceShard: "Ice Shard"
+		}
+		
+		ItemTooltip: {
+			IceDrill: ""
+			IceShard: ""
+		}
+		
+		ProjectileName: {
+			IceDrillProjectile: "{$Mods.DarknessFallenMod.ItemName.IceDrill}"
+		}
+		
 		TownNPCMood: {
 			SlimePrinceNPC: {
 				Content: I miss my slime palace, but this is good.

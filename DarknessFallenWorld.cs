@@ -30,11 +30,11 @@ namespace DarknessFallenMod
 		{
 			if (Main.time == 0 && Main.dayTime)
 			{
-				for (int i = 0; i < Main.player.Length; i++)
+				for (int i = 0; i < Main.maxPlayers; i++)
 				{
 					Player player = Main.player[i];
 
-					if (player is not null)
+					if (player is not null && player.active)
                     {
 						player.GetModPlayer<DarknessFallenPlayer>().HasRodGambled = false;
 						player.GetModPlayer<DarknessFallenPlayer>().GambleRodBuff = -1;
