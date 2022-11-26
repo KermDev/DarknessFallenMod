@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.Audio;
+using DarknessFallenMod.Items.Placeable.Banners;
 
 namespace DarknessFallenMod.NPCs
 {
@@ -31,6 +32,9 @@ namespace DarknessFallenMod.NPCs
             NPC.value = Item.buyPrice(silver: 68);
             NPC.aiStyle = 0;
             NPC.noGravity = false;
+
+            Banner = Type;
+            BannerItem = ModContent.ItemType<AridBeastBanner>();
         }
 
         public override void AI()

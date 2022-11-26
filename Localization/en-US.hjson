@@ -2,13 +2,19 @@
 	DarknessFallenMod:{
 		
 		ItemName: {
+			AridBeastBanner: "{$Mods.DarknessFallenMod.NPCName.AridBeast} Banner"
 			IceDrill: "Ice Drill"
 			IceShard: "Ice Shard"
 		}
 		
 		ItemTooltip: {
+			AridBeastBanner: "{$CommonItemTooltip.BannerBonus}{$Mods.DarknessFallenMod.NPCName.AridBeast}"
 			IceDrill: ""
 			IceShard: ""
+		}
+		
+		MapObject: {
+			AridBeastBanner: "{$MapObject.Banner}"
 		}
 		
 		ProjectileName: {
