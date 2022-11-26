@@ -25,6 +25,7 @@ namespace DarknessFallenMod
 	public class DarknessFallenPlayer : ModPlayer
 	{
         public bool HasRodGambled = false;
+        public bool IsRodGambling = false;
         public int GambleRodBuff = -1;
 
 		public override void clientClone(ModPlayer clientClone)
@@ -46,40 +47,43 @@ namespace DarknessFallenMod
 
         public override void ModifyCaughtFish(Item fish)
         {
-            switch(new Random().Next(0, 5))
+            if(IsRodGambling)
             {
-                default:
-                    {
-                        Main.NewText("You have been blessed with speed!");
-                        GambleRodBuff = BuffID.Swiftness;
-                        break;
-                    }
-                case 1:
-                    {
-                        Main.NewText("You have been blessed with endurance!");
-                        GambleRodBuff = BuffID.Endurance;
-                        break;
-                    }
-                case 2:
-                    {
-                        Main.NewText("You have been cursed with slowness!");
-                        GambleRodBuff = BuffID.Slow;
-                        break;
-                    }
-                case 3:
-                    {
-                        Main.NewText("You have been blessed with mana regeneration!");
-                        GambleRodBuff = BuffID.ManaRegeneration;
-                        break;
-                    }
-                case 4:
-                    {
-                        Main.NewText("You have been cursed with blindness!");
-                        GambleRodBuff = BuffID.Blackout;
-                        break;
-                    }
+                switch(new Random().Next(0, 5))
+                {
+                    default:
+                        {
+                            Main.NewText("You have been blessed with speed!");
+                            GambleRodBuff = BuffID.Swiftness;
+                            break;
+                        }
+                    case 1:
+                        {
+                            Main.NewText("You have been blessed with endurance!");
+                            GambleRodBuff = BuffID.Endurance;
+                            break;
+                        }
+                    case 2:
+                        {
+                            Main.NewText("You have been cursed with slowness!");
+                            GambleRodBuff = BuffID.Slow;
+                            break;
+                        }
+                    case 3:
+                        {
+                            Main.NewText("You have been blessed with mana regeneration!");
+                            GambleRodBuff = BuffID.ManaRegeneration;
+                            break;
+                        }
+                    case 4:
+                        {
+                            Main.NewText("You have been cursed with blindness!");
+                            GambleRodBuff = BuffID.Blackout;
+                            break;
+                        }
+                }
+                this.HasRodGambled = true;
             }
-            this.Player.GetModPlayer<DarknessFallenPlayer>().HasRodGambled = true;
         }
 
         public override void PreUpdateBuffs()

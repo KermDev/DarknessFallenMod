@@ -31,18 +31,19 @@ namespace DarknessFallenMod.Items.Tools.GamblerRod
 			DrawOriginOffsetY = -8; // Adjusts the draw position
 		}
 
-        public override void Kill(int timeLeft)
-        {
-
-        }
-
-        // What if we want to randomize the line color
-        public override void AI()
+		public override void Kill(int timeLeft)
 		{
-
+			Player player = Main.player[Projectile.owner];
+			player.GetModPlayer<DarknessFallenPlayer>().IsRodGambling = false;
 		}
 
-		public override void ModifyFishingLine(ref Vector2 lineOriginOffset, ref Color lineColor)
+        public override void OnSpawn(IEntitySource source)
+        {
+			Player player = Main.player[Projectile.owner];
+			player.GetModPlayer<DarknessFallenPlayer>().IsRodGambling = true;
+        }
+
+        public override void ModifyFishingLine(ref Vector2 lineOriginOffset, ref Color lineColor)
 		{
 			// Change these two values in order to change the origin of where the line is being drawn.
 			// This will make it draw 47 pixels right and 31 pixels up from the player's center, while they are looking right and in normal gravity.

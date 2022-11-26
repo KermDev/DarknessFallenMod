@@ -19,7 +19,7 @@ namespace DarknessFallenMod
                     break;
                 case 30:
                     //bleeding;
-                    npc.lifeRegen = -10;
+                    npc.lifeRegen -= 10;
                     break;
             }
         }
