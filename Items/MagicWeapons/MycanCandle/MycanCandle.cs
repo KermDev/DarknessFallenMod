@@ -3,11 +3,9 @@
 //Sellprice
 //Rarity
 //Bloom
-//Balance
 //Fix spritesheet
 //Hitdirection
 //Grass breaking
-//Add combo logic
 //Improve m1 visuals
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -24,6 +22,10 @@ using System.Collections.Generic;
 using DarknessFallen.Core;
 using DarknessFallenMod.Helpers;
 using Terraria.Graphics.Effects;
+using IL.Terraria.GameContent;
+using On.Terraria.GameContent;
+using System.Linq;
+using Mono.Cecil;
 
 namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 {
@@ -38,8 +40,8 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 
 		public override void SetDefaults()
 		{
-			Item.damage = 17;
-			Item.mana = 5;
+			Item.damage = 8;
+			Item.mana = 10;
 			Item.DamageType = DamageClass.Magic;
 			Item.width = 30;
 			Item.height = 46;
@@ -67,10 +69,12 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 			{
 				Item.useStyle = ItemUseStyleID.Shoot;
 				Item.noUseGraphic = true;
+                Item.useTime = Item.useAnimation = 5;
 			}
 			else
 			{
-				Item.useStyle = ItemUseStyleID.HoldUp;
+                Item.useTime = Item.useAnimation = 35;
+                Item.useStyle = ItemUseStyleID.HoldUp;
                 Item.noUseGraphic = false;
             }
 			return base.CanUseItem(player);
@@ -80,6 +84,7 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 		{
 			if (player.altFunctionUse == 2)
 			{
+                damage *= 2;
 				type = ModContent.ProjectileType<MycanCandleSpear>();
 				velocity.Normalize();
 			}
@@ -95,9 +100,9 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 			if (player.altFunctionUse != 2)
 			{
 				int tries = 0;
-				for (int i = 0; i < 3; i++)
+				for (int i = 0; i < 2; i++)
 				{
-					Vector2 pos = player.Center + Main.rand.NextVector2Circular(45, 45);
+					Vector2 pos = player.Center + Main.rand.NextVector2Circular(65, 65);
 					Vector2 vel = pos.DirectionTo(Main.MouseWorld) * 10;
 
 					Tile tile = Framing.GetTileSafely((int)(pos.X / 16), (int)(pos.Y / 16));
@@ -107,8 +112,8 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 						i--;
 						continue;
 					}
-                    Projectile.NewProjectile(source, pos, Vector2.Zero, ModContent.ProjectileType<MycanCandlePortal>(), 0, 0, player.whoAmI, Main.rand.Next(15,25), vel.ToRotation());
-					Projectile.NewProjectile(source, pos, vel, type, damage, knockback, player.whoAmI);
+                    Projectile.NewProjectile(source, pos, Vector2.Zero, ModContent.ProjectileType<MycanCandleRing>(), 0, 0, player.whoAmI, Main.rand.Next(15,25), vel.ToRotation());
+					Projectile.NewProjectile(source, pos, vel.RotatedByRandom(0.2f), type, damage, knockback, player.whoAmI);
 				}
 				return false;
 			}
@@ -119,6 +124,12 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 	class MycanCandleProj : ModProjectile
 	{
 		Vector2 oldPos = Vector2.Zero;
+
+        bool stuck = false;
+
+        NPC stuckTarget = default;
+
+        Vector2 offset = Vector2.Zero;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mycan Candle");
@@ -128,7 +139,7 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
         {
             Projectile.width = 16;
             Projectile.height = 16;
-            Projectile.timeLeft = 300;
+            Projectile.timeLeft = 150;
             Projectile.penetrate = 1;
             Projectile.friendly = true;
             Projectile.ignoreWater = true;
@@ -138,6 +149,16 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 
 		public override void AI()
 		{
+            if (stuck)
+            {
+                if (!stuckTarget.active)
+                {
+                    Projectile.active = false;
+                    return;
+                }
+                Projectile.Center = stuckTarget.Center + offset;
+            }
+
 			if (oldPos == Vector2.Zero)
 				oldPos = Projectile.Center;
 
@@ -148,7 +169,55 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 			}
             oldPos = Projectile.Center;
         }
-	}
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            Projectile.tileCollide = false;
+            Projectile.friendly = false;
+            Projectile.penetrate++;
+            stuck = true;
+            stuckTarget = target;
+            offset = Projectile.Center - target.Center;
+        }
+    }
+
+    public class MycanCandleFlameDustBig : MycanCandleFlameDust
+    {
+        public override bool Update(Dust dust)
+        {
+            if (dust.customData is null)
+            {
+                dust.position -= Vector2.One * 32 * dust.scale;
+                dust.customData = true;
+            }
+
+            Vector2 currentCenter = dust.position + Vector2.One.RotatedBy(dust.rotation) * 32 * dust.scale;
+
+            dust.scale *= 0.92f;
+            Vector2 nextCenter = dust.position + Vector2.One.RotatedBy(dust.rotation + 0.06f) * 32 * dust.scale;
+
+            dust.rotation += 0.06f;
+            dust.position += currentCenter - nextCenter;
+
+            dust.shader.UseColor(dust.color);
+
+
+            dust.position += dust.velocity;
+
+            if (!dust.noGravity)
+                dust.velocity.Y += 0.1f;
+
+            dust.velocity *= 0.95f;
+
+            if (!dust.noLight)
+                Lighting.AddLight(dust.position, dust.color.ToVector3() * 0.5f);
+
+            if (dust.scale < 0.05f)
+                dust.active = false;
+
+            return false;
+        }
+    }
 
     public class MycanCandleFlameDust : ModDust
 	{ 
@@ -202,14 +271,17 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
         }
     }
 
-    public class MycanCandlePortal : ModProjectile
+    public class MycanCandleRing : ModProjectile
     { 
+        private List<NPC> alreadyHit = new List<NPC>();
         private List<Vector2> cache;
 
         private Trail trail;
         private Trail trail2;
 
         public int timeLeftStart = 40;
+
+        public float skew = 0.4f;
         private float Progress => 1 - (Projectile.timeLeft / (float)timeLeftStart);
 
         private float Radius => Projectile.ai[0] * (float)Math.Sqrt(Math.Sqrt(Progress));
@@ -218,9 +290,9 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
         {
             Projectile.width = 80;
             Projectile.height = 80;
-            Projectile.friendly = false;
+            Projectile.friendly = true;
             Projectile.tileCollide = false;
-            Projectile.penetrate = -1;
+            Projectile.penetrate = 1;
             Projectile.timeLeft = timeLeftStart;
             Projectile.extraUpdates = 1;
         }
@@ -253,7 +325,7 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
             for (int i = 0; i < 33; i++) //TODO: Cache offsets, to improve performance
             {
                 double rad = (i / 32f) * 6.28f;
-                Vector2 offset = new Vector2((float)Math.Sin(rad) * 0.4f, (float)Math.Cos(rad));
+                Vector2 offset = new Vector2((float)Math.Sin(rad) * skew, (float)Math.Cos(rad));
                 offset *= radius;
                 offset = offset.RotatedBy(Projectile.ai[1]);
                 cache.Add(Projectile.Center + offset);
@@ -265,12 +337,24 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
             }
         }
 
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            Vector2 line = targetHitbox.Center.ToVector2() - Projectile.Center;
+            line.Normalize();
+            line *= Radius;
+            if (Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + line))
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void ManageTrail()
         {
 
             trail = trail ?? new Trail(Main.instance.GraphicsDevice, 33, new TriangularTip(1), factor => 28 * (1 - Progress), factor =>
             {
-                return Color.MediumPurple;
+                return Color.Magenta;
             });
 
             trail2 = trail2 ?? new Trail(Main.instance.GraphicsDevice, 33, new TriangularTip(1), factor => 10 * (1 - Progress), factor =>
@@ -302,6 +386,19 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 
             trail?.Render(effect);
             trail2?.Render(effect);
+        }
+
+        public override bool? CanHitNPC(NPC target)
+        {
+            if (alreadyHit.Contains(target))
+                return false;
+            return base.CanHitNPC(target);
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            Projectile.penetrate++;
+            alreadyHit.Add(target);
         }
     }
 
@@ -375,6 +472,23 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 
             if (Main.rand.NextBool(6))
                 Dust.NewDustPerfect(pos + Main.rand.NextVector2Circular(10,10), ModContent.DustType<MycanCandleFlameDust>(), Main.rand.NextVector2Circular(0.5f, 0.5f), 0, Color.Magenta, Main.rand.NextFloat(0.3f, 0.6f));
+
+            var flame = Main.projectile.Where(n => n.active && n.type == ModContent.ProjectileType<MycanCandleProj>() && Collision.CheckAABBvLineCollision(n.position, n.Size, Projectile.Center, Projectile.Center + (Projectile.rotation.ToRotationVector2() * 85))).OrderBy(n => n.Distance(Projectile.Center)).FirstOrDefault();
+
+            if (flame != default)
+            {
+                Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), flame.Center, Vector2.Zero, ModContent.ProjectileType<MycanCandleRing>(), Projectile.damage, 0, Player.whoAmI, Main.rand.Next(70,90), 0);
+                (proj.ModProjectile as MycanCandleRing).skew = 1;
+                (proj.ModProjectile as MycanCandleRing).timeLeftStart = 20;
+
+                for (int i = 0; i < 12; i++)
+                {
+                    Dust.NewDustPerfect(flame.Center, ModContent.DustType<MycanCandleFlameDustBig>(), Main.rand.NextVector2Circular(12, 12), 0, Color.Magenta, Main.rand.NextFloat(0.6f, 1.8f));
+                }    
+                Player.GetModPlayer<DarknessFallenPlayer>().ShakeScreen(8, 0.82f);
+                proj.timeLeft = 20;
+                flame.active = false;
+            } 
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
