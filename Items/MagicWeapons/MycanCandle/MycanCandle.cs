@@ -26,6 +26,7 @@ using IL.Terraria.GameContent;
 using On.Terraria.GameContent;
 using System.Linq;
 using Mono.Cecil;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 {
@@ -56,6 +57,8 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 			Item.shoot = ModContent.ProjectileType<MycanCandleSpear>();
 			Item.shootSpeed = 13f;
 			Item.noMelee = true;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noUseGraphic = true;
         }
 
 		public override bool AltFunctionUse(Player player)
@@ -67,15 +70,11 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 		{
 			if (player.altFunctionUse == 2)
 			{
-				Item.useStyle = ItemUseStyleID.Shoot;
-				Item.noUseGraphic = true;
                 Item.useTime = Item.useAnimation = 5;
 			}
 			else
 			{
                 Item.useTime = Item.useAnimation = 35;
-                Item.useStyle = ItemUseStyleID.HoldUp;
-                Item.noUseGraphic = false;
             }
 			return base.CanUseItem(player);
 		}
@@ -90,8 +89,7 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 			}
 			else
 			{
-				velocity = Vector2.Zero;
-                type = ModContent.ProjectileType<MycanCandleProj>();
+                type = ModContent.ProjectileType<MycanCandleHeld>();
             }
 		}
 
@@ -113,9 +111,9 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 						continue;
 					}
                     Projectile.NewProjectile(source, pos, Vector2.Zero, ModContent.ProjectileType<MycanCandleRing>(), 0, 0, player.whoAmI, Main.rand.Next(15,25), vel.ToRotation());
-					Projectile.NewProjectile(source, pos, vel.RotatedByRandom(0.2f), type, damage, knockback, player.whoAmI);
+					Projectile.NewProjectile(source, pos, vel.RotatedByRandom(0.2f), ModContent.ProjectileType<MycanCandleProj>(), damage, knockback, player.whoAmI);
 				}
-				return false;
+				return true;
 			}
 			return base.Shoot(player, source, position, velocity, type, damage, knockback);
 		}
@@ -404,20 +402,20 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 
     class MycanCandleSpear : ModProjectile
     {
-		int afterImageLength = 10;
+        int afterImageLength = 10;
 
-		List<float> oldRotation = new List<float>();
+        List<float> oldRotation = new List<float>();
 
-		List<Vector2> oldPosition = new List<Vector2>();
+        List<Vector2> oldPosition = new List<Vector2>();
 
-		Vector2 initialDirection = Vector2.Zero;
+        Vector2 initialDirection = Vector2.Zero;
 
-		float initialRotation => initialDirection.ToRotation();
+        float initialRotation => initialDirection.ToRotation();
 
-		public override void SetStaticDefaults()
-		{
+        public override void SetStaticDefaults()
+        {
             DisplayName.SetDefault("Mycan Candle");
-			Main.projFrames[Projectile.type] = 6;
+            Main.projFrames[Projectile.type] = 6;
         }
         public override void SetDefaults()
         {
@@ -427,91 +425,91 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
             Projectile.penetrate = -1;
             Projectile.friendly = true;
             Projectile.ignoreWater = true;
-			Projectile.ownerHitCheck = true;
-			Projectile.tileCollide = false;
+            Projectile.ownerHitCheck = true;
+            Projectile.tileCollide = false;
         }
 
         public override void AI()
         {
-			if (Projectile.velocity != Vector2.Zero)
-			{
-				initialDirection = Projectile.velocity;
-				Projectile.velocity = Vector2.Zero;
-			}
-			Projectile.frameCounter++;
-			if (Projectile.frameCounter % 5 == 4)
-				Projectile.frame++;
-			Projectile.frame %= Main.projFrames[Projectile.type];
+            if (Projectile.velocity != Vector2.Zero)
+            {
+                initialDirection = Projectile.velocity;
+                Projectile.velocity = Vector2.Zero;
+            }
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter % 5 == 4)
+                Projectile.frame++;
+            Projectile.frame %= Main.projFrames[Projectile.type];
 
             var Player = Main.player[Projectile.owner];
 
             var center = Player.Center + Vector2.UnitY * Player.gfxOffY + initialDirection * 15;
 
-			Player.itemTime = Player.itemAnimation = 5;
+            Player.itemTime = Player.itemAnimation = 5;
             Player.heldProj = Projectile.whoAmI;
             Player.ChangeDir(Math.Sign(initialDirection.X));
 
             float progress = 1 - (Projectile.timeLeft / 30f);
-			progress = EaseFunction.EaseCubicInOut.Ease(progress);
-			Projectile.rotation = initialRotation + MathHelper.Lerp(0.15f * Player.direction, -0.15f * Player.direction, EaseFunction.EaseQuadInOut.Ease(progress));
-			Projectile.Center = center + (initialDirection * 45 * (float)(Math.Sin(progress * 3.14f) - 0.95f));
+            progress = EaseFunction.EaseCubicInOut.Ease(progress);
+            Projectile.rotation = initialRotation + MathHelper.Lerp(0.15f * Player.direction, -0.15f * Player.direction, EaseFunction.EaseQuadInOut.Ease(progress));
+            Projectile.Center = center + (initialDirection * 45 * (float)(Math.Sin(progress * 3.14f) - 0.95f));
 
             Player.itemRotation = MathHelper.WrapAngle(initialRotation - ((Player.direction == 1) ? 0 : MathHelper.Pi));
 
-			oldRotation.Add(Projectile.rotation);
-			oldPosition.Add(Projectile.Center);
+            oldRotation.Add(Projectile.rotation);
+            oldPosition.Add(Projectile.Center);
 
-			if (oldRotation.Count > afterImageLength)
-			{
-				oldRotation.RemoveAt(0);
-				oldPosition.RemoveAt(0);
+            if (oldRotation.Count > afterImageLength)
+            {
+                oldRotation.RemoveAt(0);
+                oldPosition.RemoveAt(0);
             }
 
             Vector2 pos = Projectile.Center + (Projectile.rotation.ToRotationVector2() * 65);
             Lighting.AddLight(pos, Color.Magenta.ToVector3());
 
             if (Main.rand.NextBool(6))
-                Dust.NewDustPerfect(pos + Main.rand.NextVector2Circular(10,10), ModContent.DustType<MycanCandleFlameDust>(), Main.rand.NextVector2Circular(0.5f, 0.5f), 0, Color.Magenta, Main.rand.NextFloat(0.3f, 0.6f));
+                Dust.NewDustPerfect(pos + Main.rand.NextVector2Circular(10, 10), ModContent.DustType<MycanCandleFlameDust>(), Main.rand.NextVector2Circular(0.5f, 0.5f), 0, Color.Magenta, Main.rand.NextFloat(0.3f, 0.6f));
 
             var flame = Main.projectile.Where(n => n.active && n.type == ModContent.ProjectileType<MycanCandleProj>() && Collision.CheckAABBvLineCollision(n.position, n.Size, Projectile.Center, Projectile.Center + (Projectile.rotation.ToRotationVector2() * 85))).OrderBy(n => n.Distance(Projectile.Center)).FirstOrDefault();
 
             if (flame != default)
             {
-                Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), flame.Center, Vector2.Zero, ModContent.ProjectileType<MycanCandleRing>(), Projectile.damage, 0, Player.whoAmI, Main.rand.Next(70,90), 0);
+                Projectile proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), flame.Center, Vector2.Zero, ModContent.ProjectileType<MycanCandleRing>(), Projectile.damage, 0, Player.whoAmI, Main.rand.Next(70, 90), 0);
                 (proj.ModProjectile as MycanCandleRing).skew = 1;
                 (proj.ModProjectile as MycanCandleRing).timeLeftStart = 20;
-
+                Terraria.Audio.SoundEngine.PlaySound(SoundID.Item14, flame.Center);
                 for (int i = 0; i < 12; i++)
                 {
                     Dust.NewDustPerfect(flame.Center, ModContent.DustType<MycanCandleFlameDustBig>(), Main.rand.NextVector2Circular(12, 12), 0, Color.Magenta, Main.rand.NextFloat(0.6f, 1.8f));
-                }    
+                }
                 Player.GetModPlayer<DarknessFallenPlayer>().ShakeScreen(8, 0.82f);
                 proj.timeLeft = 20;
                 flame.active = false;
-            } 
+            }
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
-		{
-			float collisionPoint = 0f;
-			return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + (Projectile.rotation.ToRotationVector2() * 65), 15, ref collisionPoint);
-		}
+        {
+            float collisionPoint = 0f;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + (Projectile.rotation.ToRotationVector2() * 65), 15, ref collisionPoint);
+        }
 
-		public override bool PreDraw(ref Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = ModContent.Request<Texture2D>(Texture).Value;
             Texture2D glowTex = ModContent.Request<Texture2D>(Texture + "_Glow").Value;
             Texture2D fireTex = ModContent.Request<Texture2D>(Texture + "_Fire").Value;
 
             int frameHeight = tex.Height / Main.projFrames[Projectile.type];
-			Rectangle frameBox = new Rectangle(0, frameHeight * Projectile.frame, tex.Width, frameHeight);
+            Rectangle frameBox = new Rectangle(0, frameHeight * Projectile.frame, tex.Width, frameHeight);
 
-			Vector2 origin = frameBox.Size() * new Vector2(0.5f, 0.9f);
+            Vector2 origin = frameBox.Size() * new Vector2(0.5f, 0.9f);
 
-            for(int i = 0; i < oldPosition.Count; i++)
-			{
+            for (int i = 0; i < oldPosition.Count; i++)
+            {
                 float opacity = i / (float)afterImageLength;
-				float scale = MathHelper.Lerp(0.5f, 1, opacity);
+                float scale = MathHelper.Lerp(0.5f, 1, opacity);
                 Main.spriteBatch.Draw(tex, oldPosition[i] - Main.screenPosition, frameBox, lightColor * opacity * 0.4f, oldRotation[i] + 1.57f, origin, Projectile.scale * scale, SpriteEffects.None, 0f);
                 Main.spriteBatch.Draw(fireTex, oldPosition[i] - Main.screenPosition, frameBox, Color.White * opacity * 0.4f, oldRotation[i] + 1.57f, origin, Projectile.scale * scale, SpriteEffects.None, 0f);
             }
@@ -520,9 +518,91 @@ namespace DarknessFallenMod.Items.MagicWeapons.MycanCandle
 
 
             Color glowColor = Color.Magenta;
-			glowColor.A = 0;
-			glowColor *= 0.25f;
+            glowColor.A = 0;
+            glowColor *= 0.25f;
             Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition, frameBox, glowColor, Projectile.rotation + 1.57f, origin, Projectile.scale * 1.05f, SpriteEffects.None, 0f);
+            return false;
+        }
+    }
+
+    class MycanCandleHeld : ModProjectile
+    {
+        int direction = 0;
+
+        float white = 1;
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Mycan Candle");
+            Main.projFrames[Projectile.type] = 5;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = 24;
+            Projectile.height = 24;
+            Projectile.timeLeft = 50;
+            Projectile.penetrate = -1;
+            Projectile.friendly = false;
+            Projectile.ignoreWater = true;
+            Projectile.ownerHitCheck = true;
+            Projectile.tileCollide = false;
+        }
+
+        public override void AI()
+        {
+            if (white > 0)
+                white -= 0.05f;
+            else
+                white = 0;
+            if (Projectile.velocity != Vector2.Zero)
+            {
+                direction = Math.Sign(Projectile.velocity.X);
+                Projectile.velocity = Vector2.Zero;
+            }
+            Projectile.frameCounter++;
+            if (Projectile.frameCounter % 5 == 4)
+                Projectile.frame++;
+            Projectile.frame %= Main.projFrames[Projectile.type];
+
+            var Player = Main.player[Projectile.owner];
+
+            var center = Player.Center + Vector2.UnitY * Player.gfxOffY + (Vector2.UnitX * direction * 15);
+
+            Player.itemTime = Player.itemAnimation = 5;
+            Player.heldProj = Projectile.whoAmI;
+            Player.ChangeDir(direction);
+
+            Projectile.rotation = 0;
+            Projectile.Center = center;
+
+            Player.itemRotation = 0;
+
+            Lighting.AddLight(center, Color.Magenta.ToVector3() * 0.5f);
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Player owner = Main.player[Projectile.owner];
+            SpriteEffects effects = owner.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            Texture2D tex = ModContent.Request<Texture2D>(Texture).Value;
+            Texture2D bloomTex = ModContent.Request<Texture2D>(Texture + "_Bloom").Value;
+            Texture2D glowTex = ModContent.Request<Texture2D>(Texture + "_Glow").Value;
+            Texture2D whiteTex = ModContent.Request<Texture2D>(Texture + "_White").Value;
+
+            int frameHeight = tex.Height / Main.projFrames[Projectile.type];
+            Rectangle frameBox = new Rectangle(0, frameHeight * Projectile.frame, tex.Width, frameHeight);
+
+            Vector2 origin = frameBox.Size() * new Vector2(0.5f, 0.8f);
+
+            Main.spriteBatch.Draw(tex, Projectile.Center - Main.screenPosition, frameBox, lightColor, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+            Main.spriteBatch.Draw(glowTex, Projectile.Center - Main.screenPosition, frameBox, Color.White, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+            Main.spriteBatch.Draw(whiteTex, Projectile.Center - Main.screenPosition, frameBox, Color.White * white, Projectile.rotation, origin, Projectile.scale, effects, 0f);
+
+
+            Color glowColor = Color.Magenta;
+            glowColor.A = 0;
+            glowColor *= 0.25f;
+            Main.spriteBatch.Draw(bloomTex, Projectile.Center - Main.screenPosition, frameBox, glowColor, Projectile.rotation, origin, Projectile.scale, effects, 0f);
             return false;
         }
     }
